@@ -2,28 +2,16 @@
 export const Routes = {
     // pages
     Signin: { path: "/" },
-    DashboardOverview: { path: "/dashboard/overview" },
+    DashboardOverview: { path: "/dashboard" },
     Transactions: { path: "/transactions" },
     Settings: { path: "/settings" },
-    Upgrade: { path: "/upgrade" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },
-    Billing: { path: "/examples/billing" },
-    Invoice: { path: "/examples/invoice" },
-    Signup: { path: "/examples/sign-up" },
-    ForgotPassword: { path: "/examples/forgot-password" },
-    ResetPassword: { path: "/examples/reset-password" },
-    Lock: { path: "/examples/lock" },
+    Signup: { path: "/auth/sign-up" },
+    ForgotPassword: { path: "/auth/forgot-password" },
+    ResetPassword: { path: "/auth/reset-password" },
+    Lock: { path: "/auth/lock" },
     NotFound: { path: "/examples/404" },
     ServerError: { path: "/examples/500" },
-
-    // docs
-    DocsOverview: { path: "/documentation/overview" },
-    DocsDownload: { path: "/documentation/download" },
-    DocsQuickStart: { path: "/documentation/quick-start" },
-    DocsLicense: { path: "/documentation/license" },
-    DocsFolderStructure: { path: "/documentation/folder-structure" },
-    DocsBuild: { path: "/documentation/build-tools" },
-    DocsChangelog: { path: "/documentation/changelog" },
 
     // components
     Accordions: { path: "/components/accordions" },
