@@ -7,7 +7,7 @@ import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown }
 import { DesignationTable } from "./designationTable";
 const API = `https://localhost:5001/api/Designation/GetDesignation`;
 
-export default()=> {
+export default () => {
 
   const [Search, setSearch] = useState("");
 
@@ -16,7 +16,7 @@ export default()=> {
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <div className="d-block mb-4 mb-md-0">
-          <h4>Designations</h4>
+          <h4>Designations Dashboard</h4>
         </div>
         {/* <div className="btn-toolbar mb-2 mb-md-0">
           <ButtonGroup>
@@ -33,7 +33,7 @@ export default()=> {
               <InputGroup.Text>
                 <FontAwesomeIcon icon={faSearch} />
               </InputGroup.Text>
-              <Form.Control type="text" placeholder="Search by designation name" onChange={(e)=>setSearch(e.target.value)} />
+              <Form.Control type="text" placeholder="Search by designation name" onChange={(e) => setSearch(e.target.value)} />
             </InputGroup>
           </Col>
           <Col xs={6} md={2} xl={1} className="ps-md-0 text-end">
@@ -56,7 +56,7 @@ export default()=> {
         </Row>
       </div>
 
-      <DesignationTable  searchText={Search}/>
+      <DesignationTable searchText={Search} />
     </>
   );
 }
