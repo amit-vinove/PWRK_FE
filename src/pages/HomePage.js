@@ -4,9 +4,9 @@ import { Routes } from "../routes";
 
 // pages
 import DashboardOverview from "./dashboard/DashboardOverview";
-import Transactions from "./tables/Transactions";
+import Designations from "./designations/designationPage";
 import Settings from "./Settings";
-import BootstrapTables from "./tables/BootstrapTables";
+import BootstrapTables from "../components/BootstrapTables";
 import Signin from "./auth/Signin";
 import Signup from "./auth/Signup";
 import ForgotPassword from "./auth/ForgotPassword";
@@ -99,7 +99,7 @@ export default () => (
 
     {/* pages */}
     <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
-    <RouteWithSidebar exact path={Routes.Transactions.path} component={Transactions} />
+    <RouteWithSidebar exact path={Routes.Designations.path} component={Designations} />
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
 

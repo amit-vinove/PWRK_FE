@@ -3,7 +3,7 @@ export const Routes = {
     // pages
     Signin: { path: "/" },
     DashboardOverview: { path: "/dashboard" },
-    Transactions: { path: "/transactions" },
+    Designations: { path: "/designations" },
     Settings: { path: "/settings" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },
     Signup: { path: "/auth/sign-up" },

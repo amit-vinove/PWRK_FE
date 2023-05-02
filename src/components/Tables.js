@@ -4,11 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
-
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Routes } from "../routes";
 import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
+const API = `https://localhost:5001/api/Designation/GetDesignation`;
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -190,42 +192,52 @@ export const RankingTable = () => {
 export const TransactionsTable = () => {
   const totalTransactions = transactions.length;
 
+  const [designationData, setDesignationData] = useState([]);
+
+  async function getDesignation() {
+    await axios.get(API).then((response) => {
+      setDesignationData(response.data);
+    });
+  }
+  
+  useEffect(() => {
+    getDesignation();
+  }, []);
+  
   const TableRow = (props) => {
-    const { invoiceNumber, subscription, price, issueDate, dueDate, status } = props;
-    const statusVariant = status === "Paid" ? "success"
-      : status === "Due" ? "warning"
-        : status === "Canceled" ? "danger" : "primary";
+    const { designationId, designationName, designationOrderId, designationShort, ipAddress, isActive } = props;
+    const statusVariant = isActive ? "success": !isActive ? "danger" : "primary";
 
     return (
       <tr>
         <td>
-          <Card.Link as={Link} className="fw-normal">
-            {invoiceNumber}
+          <Card.Link className="fw-normal">
+            {designationId}
           </Card.Link>
         </td>
         <td>
           <span className="fw-normal">
-            {subscription}
+            {designationName}
           </span>
         </td>
         <td>
           <span className="fw-normal">
-            {issueDate}
+            {designationOrderId}
           </span>
         </td>
         <td>
           <span className="fw-normal">
-            {dueDate}
+            {designationShort}
           </span>
         </td>
         <td>
           <span className="fw-normal">
-            ${parseFloat(price).toFixed(2)}
+            {ipAddress}
           </span>
         </td>
         <td>
           <span className={`fw-normal text-${statusVariant}`}>
-            {status}
+            {isActive ? "Active" : !isActive ? "Inactive" : "Unknown"}
           </span>
         </td>
         <td>
@@ -258,17 +270,17 @@ export const TransactionsTable = () => {
         <Table hover className="user-table align-items-center">
           <thead>
             <tr>
-              <th className="border-bottom">#</th>
-              <th className="border-bottom">Bill For</th>
-              <th className="border-bottom">Issue Date</th>
-              <th className="border-bottom">Due Date</th>
-              <th className="border-bottom">Total</th>
+              <th className="border-bottom">Id</th>
+              <th className="border-bottom">Designation Name</th>
+              <th className="border-bottom">Designation OrderId</th>
+              <th className="border-bottom">Designation Short</th>
+              <th className="border-bottom">Ip Address</th>
               <th className="border-bottom">Status</th>
               <th className="border-bottom">Action</th>
             </tr>
           </thead>
           <tbody>
-            {transactions.map(t => <TableRow key={`transaction-${t.invoiceNumber}`} {...t} />)}
+            {designationData && designationData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
           </tbody>
         </Table>
         <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
