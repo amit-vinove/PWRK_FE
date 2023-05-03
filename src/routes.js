@@ -33,3 +33,4 @@ export const Routes = {
     Toasts: { path: "/components/toasts" },
     WidgetsComponent: { path: "/components/widgets" }
 };
+export default Routes;
