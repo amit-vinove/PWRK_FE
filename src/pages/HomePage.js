@@ -38,6 +38,8 @@ import Tabs from "./components/Tabs";
 import Tooltips from "./components/Tooltips";
 import Toasts from "./components/Toasts";
 import { Router } from 'react-router';
+import titlePage from './title/titlePage';
+import districtPage from './district/districtPage';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -103,6 +105,8 @@ export default () => (
     {/* pages */}
     <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
     <RouteWithSidebar exact path={Routes.Designations.path} component={Designations} />
+    <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />
+    <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
 

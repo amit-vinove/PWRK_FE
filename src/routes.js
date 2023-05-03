@@ -4,6 +4,8 @@ export const Routes = {
     Signin: { path: "/" },
     DashboardOverview: { path: "/dashboard" },
     Designations: { path: "/designations" },
+    Title: { path: "/title" },
+    District: { path: "/district" },
     Settings: { path: "/settings" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },
     Signup: { path: "/auth/sign-up" },

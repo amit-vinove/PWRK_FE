@@ -78,10 +78,12 @@ export default (props = {}) => {
       <CSSTransition timeout={300} in={show} classNames="sidebar-transition">
         <SimpleBar className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}>
           <div className="sidebar-inner px-4 pt-3">
-          
+
             <Nav className="flex-column pt-3 pt-md-0">
               <NavItem title="Dashboard" link={Routes.DashboardOverview.path} icon={faChartPie} />
               <NavItem title="Designations" icon={faHandHoldingUsd} link={Routes.Designations.path} />
+              <NavItem title="Title" icon={faHandHoldingUsd} link={Routes.Title.path} />
+              <NavItem title="District" icon={faHandHoldingUsd} link={Routes.District.path} />
               <NavItem title="Table2" link={Routes.BootstrapTables.path} icon={faTable} />
               <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} />
 

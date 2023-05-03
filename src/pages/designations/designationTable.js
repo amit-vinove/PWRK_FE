@@ -61,11 +61,7 @@ export const DesignationTable = ({searchText}) => {
               {designationShort}
             </span>
           </td>
-          <td>
-            <span className="fw-normal">
-              {ipAddress}
-            </span>
-          </td>
+         
           <td>
             <span className={`fw-normal text-${statusVariant}`}>
               {isActive ? "Active" : !isActive ? "Inactive" : "Unknown"}
@@ -105,7 +101,6 @@ export const DesignationTable = ({searchText}) => {
                 <th className="border-bottom">Designation Name</th>
                 <th className="border-bottom">Designation OrderId</th>
                 <th className="border-bottom">Designation Short</th>
-                <th className="border-bottom">Ip Address</th>
                 <th className="border-bottom">Status</th>
                 <th className="border-bottom">Action</th>
               </tr>
