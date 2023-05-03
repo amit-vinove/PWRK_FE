@@ -53,7 +53,9 @@ export default (props) => {
 
                 <Dropdown.Divider />
 
-                <Dropdown.Item className="fw-bold" as={Link} to={Routes.Signup.path}>
+                <Dropdown.Item className="fw-bold" as={Link} onClick={() => {
+                  localStorage.clear();
+                }} to={Routes.Signin.path}>
                   <FontAwesomeIcon icon={faSignOutAlt} className="text-danger me-2" /> Logout
                 </Dropdown.Item>
               </Dropdown.Menu>

@@ -41,6 +41,7 @@ import Tables from "./components/Tables";
 import Tabs from "./components/Tabs";
 import Tooltips from "./components/Tooltips";
 import Toasts from "./components/Toasts";
+import { Router } from 'react-router';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -51,7 +52,7 @@ const RouteWithLoader = ({ component: Component, ...rest }) => {
   }, []);
 
   return (
-    <Route {...rest} render={props => ( <> <Preloader show={loaded ? false : true} /> <Component {...props} /> </> ) } />
+    <Route {...rest} render={props => (<> <Preloader show={loaded ? false : true} /> <Component {...props} /> </>)} />
   );
 };
 
@@ -92,7 +93,9 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
 };
 
 export default () => (
+
   <Switch>
+
     <RouteWithLoader exact path={Routes.Signin.path} component={Signin} />
     <RouteWithLoader exact path={Routes.Signup.path} component={Signup} />
     <RouteWithLoader exact path={Routes.ForgotPassword.path} component={ForgotPassword} />
@@ -130,5 +133,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Toasts.path} component={Toasts} />
 
     <Redirect to={Routes.NotFound.path} />
+
   </Switch>
+
 );

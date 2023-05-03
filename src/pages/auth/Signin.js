@@ -1,22 +1,122 @@
-
 import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+// import Captcha from "../Captcha/Captcha";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
-import { Link } from 'react-router-dom';
-
-import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
+import { Link, useHistory } from "react-router-dom";
+//import {  } from "react-router";
+// import Routes from "../../routes";
+import Routes from '../../routes.js';
+const Login = (props) => {
+  const [captcha, setCaptcha] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [loginId, setLoginId] = useState("");
+  // const validateEmail = (email) => {
+  //   return email.match(
+  //     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  //   );
+  // };
+  const [passwordShown, setPasswordShown] = useState(true);
+  const [loading, setLoading] = useState(false);
+  let captchaVerified;
+  const history = useHistory();
+
+  useEffect(() => {
+    const loginToken = localStorage.getItem("token");
+    if (loginToken) {
+      history.push("/dashboard")
+    }
+  }, [])
+
+  // handle button click of login form
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    let payload = {
+      loginId: loginId,
+      password: password,
+
+    };
 
 
-export default () => {
+    if (password !== "" && loginId !== "") {
+      let result = await axios
+        .post(`https://localhost:5001/api/Account/SignIn`, payload)
+        .then((res) => {
+          console.log(res, "res");
+          if (res.data.message != null) {
+            Swal.fire(
+              res.data.message,
+              "Error"
+            );
+          }
+
+          if (res.data && res.data.token) {
+            const { token, userId, RoleId, loginId, userName, resiAdd, address } = res.data;
+
+            localStorage.setItem("token", token.accessToken);
+            localStorage.setItem("UserId", userId);
+            localStorage.setItem("UserName", userName);
+            localStorage.setItem("RoleId", RoleId);
+            localStorage.setItem("ResiAdd", resiAdd);
+            localStorage.setItem("Address", address);
+            history.push(Routes.DashboardOverview.path);
+          }
+        })
+        .catch((err) => {
+          setError(err.message);
+        });
+    } else {
+      if (userName === "") {
+        setError("Please Enter LoginId");
+        Swal.fire(
+          "Please Eneter LoginId",
+          "Error"
+        );
+      }
+      else if (password === "") {
+        setError("Please Enter your Password");
+        Swal.fire(
+          "Please enter your Password",
+          "Error"
+        );
+      }
+      //  else if (!captchaVerified) {
+      //   setError("Please Verify Captcha");
+      // }
+      else {
+        Swal.fire(
+          "Please Enter LoginId and Password",
+          "Error"
+        );
+        setError("Please Enter LoginId and Password");
+      }
+    }
+
+  };
+
+  // const getCapchaVerified = (isVerified) => {
+  //   console.log(isVerified, "verified function");
+  //   captchaVerified = isVerified;
+  // };
+
+  // const togglePassword = () => {
+  //   setPasswordShown(!passwordShown);
+  // };
   return (
-    <main>
+    <div>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <Container>
           <p className="text-center">
-            <Card.Link as={Link} to={Routes.DashboardOverview.path} className="text-gray-700">
+            <Card.Link as={Link} to={Routes.DASHBOARD} className="text-gray-700">
               <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> Back to homepage
             </Card.Link>
           </p>
@@ -26,14 +126,14 @@ export default () => {
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <h3 className="mb-0">Sign in to our platform</h3>
                 </div>
-                <Form className="mt-4">
+                <Form onSubmit={handleLogin} className="mt-4">
                   <Form.Group id="email" className="mb-4">
-                    <Form.Label>Your Email</Form.Label>
+                    <Form.Label>Login Id</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faEnvelope} />
                       </InputGroup.Text>
-                      <Form.Control autoFocus required type="email" placeholder="example@company.com" />
+                      <Form.Control autoFocus required type="text" placeholder="LoginId" onChange={(e) => setLoginId(e.target.value)} />
                     </InputGroup>
                   </Form.Group>
                   <Form.Group>
@@ -43,7 +143,7 @@ export default () => {
                         <InputGroup.Text>
                           <FontAwesomeIcon icon={faUnlockAlt} />
                         </InputGroup.Text>
-                        <Form.Control required type="password" placeholder="Password" />
+                        <Form.Control required type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                       </InputGroup>
                     </Form.Group>
                     <div className="d-flex justify-content-between align-items-center mb-4">
@@ -51,7 +151,7 @@ export default () => {
                         <FormCheck.Input id="defaultCheck5" className="me-2" />
                         <FormCheck.Label htmlFor="defaultCheck5" className="mb-0">Remember me</FormCheck.Label>
                       </Form.Check>
-                      <Card.Link className="small text-end">Lost password?</Card.Link>
+                      <Card.Link onClick={() => history.push("/auth/forgot-password")} className="small text-end">Lost password?</Card.Link>
                     </div>
                   </Form.Group>
                   <Button variant="primary" type="submit" className="w-100">
@@ -59,9 +159,9 @@ export default () => {
                   </Button>
                 </Form>
 
-                <div className="mt-3 mb-4 text-center">
+                {/* <div className="mt-3 mb-4 text-center">
                   <span className="fw-normal">or login with</span>
-                </div>
+                </div> */}
                 <div className="d-flex justify-content-center my-4">
                   <Button variant="outline-light" className="btn-icon-only btn-pill text-facebook me-2">
                     <FontAwesomeIcon icon={faFacebookF} />
@@ -86,6 +186,13 @@ export default () => {
           </Row>
         </Container>
       </section>
-    </main>
+    </div>
   );
 };
+
+export default Login;
+
+
+
+
+
