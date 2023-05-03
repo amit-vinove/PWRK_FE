@@ -45,14 +45,16 @@
     "react-dom": "^16.13.1",
     "react-github-btn": "^1.2.0",
     "react-live": "^2.2.3",
+    "react-router": "^6.11.0",
     "react-router-dom": "^5.2.0",
     "react-router-hash-link": "^2.3.1",
     "react-scripts": "3.4.3",
     "react-transition-group": "^4.4.1",
-    "simplebar-react": "^2.3.0"
+    "simplebar-react": "^2.3.0",
+    "sweetalert2": "^11.7.3"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "build-local": "PUBLIC_URL=./ react-scripts build",
     "test": "react-scripts test",
