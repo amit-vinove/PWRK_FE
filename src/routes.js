@@ -4,6 +4,11 @@ export const Routes = {
     Signin: { path: "/" },
     DashboardOverview: { path: "/dashboard" },
     Designations: { path: "/designations" },
+    RTIDesignations: { path: "/rti-designations" },
+    Module  : { path: "/module" },
+    Office  : { path: "/officeDetails" },
+    Profile  : { path: "/profile" },
+
     Settings: { path: "/settings" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },
     Signup: { path: "/auth/sign-up" },
