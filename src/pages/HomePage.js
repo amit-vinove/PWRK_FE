@@ -5,6 +5,10 @@ import { Routes } from "../routes";
 // pages
 import DashboardOverview from "./dashboard/DashboardOverview";
 import Designations from "./designations/designationPage";
+import Module from "./module/modulePage";
+import ProfilePage from './profile/profilePage';
+import RTIDesignationPage from './rtiDesignation/rtiDesignationPage';
+import OfficePage from './officeDetails/officeDetails';
 import Settings from "./Settings";
 import BootstrapTables from "../components/BootstrapTables";
 import Signin from "./auth/Signin";
@@ -105,6 +109,10 @@ export default () => (
     {/* pages */}
     <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
     <RouteWithSidebar exact path={Routes.Designations.path} component={Designations} />
+    <RouteWithSidebar exact path={Routes.RTIDesignations.path} component={RTIDesignationPage} />
+    <RouteWithSidebar exact path={Routes.Module.path} component={Module} />
+    <RouteWithSidebar exact path={Routes.Profile.path} component={ProfilePage} />
+    <RouteWithSidebar exact path={Routes.Office.path} component={OfficePage} />
     <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />
     <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />

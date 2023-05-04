@@ -6,6 +6,11 @@ export const Routes = {
     Designations: { path: "/designations" },
     Title: { path: "/title" },
     District: { path: "/district" },
+    RTIDesignations: { path: "/rti-designations" },
+    Module  : { path: "/module" },
+    Office  : { path: "/officeDetails" },
+    Profile  : { path: "/profile" },
+
     Settings: { path: "/settings" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },
     Signup: { path: "/auth/sign-up" },
