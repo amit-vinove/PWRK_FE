@@ -4,6 +4,8 @@ export const Routes = {
     Signin: { path: "/" },
     DashboardOverview: { path: "/dashboard" },
     Designations: { path: "/designations" },
+    Title: { path: "/title" },
+    District: { path: "/district" },
     RTIDesignations: { path: "/rti-designations" },
     Module  : { path: "/module" },
     Office  : { path: "/officeDetails" },
