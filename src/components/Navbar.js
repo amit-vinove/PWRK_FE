@@ -44,8 +44,9 @@ export default (props) => {
                 <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faCog} className="me-2" /> Settings
                 </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faEnvelopeOpen} className="me-2" /> Messages
+                <Dropdown.Item className="fw-bold" as={Link} onClick={() => {
+                }} to={Routes.ChangePassword.path}>
+                  <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Change Password
                 </Dropdown.Item>
                 <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faUserShield} className="me-2" /> Support

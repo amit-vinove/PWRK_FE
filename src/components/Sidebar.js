@@ -73,14 +73,16 @@ export default (props = {}) => {
               <NavItem title="Designations" icon={faTable} link={Routes.Designations.path} />
               <NavItem title="RTI Designations" icon={faTable} link={Routes.RTIDesignations.path} />
               <NavItem title="Title" icon={faHandHoldingUsd} link={Routes.Title.path} />
-              <NavItem title="DDOType" icon={faHandHoldingUsd} link={Routes.DDOType.path} />
+              <NavItem title="DDO Type" icon={faHandHoldingUsd} link={Routes.DDOType.path} />
               <NavItem title="District" icon={faHandHoldingUsd} link={Routes.District.path} />
               <NavItem title="State" icon={faHandHoldingUsd} link={Routes.State.path} />
-              <NavItem title="OfficeType" icon={faHandHoldingUsd} link={Routes.OfficeType.path} />
-              <NavItem title="OfficeLevel" icon={faTable} link={Routes.OfficeLevel.path} />
-              <NavItem title="OfficeUnit" icon={faHandHoldingUsd} link={Routes.OfficeUnit.path} />
-              <NavItem title="Modules" icon={faTable} link={Routes.Module.path} />
               <NavItem title="Role" icon={faHandHoldingUsd} link={Routes.Role.path} />
+              <NavItem title="Office Type" icon={faHandHoldingUsd} link={Routes.OfficeType.path} />
+              <NavItem title="Office Level" icon={faTable} link={Routes.OfficeLevel.path} />
+              <NavItem title="Office Unit" icon={faHandHoldingUsd} link={Routes.OfficeUnit.path} />
+              <NavItem title="Office Account Detail" icon={faHandHoldingUsd} link={Routes.OfficeAccDetail.path} />
+              <NavItem title="Modules" icon={faTable} link={Routes.Module.path} />
+              <NavItem title="Other Office" icon={faHandHoldingUsd} link={Routes.OtherOffice.path} />
               <NavItem title="Office" icon={faTable} link={Routes.Office.path} />
               <NavItem title="Profile" icon={faUser} link={Routes.Profile.path} />
               {/* <NavItem title="Table2" link={Routes.BootstrapTables.path} icon={faTable} /> */}

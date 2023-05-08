@@ -20,6 +20,7 @@ const Login = (props) => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loginId, setLoginId] = useState("");
+
   // const validateEmail = (email) => {
   //   return email.match(
   //     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -60,8 +61,8 @@ const Login = (props) => {
           }
 
           if (res.data && res.data.token) {
-            const { token, userId, RoleId, loginId, userName, resiAdd, address } = res.data;
-
+            const { token, RoleId, loginId, userName, resiAdd, address } = res.data;
+            let userId = res.data.userID;
             localStorage.setItem("token", token.accessToken);
             localStorage.setItem("UserId", userId);
             localStorage.setItem("UserName", userName);
@@ -74,7 +75,8 @@ const Login = (props) => {
         .catch((err) => {
           setError(err.message);
         });
-    } else {
+    }
+    else {
       if (userName === "") {
         setError("Please Enter LoginId");
         Swal.fire(

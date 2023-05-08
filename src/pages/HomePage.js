@@ -47,6 +47,9 @@ import rolePage from './role/rolePage';
 import officeUnitPage from './officeUnit/officeUnitPage';
 import officeTypePage from './officeType/officeTypePage';
 import officeLevelPage from './officeLevel/officeLevelPage';
+import officeAccDeataiPage from './officeAccDetail/officeAccDeatailPage';
+import otherOfficePage from './otherOffice/otherOfficePage';
+import ChangePassword from './auth/ChangePassword';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -90,6 +93,7 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
 export default () => (
   <Switch>
     <RouteWithLoader exact path={Routes.Signin.path} component={Signin} />
+    <RouteWithLoader exact path={Routes.ChangePassword.path} component={ChangePassword} />
     <RouteWithLoader exact path={Routes.Signup.path} component={Signup} />
     <RouteWithLoader exact path={Routes.ForgotPassword.path} component={ForgotPassword} />
     <RouteWithLoader exact path={Routes.ResetPassword.path} component={ResetPassword} />
@@ -110,6 +114,8 @@ export default () => (
     <RouteWithSidebar exact path={Routes.OfficeLevel.path} component={officeLevelPage} />
     <RouteWithSidebar exact path={Routes.OfficeType.path} component={officeTypePage} />
     <RouteWithSidebar exact path={Routes.OfficeUnit.path} component={officeUnitPage} />
+    <RouteWithSidebar exact path={Routes.OfficeAccDetail.path} component={officeAccDeataiPage} />
+    <RouteWithSidebar exact path={Routes.OtherOffice.path} component={otherOfficePage} />
     <RouteWithSidebar exact path={Routes.Role.path} component={rolePage} />
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
