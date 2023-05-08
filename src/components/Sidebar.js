@@ -4,7 +4,7 @@ import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faBoxOpen, faChartPie, faCog, faFileAlt, faHandHoldingUsd, faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket , faUser} from "@fortawesome/free-solid-svg-icons";
+import { faBook, faBoxOpen, faChartPie, faCog, faFileAlt, faHandHoldingUsd, faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -84,7 +84,9 @@ export default (props = {}) => {
               <NavItem title="Designations" icon={faTable} link={Routes.Designations.path} />
               <NavItem title="RTI Designations" icon={faTable} link={Routes.RTIDesignations.path} />
               <NavItem title="Title" icon={faHandHoldingUsd} link={Routes.Title.path} />
+              <NavItem title="DDOType" icon={faHandHoldingUsd} link={Routes.DDOType.path} />
               <NavItem title="District" icon={faHandHoldingUsd} link={Routes.District.path} />
+              <NavItem title="State" icon={faHandHoldingUsd} link={Routes.State.path} />
               <NavItem title="Modules" icon={faTable} link={Routes.Module.path} />
               <NavItem title="Office" icon={faTable} link={Routes.Office.path} />
               <NavItem title="Profile" icon={faUser} link={Routes.Profile.path} />

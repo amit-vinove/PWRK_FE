@@ -18,7 +18,8 @@ import ResetPassword from "./auth/ResetPassword";
 import Lock from "./auth/Lock";
 import NotFoundPage from "./auth/NotFound";
 import ServerError from "./auth/ServerError";
-
+import titlePage from './title/titlePage';
+import districtPage from './district/districtPage';
 
 // components
 import Sidebar from "../components/Sidebar";
@@ -42,8 +43,9 @@ import Tabs from "./components/Tabs";
 import Tooltips from "./components/Tooltips";
 import Toasts from "./components/Toasts";
 import { Router } from 'react-router';
-import titlePage from './title/titlePage';
-import districtPage from './district/districtPage';
+import statePage from './State/statePage';
+import ddoTypePage from './ddoType/ddoTypePage';
+
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -114,7 +116,9 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Profile.path} component={ProfilePage} />
     <RouteWithSidebar exact path={Routes.Office.path} component={OfficePage} />
     <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />
+    <RouteWithSidebar exact path={Routes.DDOType.path} component={ddoTypePage} />
     <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
+    <RouteWithSidebar exact path={Routes.State.path} component={statePage} />
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
 
