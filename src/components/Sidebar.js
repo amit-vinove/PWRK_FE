@@ -76,10 +76,12 @@ export default (props = {}) => {
               <NavItem title="DDOType" icon={faHandHoldingUsd} link={Routes.DDOType.path} />
               <NavItem title="District" icon={faHandHoldingUsd} link={Routes.District.path} />
               <NavItem title="State" icon={faHandHoldingUsd} link={Routes.State.path} />
+              <NavItem title="OfficeType" icon={faHandHoldingUsd} link={Routes.OfficeType.path} />
+              <NavItem title="OfficeLevel" icon={faTable} link={Routes.OfficeLevel.path} />
               <NavItem title="OfficeUnit" icon={faHandHoldingUsd} link={Routes.OfficeUnit.path} />
               <NavItem title="Modules" icon={faTable} link={Routes.Module.path} />
-              <NavItem title="Office" icon={faTable} link={Routes.Office.path} />
               <NavItem title="Role" icon={faHandHoldingUsd} link={Routes.Role.path} />
+              <NavItem title="Office" icon={faTable} link={Routes.Office.path} />
               <NavItem title="Profile" icon={faUser} link={Routes.Profile.path} />
               {/* <NavItem title="Table2" link={Routes.BootstrapTables.path} icon={faTable} /> */}
               <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} />

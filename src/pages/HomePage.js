@@ -45,6 +45,8 @@ import statePage from './State/statePage';
 import ddoTypePage from './ddoType/ddoTypePage';
 import rolePage from './role/rolePage';
 import officeUnitPage from './officeUnit/officeUnitPage';
+import officeTypePage from './officeType/officeTypePage';
+import officeLevelPage from './officeLevel/officeLevelPage';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -105,6 +107,8 @@ export default () => (
     <RouteWithSidebar exact path={Routes.DDOType.path} component={ddoTypePage} />
     <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
     <RouteWithSidebar exact path={Routes.State.path} component={statePage} />
+    <RouteWithSidebar exact path={Routes.OfficeLevel.path} component={officeLevelPage} />
+    <RouteWithSidebar exact path={Routes.OfficeType.path} component={officeTypePage} />
     <RouteWithSidebar exact path={Routes.OfficeUnit.path} component={officeUnitPage} />
     <RouteWithSidebar exact path={Routes.Role.path} component={rolePage} />
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
