@@ -3,21 +3,15 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
-import { DDOTypeTable } from "./ddoTypeTable";
-
-
-const API = `https://localhost:5001/api/DDOType/GetDDOType`;
-
+import { RoleTable } from "./roleTable";
+const API = `https://localhost:5001/api/Role/GetRole`;
 export default () => {
-
     const [Search, setSearch] = useState("");
-
-
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
                 <div className="d-block mb-4 mb-md-0">
-                    <h4>DDO Type Dashboard</h4>
+                    <h4>Role Dashboard</h4>
                 </div>
                 {/* <div className="btn-toolbar mb-2 mb-md-0">
           <ButtonGroup>
@@ -34,7 +28,7 @@ export default () => {
                             <InputGroup.Text>
                                 <FontAwesomeIcon icon={faSearch} />
                             </InputGroup.Text>
-                            <Form.Control type="text" placeholder="Search by DDo Type name" onChange={(e) => setSearch(e.target.value)} />
+                            <Form.Control type="text" placeholder="Search by Role name" onChange={(e) => setSearch(e.target.value)} />
                         </InputGroup>
                     </Col>
                     <Col xs={6} md={2} xl={1} className="ps-md-0 text-end">
@@ -56,8 +50,7 @@ export default () => {
                     </Col>
                 </Row>
             </div>
-
-            <DDOTypeTable searchText={Search} />
+            <RoleTable searchText={Search} />
         </>
     );
 }

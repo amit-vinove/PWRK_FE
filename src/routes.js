@@ -1,4 +1,3 @@
-
 export const Routes = {
     // pages
     Signin: { path: "/" },
@@ -7,12 +6,13 @@ export const Routes = {
     Title: { path: "/title" },
     District: { path: "/district" },
     State: { path: "/state" },
+    Role: { path: "/role" },
     DDOType: { path: "/ddoType" },
     RTIDesignations: { path: "/rti-designations" },
     Module: { path: "/module" },
     Office: { path: "/officeDetails" },
+    OfficeUnit: { path: "/officeUnit" },
     Profile: { path: "/profile" },
-
     Settings: { path: "/settings" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },
     Signup: { path: "/auth/sign-up" },
@@ -21,7 +21,6 @@ export const Routes = {
     Lock: { path: "/auth/lock" },
     NotFound: { path: "/examples/404" },
     ServerError: { path: "/examples/500" },
-
     // components
     Accordions: { path: "/components/accordions" },
     Alerts: { path: "/components/alerts" },

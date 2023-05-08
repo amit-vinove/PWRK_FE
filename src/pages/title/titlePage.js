@@ -28,7 +28,7 @@ export default () => {
                             <InputGroup.Text>
                                 <FontAwesomeIcon icon={faSearch} />
                             </InputGroup.Text>
-                            <Form.Control type="text" placeholder="Search by designation name" onChange={(e) => setSearch(e.target.value)} />
+                            <Form.Control type="text" placeholder="Search by title name" onChange={(e) => setSearch(e.target.value)} />
                         </InputGroup>
                     </Col>
                     <Col xs={6} md={2} xl={1} className="ps-md-0 text-end">
