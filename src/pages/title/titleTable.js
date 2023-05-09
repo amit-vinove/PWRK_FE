@@ -4,6 +4,8 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/src/sweetalert2.scss";
 const API = `https://localhost:5001/api/Title/GetTitle`;
 
 
@@ -11,12 +13,10 @@ export const TitleTable = ({ searchText }) => {
 
     const [titleData, setTitleData] = useState([]);
     const [tempTitleData, setTempTitleData] = useState([]);
-
     const totalCount = titleData.length;
     async function getTitle() {
         await axios.get(API).then((response) => {
             setTitleData(response.data);
-            console.log(titleData)
             setTempTitleData(response.data);
         });
     }
@@ -28,6 +28,40 @@ export const TitleTable = ({ searchText }) => {
             ))
     }
 
+    const handleDelete = (id) => {
+
+        Swal.fire({
+            title: "Do You Want To Delete?",
+            showCancelButton: true,
+            icon: "warning",
+            confirmButtonText: "Yes, delete it!",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios
+                    .post(
+                        `https://localhost:5001/api/Title/deleteTitle/${id}`
+                    )
+
+                    .then((res) => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Your work has been Deleted",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        getTitle();
+                    })
+                    .catch(() => {
+                        Swal.fire("Title not deleted.");
+                    });
+                console.log(id, "titleId");
+            }
+
+        });
+    };
+
     useEffect(() => {
         getTitle();
     }, []);
@@ -37,9 +71,9 @@ export const TitleTable = ({ searchText }) => {
     }, [searchText])
 
     const TableRow = (props) => {
-        const { srNo, titleName, isActive } = props;
+        const { srNo, titleId, titleName, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-
+        console.log(titleId, "titleId234")
         return (
             <tr>
                 <td>
@@ -71,7 +105,7 @@ export const TitleTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
-                            <Dropdown.Item className="text-danger">
+                            <Dropdown.Item className="text-danger" onClick={() => { handleDelete(titleId) }}>
                                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
                             </Dropdown.Item>
                         </Dropdown.Menu>

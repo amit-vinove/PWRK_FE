@@ -5,13 +5,35 @@ import { faBell, faCog, faEnvelopeOpen, faSearch, faSignOutAlt, faUserShield } f
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import { Row, Col, Nav, Form, Image, Navbar, Dropdown, Container, ListGroup, InputGroup } from '@themesberg/react-bootstrap';
 import { Routes } from "../routes";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import NOTIFICATIONS_DATA from "../data/notifications";
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
+import Swal from "sweetalert2";
 
 
 export default (props) => {
+  const history = useHistory();
 
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Do you want to end this seassion ? Please click on Yes !',
+      showCancelButton: true,
+      icon: "error",
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        Swal.fire({
+          title: 'Logout Successfully',
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2100
+        });
+      }
+      history.push(Routes.Signin.path);
+    })
+  }
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
       <Container fluid className="px-0">
@@ -54,9 +76,7 @@ export default (props) => {
 
                 <Dropdown.Divider />
 
-                <Dropdown.Item className="fw-bold" as={Link} onClick={() => {
-                  localStorage.clear();
-                }} to={Routes.Signin.path}>
+                <Dropdown.Item className="fw-bold" onClick={() => { handleLogout() }} >
                   <FontAwesomeIcon icon={faSignOutAlt} className="text-danger me-2" /> Logout
                 </Dropdown.Item>
               </Dropdown.Menu>

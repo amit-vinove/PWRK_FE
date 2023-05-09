@@ -56,7 +56,7 @@ const Login = (props) => {
           if (res.data.message != null) {
             Swal.fire(
               res.data.message,
-              "Error"
+              { icon: "error", }
             );
           }
 

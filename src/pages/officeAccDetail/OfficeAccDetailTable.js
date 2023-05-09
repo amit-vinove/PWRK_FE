@@ -203,7 +203,7 @@ export const OfficeAccDetailTable = ({ searchText }) => {
                             <th className="border-bottom">PAN Number</th>
                             <th className="border-bottom">GST</th>
                             <th className="border-bottom">Bank Account Number</th>
-                            <th className="border-bottom">Banck Name</th>
+                            <th className="border-bottom">Bank Name</th>
                             <th className="border-bottom">Bank Address</th>
                             <th className="border-bottom">Bank IFSC</th>
                             <th className="border-bottom">Status</th>

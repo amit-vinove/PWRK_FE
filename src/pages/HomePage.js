@@ -50,6 +50,8 @@ import officeLevelPage from './officeLevel/officeLevelPage';
 import officeAccDeataiPage from './officeAccDetail/officeAccDeatailPage';
 import otherOfficePage from './otherOffice/otherOfficePage';
 import ChangePassword from './auth/ChangePassword';
+import officePage from './office/officePage';
+import officeDetails from './officeDetails/officeDetails';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -106,11 +108,12 @@ export default () => (
     <RouteWithSidebar exact path={Routes.RTIDesignations.path} component={RTIDesignationPage} />
     <RouteWithSidebar exact path={Routes.Module.path} component={Module} />
     <RouteWithSidebar exact path={Routes.Profile.path} component={ProfilePage} />
-    <RouteWithSidebar exact path={Routes.Office.path} component={OfficePage} />
+    <RouteWithSidebar exact path={Routes.OfficeDetail.path} component={officeDetails} />
     <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />
     <RouteWithSidebar exact path={Routes.DDOType.path} component={ddoTypePage} />
     <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
     <RouteWithSidebar exact path={Routes.State.path} component={statePage} />
+    <RouteWithSidebar exact path={Routes.Office.path} component={officePage} />
     <RouteWithSidebar exact path={Routes.OfficeLevel.path} component={officeLevelPage} />
     <RouteWithSidebar exact path={Routes.OfficeType.path} component={officeTypePage} />
     <RouteWithSidebar exact path={Routes.OfficeUnit.path} component={officeUnitPage} />
