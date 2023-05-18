@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-// import Captcha from "../Captcha/Captcha";
+import Captcha from "../auth/Captcha";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
@@ -55,9 +55,12 @@ const Login = (props) => {
           console.log(res, "res");
           if (res.data.message != null) {
             Swal.fire(
-              res.data.message,
-              { icon: "error", }
-            );
+              {
+                text: 'LoginId / Password is incorrect.',
+                icon: 'error',
+              }
+
+            ); console.log(res.data.message, "message")
           }
 
           if (res.data && res.data.token) {
@@ -79,25 +82,29 @@ const Login = (props) => {
     else {
       if (userName === "") {
         setError("Please Enter LoginId");
-        Swal.fire(
-          "Please Eneter LoginId",
-          "Error"
+        Swal.fire({
+          icon: 'error',
+          text: 'Please Eneter LoginId',
+        }
+
         );
       }
       else if (password === "") {
         setError("Please Enter your Password");
-        Swal.fire(
-          "Please enter your Password",
-          "Error"
-        );
+        Swal.fire({
+          icon: 'error',
+          text: 'Please enter your Password',
+
+        });
       }
-      //  else if (!captchaVerified) {
-      //   setError("Please Verify Captcha");
-      // }
+      else if (!captchaVerified) {
+        setError("Please Verify Captcha");
+      }
       else {
-        Swal.fire(
-          "Please Enter LoginId and Password",
-          "Error"
+        Swal.fire({
+          text: "Please Enter LoginId and Password",
+          icon: 'error',
+        }
         );
         setError("Please Enter LoginId and Password");
       }
@@ -105,14 +112,14 @@ const Login = (props) => {
 
   };
 
-  // const getCapchaVerified = (isVerified) => {
-  //   console.log(isVerified, "verified function");
-  //   captchaVerified = isVerified;
-  // };
+  const getCapchaVerified = (isVerified) => {
+    console.log(isVerified, "verified function");
+    captchaVerified = isVerified;
+  };
 
-  // const togglePassword = () => {
-  //   setPasswordShown(!passwordShown);
-  // };
+  const togglePassword = () => {
+    setPasswordShown(!passwordShown);
+  };
   return (
     <div>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -148,13 +155,29 @@ const Login = (props) => {
                         <Form.Control required type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                       </InputGroup>
                     </Form.Group>
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                      <Form.Check type="checkbox">
-                        <FormCheck.Input id="defaultCheck5" className="me-2" />
-                        <FormCheck.Label htmlFor="defaultCheck5" className="mb-0">Remember me</FormCheck.Label>
-                      </Form.Check>
-                      <Card.Link onClick={() => history.push("/auth/forgot-password")} className="small text-end">Lost password?</Card.Link>
-                    </div>
+                    <Form.Group>
+                      <label>Captcha</label>
+                      <div className="form-group ">
+
+                        <Captcha
+                          userCaptcha={captcha}
+                          setUserCaptcha={setCaptcha}
+                          getCapchaVerified={getCapchaVerified}
+
+                        />
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center mb-4">
+                        <Form.Check type="checkbox">
+                          <FormCheck.Input id="defaultCheck5" className="me-2" />
+                          <FormCheck.Label htmlFor="defaultCheck5" className="mb-0">Remember me</FormCheck.Label>
+                        </Form.Check>
+
+
+
+                        <Card.Link onClick={() => history.push("/auth/forgot-password")} className="small text-end">Lost password?</Card.Link>
+                      </div>
+                    </Form.Group>
+
                   </Form.Group>
                   <Button variant="primary" type="submit" className="w-100">
                     Sign in
