@@ -9,9 +9,8 @@ import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-i
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
 import BgImage from "../../assets/img/illustrations/signin.svg";
 import { Link, useHistory } from "react-router-dom";
-//import {  } from "react-router";
-// import Routes from "../../routes";
 import Routes from '../../routes.js';
+import { Facebook } from "@material-ui/icons";
 const Login = (props) => {
   const [captcha, setCaptcha] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +19,6 @@ const Login = (props) => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loginId, setLoginId] = useState("");
-
   // const validateEmail = (email) => {
   //   return email.match(
   //     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -30,24 +28,19 @@ const Login = (props) => {
   const [loading, setLoading] = useState(false);
   let captchaVerified;
   const history = useHistory();
-
   useEffect(() => {
     const loginToken = localStorage.getItem("token");
     if (loginToken) {
       history.push("/dashboard")
     }
   }, [])
-
   // handle button click of login form
   const handleLogin = async (e) => {
     e.preventDefault();
     let payload = {
       loginId: loginId,
       password: password,
-
     };
-
-
     if (password !== "" && loginId !== "") {
       let result = await axios
         .post(`https://localhost:5001/api/Account/SignIn`, payload)
@@ -59,10 +52,8 @@ const Login = (props) => {
                 text: 'LoginId / Password is incorrect.',
                 icon: 'error',
               }
-
             ); console.log(res.data.message, "message")
           }
-
           if (res.data && res.data.token) {
             const { token, RoleId, loginId, userName, resiAdd, address } = res.data;
             let userId = res.data.userID;
@@ -72,6 +63,7 @@ const Login = (props) => {
             localStorage.setItem("RoleId", RoleId);
             localStorage.setItem("ResiAdd", resiAdd);
             localStorage.setItem("Address", address);
+            localStorage.setItem("LoginId", loginId);
             history.push(Routes.DashboardOverview.path);
           }
         })
@@ -86,7 +78,6 @@ const Login = (props) => {
           icon: 'error',
           text: 'Please Eneter LoginId',
         }
-
         );
       }
       else if (password === "") {
@@ -94,7 +85,6 @@ const Login = (props) => {
         Swal.fire({
           icon: 'error',
           text: 'Please enter your Password',
-
         });
       }
       else if (!captchaVerified) {
@@ -109,17 +99,14 @@ const Login = (props) => {
         setError("Please Enter LoginId and Password");
       }
     }
-
   };
-
   const getCapchaVerified = (isVerified) => {
     console.log(isVerified, "verified function");
     captchaVerified = isVerified;
   };
-
-  const togglePassword = () => {
-    setPasswordShown(!passwordShown);
-  };
+  // const togglePassword = () => {
+  //   setPasswordShown(!passwordShown);
+  // };
   return (
     <div>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -158,12 +145,10 @@ const Login = (props) => {
                     <Form.Group>
                       <label>Captcha</label>
                       <div className="form-group ">
-
                         <Captcha
                           userCaptcha={captcha}
                           setUserCaptcha={setCaptcha}
                           getCapchaVerified={getCapchaVerified}
-
                         />
                       </div>
                       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -171,32 +156,30 @@ const Login = (props) => {
                           <FormCheck.Input id="defaultCheck5" className="me-2" />
                           <FormCheck.Label htmlFor="defaultCheck5" className="mb-0">Remember me</FormCheck.Label>
                         </Form.Check>
-
-
-
                         <Card.Link onClick={() => history.push("/auth/forgot-password")} className="small text-end">Lost password?</Card.Link>
                       </div>
                     </Form.Group>
-
                   </Form.Group>
                   <Button variant="primary" type="submit" className="w-100">
                     Sign in
                   </Button>
                 </Form>
-
                 {/* <div className="mt-3 mb-4 text-center">
                   <span className="fw-normal">or login with</span>
                 </div> */}
                 <div className="d-flex justify-content-center my-4">
-                  <Button variant="outline-light" className="btn-icon-only btn-pill text-facebook me-2">
-                    <FontAwesomeIcon icon={faFacebookF} />
-                  </Button>
-                  <Button variant="outline-light" className="btn-icon-only btn-pill text-twitter me-2">
-                    <FontAwesomeIcon icon={faTwitter} />
-                  </Button>
-                  <Button variant="outline-light" className="btn-icon-only btn-pil text-dark">
-                    <FontAwesomeIcon icon={faGithub} />
-                  </Button>
+                  <a href="https://www.facebook.com/">
+                    <Button variant="outline-light" className="btn-icon-only btn-pill text-facebook me-2" color="inherit">
+                      <FontAwesomeIcon icon={faFacebookF} />
+                    </Button></a>
+                  <a href="https://twitter.com/">
+                    <Button variant="outline-light" className="btn-icon-only btn-pill text-twitter me-2">
+                      <FontAwesomeIcon icon={faTwitter} />
+                    </Button></a>
+                  <a href="https://github.com/">
+                    <Button variant="outline-light" className="btn-icon-only btn-pil text-dark">
+                      <FontAwesomeIcon icon={faGithub} />
+                    </Button></a>
                 </div>
                 <div className="d-flex justify-content-center align-items-center mt-4">
                   <span className="fw-normal">
@@ -214,7 +197,6 @@ const Login = (props) => {
     </div>
   );
 };
-
 export default Login;
 
 
