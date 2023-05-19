@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UpdateIcon from '@material-ui/icons/Update';
 
 function Captcha({ getCapchaVerified }) {
   const [username, setUsername] = useState("");
-  const characters = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz1234567890@#%";
   const [captcha, setCaptcha] = useState(generateCaptcha());
+  const inputRef = useRef(null);
+
 
   function generateString(length) {
+    const characters = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz1234567890@#%";
     let result = "";
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
@@ -22,50 +24,55 @@ function Captcha({ getCapchaVerified }) {
     };
   }
 
+  useEffect(() => {
+    if (captcha.value === username) {
+      verifyCaptcha();
+    }
+  }, [captcha]);
+
   const handleChange = (e) => {
     setUsername(e.target.value);
   };
 
+  const verifyCaptcha = () => {
+    getCapchaVerified(true);
+    inputRef.current.style.backgroundColor = "green";
+    inputRef.current.disabled = true;
+    inputRef.current.style.cursor = "not-allowed";
+  };
+
   const onSubmit = () => {
-    const successButton = document.getElementById("successBTN");
-    successButton.style.cursor = "wait";
-    successButton.innerHTML = "Checking...";
-    successButton.disabled = true;
-
     if (captcha.value === username) {
-      getCapchaVerified(true);
-      successButton.style.backgroundColor = "green";
-      successButton.innerHTML = "Captcha Verified";
-      successButton.disabled = true;
-      successButton.style.cursor = "not-allowed";
+      verifyCaptcha();
     } else {
-      successButton.style.backgroundColor = "red";
-      successButton.style.cursor = "not-allowed";
-      successButton.innerHTML = "Not Matched";
-      successButton.disabled = true;
+      inputRef.current.style.backgroundColor = "red";
+      inputRef.current.style.cursor = "not-allowed";
+      inputRef.current.disabled = true;
 
-      const resetButtonState = () => {
-        successButton.style.backgroundColor = "#007bff";
-        successButton.style.cursor = "pointer";
-        successButton.innerHTML = "Verify Captcha";
-        successButton.disabled = false;
+      setTimeout(() => {
+        inputRef.current.style.backgroundColor = "";
+        inputRef.current.style.cursor = "auto";
+        inputRef.current.disabled = false;
         setUsername("");
         setCaptcha(generateCaptcha());
-      };
+      }, 3000);
 
       getCapchaVerified(false);
-      setTimeout(resetButtonState, 3000);
     }
   };
 
   const refreshCaptcha = () => {
     setCaptcha(generateCaptcha());
+    inputRef.current.style.backgroundColor = "";
+    inputRef.current.disabled = false;
+    inputRef.current.style.cursor = "auto";
   };
 
   return (
     <div className="container" style={{ paddingTop: "0px" }}>
       <div className="row d-flex flex-50">
         <input
+          ref={inputRef}
           style={{ width: "50%" }}
           type="text"
           id="inputType"
@@ -81,13 +88,19 @@ function Captcha({ getCapchaVerified }) {
           style={{ width: "40%", paddingLeft: 25, paddingBottom: 5 }}
         >
           {captcha.value}
-        </h4><span style={{
-          width: "10%",
-          height: "10%",
-          paddingLeft: 6,
-          backgroundColor: "aliceblue"
-        }}
-          onClick={refreshCaptcha}><UpdateIcon /></span>
+        </h4>
+        <span
+          style={{
+            width: "10%",
+            height: "10%",
+            paddingLeft: 6,
+            backgroundColor: "aliceblue",
+            visibility: inputRef.current && inputRef.current.disabled ? "hidden" : "visible"
+          }}
+          onClick={refreshCaptcha}
+        >
+          <UpdateIcon />
+        </span>
         <button
           type="button"
           id="successBTN"
@@ -98,11 +111,11 @@ function Captcha({ getCapchaVerified }) {
             marginTop: 15,
             marginBottom: 15,
             marginLeft: 10,
+            visibility: inputRef.current && inputRef.current.disabled ? "hidden" : "visible"
           }}
         >
           Verify Captcha
         </button>
-
       </div>
     </div>
   );
