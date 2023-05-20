@@ -6,7 +6,7 @@ import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown }
 import { DDOTypeTable } from "./ddoTypeTable";
 
 
-const API = `https://localhost:5001/api/DDOType/GetDDOType`;
+const API = `http://122.176.101.76:8085/api/DDOType/GetDDOType`;
 
 export default () => {
 

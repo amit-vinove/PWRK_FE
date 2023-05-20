@@ -62,7 +62,7 @@ const ChangePassword = () => {
         if (oldPassword != "" && newPassword != "") {
             if (newPassword === confirmPassword) {
                 let result = await axios
-                    .post(`${process.env.REACT_APP_API_BASE_URL}Account/SetPassword`, payload)
+                    .post(`https://122.176.101.76:8085/api/Account/SetPassword`, payload)
                     .then((res) => {
                         setErrorMessage(res.data.message);
                         let userId = res.data.userID;

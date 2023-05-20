@@ -4,7 +4,7 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-const API = `https://localhost:5001/api/RTIDesignation/GetRTIDesignation`;
+const API = `http://122.176.101.76:8085/api/RTIDesignation/GetRTIDesignation`;
 
 
 export const RTIDesignationTable = ({ searchText }) => {
@@ -87,7 +87,7 @@ export const RTIDesignationTable = ({ searchText }) => {
           <thead>
             <tr>
               <th className="border-bottom">Id</th>
-              <th className="border-bottom">Designation Name</th>
+              <th className="border-bottom">Rti Designation Name</th>
               <th className="border-bottom">Status</th>
               <th className="border-bottom">Action</th>
             </tr>

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
 import { RoleTable } from "./roleTable";
-const API = `https://localhost:5001/api/Role/GetRole`;
+const API = `http://122.176.101.76:8085/api/Role/GetRole`;
 export default () => {
     const [Search, setSearch] = useState("");
     return (

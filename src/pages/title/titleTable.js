@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-const API = `https://localhost:5001/api/Title/GetTitle`;
+const API = `http://122.176.101.76:8085/api/Title/GetTitle`;
 
 
 export const TitleTable = ({ searchText }) => {
@@ -24,7 +24,7 @@ export const TitleTable = ({ searchText }) => {
     async function searchTitle(searchText) {
         setTitleData(
             tempTitleData.filter((i) =>
-                i.designationName.toLowerCase().includes(searchText.toLowerCase())
+                i.titleName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
 
@@ -41,7 +41,7 @@ export const TitleTable = ({ searchText }) => {
             if (result.isConfirmed) {
                 axios
                     .post(
-                        `https://localhost:5001/api/Title/deleteTitle/${id}`
+                        `http://122.176.101.76:8085/api/Title/deleteTitle/${id}`
                     )
 
                     .then((res) => {
@@ -73,7 +73,7 @@ export const TitleTable = ({ searchText }) => {
     const TableRow = (props) => {
         const { srNo, titleId, titleName, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-        console.log(titleId, "titleId234")
+
         return (
             <tr>
                 <td>

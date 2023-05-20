@@ -43,9 +43,9 @@ const Login = (props) => {
     };
     if (password !== "" && loginId !== "") {
       let result = await axios
-        .post(`https://localhost:5001/api/Account/SignIn`, payload)
+        .post(`http://122.176.101.76:8085/api/Account/SignIn`, payload)
         .then((res) => {
-          console.log(res, "res");
+          //console.log(res, "res");
           if (res.data.message != null) {
             Swal.fire(
               {

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
 import { OfficeUnitTable } from "./officeUnitTable";
-const API = `https://localhost:5001/api/OfficeUnit/GetOfficeUnit`;
+const API = `http://122.176.101.76:8085/api/OfficeUnit/GetOfficeUnit`;
 export default () => {
     const [Search, setSearch] = useState("");
     return (

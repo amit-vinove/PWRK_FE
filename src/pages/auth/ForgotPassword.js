@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import axios from "axios";
 
 
- const ForgotPassword = (props) => {
+const ForgotPassword = (props) => {
   // State variables
   const [email, setEmail] = useState("");
   const navigate = useHistory();
@@ -27,7 +27,7 @@ import axios from "axios";
     if (validateEmail(email)) {
       let result = await axios
         .post(
-          `${process.env.REACT_APP_API_BASE_URL}Account/ForgotPassword?EmailID=${email}`
+          `http://122.176.101.76:8085/api/Account/ForgotPassword?EmailID=${email}`
         )
         .then((res) => {
           Swal.fire(res.data);
@@ -58,8 +58,8 @@ import axios from "axios";
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
- 
-  
+
+
   return (
     <main>
       <section className="vh-lg-100 mt-4 mt-lg-0 bg-soft d-flex align-items-center">

@@ -5,7 +5,7 @@ import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-ic
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
 
 import { OfficeAccDetailTable } from "./OfficeAccDetailTable";
-const API = `https://localhost:5001/api/OfficeAccountDetails/GetOfficeAccountDetails`;
+const API = `http://122.176.101.76:8085/api/OfficeAccountDetails/GetOfficeAccountDetails`;
 
 export default () => {
 

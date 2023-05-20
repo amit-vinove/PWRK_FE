@@ -5,7 +5,7 @@ import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-ic
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
 
 import { OfficeLevelTable } from "./officeLevelTable";
-const API = `https://localhost:5001/api/OfficeLevel/GetOfficeLevel`;
+const API = `http://122.176.101.76:8085/api/OfficeLevel/GetOfficeLevel`;
 
 export default () => {
 
