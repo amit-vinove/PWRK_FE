@@ -72,8 +72,8 @@ export const OfficeLevelTable = ({ searchText }) => {
 
     const TableRow = (props) => {
 
-        const { srNo, officeTypeid, officeLevelId, officeLevel, isActive } = props;
-        const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
+        const { srNo, officeTypeid, officeLevelId, officeLevel } = props;
+        //const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
 
         console.log(officeLevelId)
 
@@ -99,11 +99,7 @@ export const OfficeLevelTable = ({ searchText }) => {
                         {officeLevel}
                     </span>
                 </td>
-                <td>
-                    <span className={`fw-normal text-${statusVariant}`}>
-                        {isActive ? "Active" : !isActive ? "Inactive" : "Unknown"}
-                    </span>
-                </td>
+
                 <td>
                     <Dropdown as={ButtonGroup}>
                         <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
@@ -142,7 +138,7 @@ export const OfficeLevelTable = ({ searchText }) => {
                             <th className="border-bottom">Office Type Id</th>
                             <th className="border-bottom">Office level Id</th>
                             <th className="border-bottom">Office Level</th>
-                            <th className="border-bottom">Status</th>
+
                             <th className="border-bottom">Action</th>
                         </tr>
                     </thead>

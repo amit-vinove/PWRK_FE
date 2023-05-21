@@ -57,6 +57,11 @@ import districtDetail from './district/districtDetail';
 import designationDetail from './designations/designationDetail';
 import stateDetail from './State/stateDetail';
 import rtidesignationdetail from './rtiDesignation/rtidesignationdetail';
+import moduleDetail from './module/moduleDetail';
+import roleDetail from './role/roleDetail';
+import officeTypeDetail from './officeType/officeTypeDetail';
+import officeLevelDetail from './officeLevel/officeLevelDetail';
+import ddoTypeDetail from './ddoType/ddoTypeDetail';
 
 
 
@@ -116,7 +121,10 @@ export default () => (
     <RouteWithSidebar exact path={Routes.DesignationDetail.path} component={designationDetail} />
     <RouteWithSidebar exact path={Routes.RTIDesignations.path} component={RTIDesignationPage} />
     <RouteWithSidebar exact path={Routes.Module.path} component={Module} />
+    <RouteWithSidebar exact path={Routes.DdoTypeDetail.path} component={ddoTypeDetail} />
+    <RouteWithSidebar exact path={Routes.ModuleDetail.path} component={moduleDetail} />
     <RouteWithSidebar exact path={Routes.TitleDetail.path} component={titleDetail} />
+    <RouteWithSidebar exact path={Routes.RoleDetail.path} component={roleDetail} />
     <RouteWithSidebar exact path={Routes.RtiDesignationDetail.path} component={rtidesignationdetail} />
     <RouteWithSidebar exact path={Routes.DistrictDetail.path} component={districtDetail} />
     <RouteWithSidebar exact path={Routes.StateDetail.path} component={stateDetail} />
@@ -125,6 +133,8 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />
     <RouteWithSidebar exact path={Routes.DDOType.path} component={ddoTypePage} />
     <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
+    <RouteWithSidebar exact path={Routes.OfficeLevelDetail.path} component={officeLevelDetail} />
+    <RouteWithSidebar exact path={Routes.OfficeTypeDetail.path} component={officeTypeDetail} />
     <RouteWithSidebar exact path={Routes.State.path} component={statePage} />
     <RouteWithSidebar exact path={Routes.Office.path} component={officePage} />
     <RouteWithSidebar exact path={Routes.OfficeLevel.path} component={officeLevelPage} />

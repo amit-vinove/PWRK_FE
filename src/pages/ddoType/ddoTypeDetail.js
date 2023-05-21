@@ -13,49 +13,49 @@ import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
 
-    const [rtiDesigId, setrtiDesigId] = useState(0);
-    const [rtiDesignation, setrtiDesignation] = useState("");
-    const [rtiDesignationError, setRtiDesignationError] = useState("");
+    const [pageMode, setPageMode] = useState("create");
+    const [ddoType, setDdoType] = useState("");
+    // const [ddoTypeError, setDdoTypeError] = useState("");
+    const [ddoTypeId, setDdoTypeId] = useState(0);
+    const [ddoTypeError, setDdoTypeError] = useState("");
     const [isActive, setIsActive] = useState(true);
     const [ipAddress, setipAddress] = useState("");
-    const [ipAddressError, setipAddresserror] = useState("");
-    const [updateby, setupdateby] = useState(0);
+    const [ipAddressError, setIpaddressError] = useState("");
     const [formValid, setFormValid] = useState("");
+    const [updateby, setupdateby] = useState(0);
+    const [updateon, setupdateon] = useState(new Date());
     const jsonData = {
         updateby: "123",
     };
-    const [updateon, setupdateon] = useState(new Date());
     const handleCancel = () => {
-        history.push("/rti-designations")
+        history.push("/ddoType")
     }
 
     useEffect(() => {
-        handleChangeState();
-    }, [rtiDesignation])
+        handleChangeDisstName();
+    }, [ddoType])
 
-    const handleChangeState = () => {
-        if (!rtiDesignation) return;
-        if (rtiDesignation.length > 50 && rtiDesignation.length < 2) {
-            setRtiDesignationError("state Name  must be less 50 words");
+    const handleChangeDisstName = () => {
+        if (!ddoType) return;
+        if (ddoType.length > 50 && ddoType.length < 2) {
+            setDdoTypeError("Title Name must be less 50 words");
             setFormValid(false)
         } else {
-            setRtiDesignationError("");
+            setDdoTypeError("");
             setFormValid(true)
         }
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (rtiDesignation === "") {
-            setRtiDesignationError("District Name is Required");
+        if (ddoType === "") {
+            setDdoTypeError("Ddo Type is Required");
         }
-        else if (rtiDesignation.length > 50) {
-            setRtiDesignationError("rti designation Name must be less 50 words");
-        }
+
         if (formValid) {
             const payload = {
-                rtiDesigId: rtiDesigId,
-                rtiDesignation: rtiDesignation,
+                ddoTypeId: ddoTypeId,
+                ddotype: ddoType,
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
@@ -63,14 +63,14 @@ export default () => {
             };
 
             Axios.post(
-                `http://122.176.101.76:8085/api/RTIDesignation/SetRTIDesignation`,
+                `http://122.176.101.76:8085/api/DDOType/SetDDOType`,
                 payload
             )
                 .then((response) => {
                     console.log(response.data);
-                    Swal.fire("Save", "RTI designation Saved Sucessfully", "success");
+                    Swal.fire("Save", "Ddo type Saved Sucessfully", "success");
 
-                    history.push("/rti-designations")
+                    history.push("/ddoType")
                 })
                 .catch((error) => {
                     console.log(error);
@@ -81,7 +81,7 @@ export default () => {
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
                 <div className="d-block mb-4 mb-md-0">
-                    <h4>RTI Designation Details</h4>
+                    <h4>DDO Type Details</h4>
                 </div>
             </div>
             <Card border="light" className="bg-white shadow-sm mb-4">
@@ -91,34 +91,31 @@ export default () => {
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Rti Designation Name</Form.Label>
-                                    {rtiDesignationError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{rtiDesignationError}</p>
+                                    <Form.Label>DDO Type</Form.Label>
+                                    {ddoTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{ddoTypeError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Country here" value={rtiDesignation}
+                                    <Form.Control required type="text" placeholder="Enter Title here" value={ddoType}
                                         onChange={(e) => {
-                                            setrtiDesignation(e.target.value);
-                                            setRtiDesignationError("");
+                                            setDdoType(e.target.value);
+                                            setDdoTypeError("");
                                         }} />
                                 </Form.Group>
                             </Col>
-                            <Col md={6} className="mb-3" >
-                                <Row >
-                                    <Form.Label> <br /> </Form.Label>
-                                    <Col md={1} className="mb-1" >   <input
-                                        class="form-check-input" type="checkbox"
-                                        checked={isActive}
-                                        onChange={(e) => {
-                                            setIsActive(e.target.checked);
-                                        }}
-                                        value={isActive}
-                                        id="defaultCheck1"
-                                    /></Col>
-                                    <Col md={5} className="mb-2" >
-                                        <Form.Label>Status</Form.Label>
-                                    </Col>
-
-                                </Row>
+                            <Form.Label>  <br />y
+                            </Form.Label>
+                            <Col md={1} className="mb-1" >
+                                <input
+                                    class="form-check-input" type="checkbox"
+                                    checked={isActive}
+                                    onChange={(e) => {
+                                        setIsActive(e.target.checked);
+                                    }}
+                                    value={isActive}
+                                    id="defaultCheck1"
+                                /></Col>
+                            <Col md={5} className="mb-2" >
+                                <Form.Label>Status</Form.Label>
                             </Col>
                         </Row>
 

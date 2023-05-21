@@ -3,14 +3,18 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
-
+import { Link, useHistory } from "react-router-dom";
 import { ModuleTable } from "./moduleTable";
 
 
 export default () => {
 
+  const history = useHistory();
   const [Search, setSearch] = useState("");
 
+  const createModule = () => {
+    history.push("/moduleDetail")
+  }
 
   return (
     <>
@@ -28,6 +32,13 @@ export default () => {
 
       <div className="table-settings mb-4">
         <Row className="justify-content-between align-items-center">
+          <Col>
+            <div className="btn-toolbar mb-2 mb-md-0">
+              <ButtonGroup>
+                <Button variant="outline-primary" size="sm" onClick={createModule}>Create Module</Button>
+              </ButtonGroup>
+            </div>
+          </Col>
           <Col xs={6} md={6} lg={3} xl={4}>
             <InputGroup>
               <InputGroup.Text>
