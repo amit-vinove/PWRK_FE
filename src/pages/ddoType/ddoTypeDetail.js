@@ -10,6 +10,7 @@ import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 
+
 export default () => {
     const history = useHistory();
 
@@ -102,8 +103,7 @@ export default () => {
                                         }} />
                                 </Form.Group>
                             </Col>
-                            <Form.Label>  <br />y
-                            </Form.Label>
+                            <Form.Label>  <br /></Form.Label>
                             <Col md={1} className="mb-1" >
                                 <input
                                     class="form-check-input" type="checkbox"

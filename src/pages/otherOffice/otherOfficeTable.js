@@ -44,7 +44,7 @@ export const OtherOfficeTable = ({ searchText }) => {
             if (result.isConfirmed) {
                 axios
                     .post(
-                        `https://localhost:5001/api/OfficeAccountDetail/deleteOfficeAccountDetail/${id}`
+                        `http://122.176.101.76:8085/api/OfficeAccountDetail/deleteOfficeAccountDetail/${id}`
                     )
                     .then((res) => {
                         Swal.fire({
@@ -203,7 +203,7 @@ export const OtherOfficeTable = ({ searchText }) => {
                             <th className="border-bottom">PAN Number</th>
                             <th className="border-bottom">GST</th>
                             <th className="border-bottom">Bank Account Number</th>
-                            <th className="border-bottom">Banck Name</th>
+                            <th className="border-bottom">Bank Name</th>
                             <th className="border-bottom">Bank Address</th>
                             <th className="border-bottom">Bank IFSC</th>
                             <th className="border-bottom">Status</th>

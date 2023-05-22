@@ -4,9 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
 import { OfficeUnitTable } from "./officeUnitTable";
+import { Link, useHistory } from "react-router-dom";
 const API = `http://122.176.101.76:8085/api/OfficeUnit/GetOfficeUnit`;
 export default () => {
+    const history = useHistory();
     const [Search, setSearch] = useState("");
+  
+    const createOfficeUnit = () => {
+      history.push("/officeUnitDetail")
+    }
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -23,6 +29,13 @@ export default () => {
 
             <div className="table-settings mb-4">
                 <Row className="justify-content-between align-items-center">
+                <Col>
+            <div className="btn-toolbar mb-2 mb-md-0">
+              <ButtonGroup>
+                <Button variant="outline-primary" size="sm" onClick={createOfficeUnit}>Create Office unit</Button>
+              </ButtonGroup>
+            </div>
+          </Col>
                     <Col xs={6} md={6} lg={3} xl={4}>
                         <InputGroup>
                             <InputGroup.Text>

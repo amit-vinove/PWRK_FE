@@ -3,13 +3,18 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
-
+import { Link, useHistory } from "react-router-dom";
 import { OfficeAccDetailTable } from "./OfficeAccDetailTable";
 const API = `http://122.176.101.76:8085/api/OfficeAccountDetails/GetOfficeAccountDetails`;
 
 export default () => {
 
+    const history = useHistory();
     const [Search, setSearch] = useState("");
+
+    const createOfficeAcc = () => {
+        history.push("/mainOfficeAccDetail")
+    }
 
 
     return (
@@ -28,6 +33,13 @@ export default () => {
 
             <div className="table-settings mb-4">
                 <Row className="justify-content-between align-items-center">
+                    <Col>
+                        <div className="btn-toolbar mb-2 mb-md-0">
+                            <ButtonGroup>
+                                <Button variant="outline-primary" size="sm" onClick={createOfficeAcc}>Create Office Account</Button>
+                            </ButtonGroup>
+                        </div>
+                    </Col>
                     <Col xs={6} md={6} lg={3} xl={4}>
                         <InputGroup>
                             <InputGroup.Text>

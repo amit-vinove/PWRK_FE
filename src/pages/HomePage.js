@@ -62,6 +62,9 @@ import roleDetail from './role/roleDetail';
 import officeTypeDetail from './officeType/officeTypeDetail';
 import officeLevelDetail from './officeLevel/officeLevelDetail';
 import ddoTypeDetail from './ddoType/ddoTypeDetail';
+import officeUnitDetail from './officeUnit/officeUnitDetail';
+import mainOfficeDetail from './office/mainOfficeDetail';
+import mainOfficeAccDetail from './officeAccDetail/mainOfficeAccDetail';
 
 
 
@@ -121,6 +124,9 @@ export default () => (
     <RouteWithSidebar exact path={Routes.DesignationDetail.path} component={designationDetail} />
     <RouteWithSidebar exact path={Routes.RTIDesignations.path} component={RTIDesignationPage} />
     <RouteWithSidebar exact path={Routes.Module.path} component={Module} />
+    <RouteWithSidebar exact path={Routes.MainOfficeAccDetail.path} component={mainOfficeAccDetail} />
+    <RouteWithSidebar exact path={Routes.OfficeUnitDetail.path} component={officeUnitDetail} />
+    <RouteWithSidebar exact path={Routes.MainOfficeDetail.path} component={mainOfficeDetail} />
     <RouteWithSidebar exact path={Routes.DdoTypeDetail.path} component={ddoTypeDetail} />
     <RouteWithSidebar exact path={Routes.ModuleDetail.path} component={moduleDetail} />
     <RouteWithSidebar exact path={Routes.TitleDetail.path} component={titleDetail} />
