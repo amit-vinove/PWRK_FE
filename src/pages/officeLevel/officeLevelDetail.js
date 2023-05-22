@@ -9,12 +9,9 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
-
     const [pageMode, setPageMode] = useState("create");
-
     const [officeTypeid, setOfficeTypeId] = useState(0);
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [officeLevelError, setOfficeLevelError] = useState("");
@@ -24,12 +21,9 @@ export default () => {
     const [ipAddress, setIpAddress] = useState("");
     const [updateBy, setUpdateBy] = useState(0);
     const [updateOn, setUpdateOn] = useState(new Date()); // initialize with current date and time
-
-
     const jsonData = {
         updateby: "123",
     };
-
     useEffect(() => {
         handleChangeOfficeLevel();
     }, [officeLevel])
@@ -46,7 +40,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         // if (officeLevelId === "") {
@@ -64,7 +57,6 @@ export default () => {
                 updateOn: updateOn,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/OfficeLevel/SetOfficeLevel`,
                 payload
@@ -131,11 +123,9 @@ export default () => {
                                         onChange={(e) => {
                                             setOfficeLevel(e.target.value);
                                             // setDistShortNameError("");
-
                                         }} />
                                 </Form.Group>
                             </Col>
-
                         </Row>
                         <div className="mt-3">
                             <Button variant="primary" type="submit" onClick={handleCancel} >Cancel</Button>

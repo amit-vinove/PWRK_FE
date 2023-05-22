@@ -7,15 +7,10 @@ import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `http://122.176.101.76:8085/api/OfficeAccountDetails/GetOfficeAccountDetails`;
-
-
 export const OtherOfficeTable = ({ searchText }) => {
-
     const [officeAccDetailData, setOfficeAccDetailData] = useState([]);
     const [officeAccDetailId, setOfficeAccDetailId] = useState(0);
-    console.log(officeAccDetailData, "officeAccDetailData")
     const [tempOfficeAccDetailData, setTempOfficeAccDetailData] = useState([]);
-
     const totalCount = officeAccDetailData.length;
     async function getOfficeAccountDetail() {
         await axios.get(API).then((response) => {
@@ -23,16 +18,13 @@ export const OtherOfficeTable = ({ searchText }) => {
             setTempOfficeAccDetailData(response.data);
         });
     }
-
     async function searchState(searchText) {
         setOfficeAccDetailData(
             tempOfficeAccDetailData.filter((i) =>
                 i.stateName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
-
     const handleDelete = (id) => {
-
         Swal.fire({
             title: "Do You Want To Delete?",
             showCancelButton: true,
@@ -61,23 +53,17 @@ export const OtherOfficeTable = ({ searchText }) => {
             }
         });
     };
-
     useEffect(() => {
         getOfficeAccountDetail();
     }, []);
-
     useEffect(() => {
         searchState(searchText);
     }, [searchText])
-
     const TableRow = (props) => {
-
         const { srNo, officeId, ddoTypeId, ddoCode, ddoCodeName, pan, gst, bankAccNo, bankName, bankAddress, bankIFSC,
             isActive, updateBy, updateOfficeTypeId, updateOfficeId, updateon } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-
         console.log(officeAccDetailId)
-
         return (
             <tr>
                 <td>
@@ -159,8 +145,6 @@ export const OtherOfficeTable = ({ searchText }) => {
                         {updateon}
                     </span>
                 </td>
-
-
                 <td>
                     <Dropdown as={ButtonGroup}>
                         <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
@@ -188,7 +172,6 @@ export const OtherOfficeTable = ({ searchText }) => {
             </tr>
         );
     };
-
     return (
         <Card border="light" className="table-wrapper table-responsive shadow-sm">
             <Card.Body className="pt-0">

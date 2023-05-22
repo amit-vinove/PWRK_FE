@@ -9,7 +9,6 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
     const [officeId, setofficeId] = useState(0);
@@ -65,7 +64,6 @@ export default () => {
     useEffect(() => {
         handleChangeOffice();
     }, [officeName])
-
     const handleChangeOffice = () => {
         if (!officeName) return;
         if (officeName.length > 50 && officeName.length < 2) {
@@ -76,7 +74,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (officeName === "") {
@@ -125,7 +122,6 @@ export default () => {
                 updateon: updateon,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/Office/SetOffice`,
                 payload
@@ -326,7 +322,6 @@ export default () => {
                                 </Form.Group>
                             </Col>
                         </Row>
-
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
@@ -385,7 +380,6 @@ export default () => {
                                 </Form.Group>
                             </Col>
                         </Row>
-
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
@@ -473,8 +467,6 @@ export default () => {
                                 </Form.Group>
                             </Col>
                         </Row>
-
-
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
@@ -504,7 +496,6 @@ export default () => {
                                 </Form.Group>
                             </Col>
                         </Row>
-
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
@@ -564,8 +555,6 @@ export default () => {
                             </Col>
                         </Row>
                         <Row>
-
-
                             <Col md={6} className="mb-3" >
                                 <Row >
                                     <Form.Label> <br /> </Form.Label>
@@ -581,10 +570,8 @@ export default () => {
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
-
                                 </Row>
                             </Col>
-
                             <Col md={6} className="mb-3">
                                 <Row >
                                     <Form.Label> <br /> </Form.Label>

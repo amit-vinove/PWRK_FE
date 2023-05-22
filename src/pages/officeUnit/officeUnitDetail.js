@@ -9,7 +9,6 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
     const [officeUnitId, setOfficeUnitId] = useState(0);
@@ -47,11 +46,9 @@ export default () => {
     const handleCancel = () => {
         history.push("/officeUnit")
     }
-
     useEffect(() => {
         handleChangeOfficeUnit();
     }, [officeTypeError])
-
     const handleChangeOfficeUnit = () => {
         if (!officeTypeError) return;
         if (officeTypeError.length > 50 && officeTypeError.length < 2) {
@@ -62,7 +59,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (officeTypeId === "") {
@@ -91,7 +87,6 @@ export default () => {
                 updatedBy: updatedby,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/OfficeUnit/SetOfficeUnit`,
                 payload
@@ -148,7 +143,6 @@ export default () => {
                             </Col>
                         </Row>
                         <Row>
-
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Designation Name</Form.Label>
@@ -178,7 +172,6 @@ export default () => {
                             </Col>
                         </Row>
                         <Row>
-
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Unit Address</Form.Label>
@@ -193,7 +186,6 @@ export default () => {
                                         }} />
                                 </Form.Group>
                             </Col>
-
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Email Id</Form.Label>
@@ -207,8 +199,6 @@ export default () => {
                                         }} />
                                 </Form.Group>
                             </Col>
-
-
                         </Row>
                         <Row>
                             <Col md={6} className="mb-3">
@@ -225,8 +215,6 @@ export default () => {
                                         }} />
                                 </Form.Group>
                             </Col>
-
-
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Longitude</Form.Label>
@@ -256,8 +244,6 @@ export default () => {
                                         }} />
                                 </Form.Group>
                             </Col>
-
-
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Comment</Form.Label>

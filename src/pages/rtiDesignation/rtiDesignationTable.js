@@ -5,13 +5,9 @@ import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagin
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 const API = `http://122.176.101.76:8085/api/RTIDesignation/GetRTIDesignation`;
-
-
 export const RTIDesignationTable = ({ searchText }) => {
-
   const [designationData, setDesignationData] = useState([]);
   const [tempDesignationData, setTempDesignationData] = useState([]);
-
   const totalCount = designationData.length;
   async function getDesignation() {
     await axios.get(API).then((response) => {
@@ -19,26 +15,21 @@ export const RTIDesignationTable = ({ searchText }) => {
       setTempDesignationData(response.data);
     });
   }
-
   async function searchDesignation(searchText) {
     setDesignationData(
       tempDesignationData.filter((i) =>
         i.designationName.toLowerCase().includes(searchText.toLowerCase())
       ))
   }
-
   useEffect(() => {
     getDesignation();
   }, []);
-
   useEffect(() => {
     searchDesignation(searchText);
   }, [searchText])
-
   const TableRow = (props) => {
     const { rtiDesigId, rtiDesignation, ipAddress, isActive } = props;
     const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-
     return (
       <tr>
         <td>
@@ -79,7 +70,6 @@ export const RTIDesignationTable = ({ searchText }) => {
       </tr>
     );
   };
-
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
       <Card.Body className="pt-0">

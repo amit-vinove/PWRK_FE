@@ -4,10 +4,7 @@ import { faBoxOpen, faCartArrowDown, faChartPie, faChevronDown, faClipboard, faC
 import { Col, Row, Button, Dropdown } from '@themesberg/react-bootstrap';
 import { ChoosePhotoWidget, ProfileCardWidget } from "../components/Widgets";
 import { GeneralInfoForm } from "../components/Forms";
-
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
-
-
 export default () => {
   return (
     <>
@@ -27,15 +24,12 @@ export default () => {
             <Dropdown.Item>
               <FontAwesomeIcon icon={faBoxOpen} className="me-2" /> Product
             </Dropdown.Item>
-
             <Dropdown.Divider />
-
             <Dropdown.Item>
               <FontAwesomeIcon icon={faRocket} className="text-danger me-2" /> Subscription Plan
-              </Dropdown.Item>
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-
         <div className="d-flex">
           <Dropdown>
             <Dropdown.Toggle as={Button} variant="primary">
@@ -55,9 +49,7 @@ export default () => {
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faChartPie} className="me-2" /> Console
               </Dropdown.Item>
-
               <Dropdown.Divider />
-
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faRocket} className="text-success me-2" /> All Reports
               </Dropdown.Item>
@@ -65,12 +57,10 @@ export default () => {
           </Dropdown>
         </div>
       </div>
-
       <Row>
         <Col xs={12} xl={8}>
           <GeneralInfoForm />
         </Col>
-
         <Col xs={12} xl={4}>
           <Row>
             <Col xs={12}>

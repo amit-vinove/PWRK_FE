@@ -5,13 +5,9 @@ import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagin
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 const API = `http://122.176.101.76:8085/api/Office/GetOffice`;
-
-
 export const OfficeTable = ({ searchText }) => {
-
     const [officeData, setOfficeData] = useState([]);
     const [tempOfficeData, setTempOfficeData] = useState([]);
-
     const totalCount = officeData.length;
     async function getOffice() {
         await axios.get(API).then((response) => {
@@ -25,15 +21,12 @@ export const OfficeTable = ({ searchText }) => {
                 i.officeName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
-
     useEffect(() => {
         getOffice();
     }, []);
-
     useEffect(() => {
         searchOffice(searchText);
     }, [searchText])
-
     const TableRow = (props) => {
         const { srNo, officeId, officeTypeId, officeName, officeNameHindi, officeCode, address, stateId, disttId, pinCode, stdCode,
             contactNo, emailId, longitude, latitude, parentId1, parentId1WEF, parentId2, parentId2WEF, parentId3, parentId3WEF, parentId4, parentId4WEF,
@@ -236,7 +229,6 @@ export const OfficeTable = ({ searchText }) => {
             </tr>
         );
     };
-
     return (
         <Card border="light" className="table-wrapper table-responsive shadow-sm">
             <Card.Body className="pt-0">

@@ -7,10 +7,7 @@ import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `http://122.176.101.76:8085/api/Title/GetTitle`;
-
-
 export const TitleTable = ({ searchText }) => {
-
     const [titleData, setTitleData] = useState([]);
     const [tempTitleData, setTempTitleData] = useState([]);
     const totalCount = titleData.length;
@@ -20,16 +17,13 @@ export const TitleTable = ({ searchText }) => {
             setTempTitleData(response.data);
         });
     }
-
     async function searchTitle(searchText) {
         setTitleData(
             tempTitleData.filter((i) =>
                 i.titleName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
-
     const handleDelete = (id) => {
-
         Swal.fire({
             title: "Do You Want To Delete?",
             showCancelButton: true,
@@ -43,7 +37,6 @@ export const TitleTable = ({ searchText }) => {
                     .post(
                         `http://122.176.101.76:8085/api/Title/deleteTitle/${id}`
                     )
-
                     .then((res) => {
                         Swal.fire({
                             icon: "success",
@@ -58,22 +51,17 @@ export const TitleTable = ({ searchText }) => {
                     });
                 console.log(id, "titleId");
             }
-
         });
     };
-
     useEffect(() => {
         getTitle();
     }, []);
-
     useEffect(() => {
         searchTitle(searchText);
     }, [searchText])
-
     const TableRow = (props) => {
         const { srNo, titleId, titleName, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-
         return (
             <tr>
                 <td>

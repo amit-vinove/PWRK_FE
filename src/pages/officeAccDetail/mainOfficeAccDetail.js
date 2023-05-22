@@ -9,7 +9,6 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
     const [pageMode, setPageMode] = useState("create");
@@ -33,7 +32,6 @@ export default () => {
     const [updateOfficeId, setUpdateOfficeId] = useState(0);
     const [updateon, setUpdateOn] = useState(new Date());
     const [ipAddress, setIpAddress] = useState("");
-
     const jsonData = {
         updateby: "123",
     };
@@ -44,7 +42,6 @@ export default () => {
     useEffect(() => {
         handleChangeOfficeAcc();
     }, [ddoCodeName])
-
     const handleChangeOfficeAcc = () => {
         if (!ddoCodeName) return;
         if (ddoCodeName.length > 50 && ddoCodeName.length < 2) {
@@ -55,7 +52,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (ddoCodeName === "") {
@@ -83,7 +79,6 @@ export default () => {
                 updateon: updateon,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/OfficeAccountDetails/SetOfficeAccountDetails`,
                 payload
@@ -255,7 +250,6 @@ export default () => {
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
-
                                 </Row>
                             </Col>
                         </Row>

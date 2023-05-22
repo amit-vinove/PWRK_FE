@@ -8,11 +8,9 @@ import { Link, useHistory } from "react-router-dom";
 export default () => {
     const history = useHistory();
     const [Search, setSearch] = useState("");
-
     const createTitle = () => {
         history.push("/titleDetail")
     }
-
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -26,7 +24,6 @@ export default () => {
                     </ButtonGroup>
                 </div> */}
             </div>
-
             <div className="table-settings mb-4">
                 <Row className="justify-content-between align-items-center">
                     <Col>
@@ -43,14 +40,12 @@ export default () => {
                             </InputGroup.Text>
                             <Form.Control type="text" placeholder="Search by title name" onChange={(e) => setSearch(e.target.value)} />
                         </InputGroup>
-
                     </Col>
                     {/* <Col style={{ maxWidth: "10%", marginTop: 112, marginLeft: -1857 }}>
                         <Button variant="primary" type="submit" className="w-100">
                             Create Title
                         </Button>
                     </Col> */}
-
                     <Col xs={6} md={2} xl={1} className="ps-md-0 text-end">
                         <Dropdown as={ButtonGroup}>
                             <Dropdown.Toggle split as={Button} variant="link" className="text-dark m-0 p-0">
@@ -70,7 +65,6 @@ export default () => {
                     </Col>
                 </Row>
             </div>
-
             <TitleTable searchText={Search} />
         </>
     )

@@ -7,15 +7,11 @@ import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `http://122.176.101.76:8085/api/State/GetState`;
-
-
 export const StateTable = ({ searchText }) => {
-
     const [stateData, setStateData] = useState([]);
     const [stateId, setStateId] = useState(0);
     console.log(stateData, "state Data")
     const [tempStateData, setTempStateData] = useState([]);
-
     const totalCount = stateData.length;
     async function getState() {
         await axios.get(API).then((response) => {
@@ -23,16 +19,13 @@ export const StateTable = ({ searchText }) => {
             setTempStateData(response.data);
         });
     }
-
     async function searchState(searchText) {
         setStateData(
             tempStateData.filter((i) =>
                 i.stateName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
-
     const handleDelete = (id) => {
-
         Swal.fire({
             title: "Do You Want To Delete?",
             showCancelButton: true,
@@ -61,22 +54,16 @@ export const StateTable = ({ searchText }) => {
             }
         });
     };
-
     useEffect(() => {
         getState();
     }, []);
-
     useEffect(() => {
         searchState(searchText);
     }, [searchText])
-
     const TableRow = (props) => {
-
         const { srNo, country, stateName, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-
         console.log(stateId)
-
         return (
             <tr>
                 <td>
@@ -126,7 +113,6 @@ export const StateTable = ({ searchText }) => {
             </tr>
         );
     };
-
     return (
         <Card border="light" className="table-wrapper table-responsive shadow-sm">
             <Card.Body className="pt-0">

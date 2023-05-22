@@ -9,11 +9,8 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
-
 export default () => {
     const history = useHistory();
-
     const [pageMode, setPageMode] = useState("create");
     const [ddoType, setDdoType] = useState("");
     // const [ddoTypeError, setDdoTypeError] = useState("");
@@ -31,11 +28,9 @@ export default () => {
     const handleCancel = () => {
         history.push("/ddoType")
     }
-
     useEffect(() => {
         handleChangeDisstName();
     }, [ddoType])
-
     const handleChangeDisstName = () => {
         if (!ddoType) return;
         if (ddoType.length > 50 && ddoType.length < 2) {
@@ -46,13 +41,11 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (ddoType === "") {
             setDdoTypeError("Ddo Type is Required");
         }
-
         if (formValid) {
             const payload = {
                 ddoTypeId: ddoTypeId,
@@ -62,7 +55,6 @@ export default () => {
                 updateon: updateon,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/DDOType/SetDDOType`,
                 payload
@@ -118,7 +110,6 @@ export default () => {
                                 <Form.Label>Status</Form.Label>
                             </Col>
                         </Row>
-
                         <div className="mt-3">
                             <Button variant="primary" type="submit" onClick={handleCancel} >Cancel</Button>
                             <Button variant="primary" type="submit" style={{ marginLeft: 10 }} onClick={handleSubmit}>Save All</Button>

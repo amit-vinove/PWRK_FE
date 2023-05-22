@@ -9,7 +9,6 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
     const [officeTypeId, setofficeTypeId] = useState("");
@@ -28,18 +27,13 @@ export default () => {
     const [updateon, setupdateon] = useState(new Date());
     const jsonData = {
         updateby: "123",
-
     }
-
-
     const handleCancel = () => {
         history.push("/designations")
     }
-
     useEffect(() => {
         handleChangedesignation();
     }, [designationName])
-
     const handleChangedesignation = () => {
         if (!designationName) return;
         if (designationName.length > 50 && designationName.length < 2) {
@@ -50,7 +44,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (designationName === "") {
@@ -70,7 +63,6 @@ export default () => {
                 updateon: updateon,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/Designation/SetDesignation`,
                 payload
@@ -149,8 +141,6 @@ export default () => {
                                     <Form.Control required type="text" placeholder="Enter Title here" value={designationOrderId}
                                         onChange={(e) => {
                                             setdesignationOrderId(e.target.value);
-
-
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -171,7 +161,6 @@ export default () => {
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
-
                                 </Row>
                             </Col>
                         </Row>

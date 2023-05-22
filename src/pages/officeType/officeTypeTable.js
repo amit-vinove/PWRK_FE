@@ -7,15 +7,11 @@ import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `http://122.176.101.76:8085/api/OfficeType/GetOfficeType`;
-
-
 export const OfficeTypeTable = ({ searchText }) => {
-
     const [officeTypeData, setOfficeTypeData] = useState([]);
     const [officeTypeId, setOfficeTypeId] = useState(0);
     console.log(officeTypeData, "state Data")
     const [tempOfficeTypeData, setTempOfficeTypeData] = useState([]);
-
     const totalCount = officeTypeData.length;
     async function getOfficeType() {
         await axios.get(API).then((response) => {
@@ -23,14 +19,12 @@ export const OfficeTypeTable = ({ searchText }) => {
             setTempOfficeTypeData(response.data);
         });
     }
-
     async function searchState(searchText) {
         setOfficeTypeData(
             tempOfficeTypeData.filter((i) =>
                 i.officeTypeName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
-
     const handleDelete = (id) => {
 
         Swal.fire({
@@ -61,22 +55,16 @@ export const OfficeTypeTable = ({ searchText }) => {
             }
         });
     };
-
     useEffect(() => {
         getOfficeType();
     }, []);
-
     useEffect(() => {
         searchState(searchText);
     }, [searchText])
-
     const TableRow = (props) => {
-
         const { srNo, officeTypeName, officeTypeNameShort, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-
         console.log(officeTypeId)
-
         return (
             <tr>
                 <td>
@@ -126,7 +114,6 @@ export const OfficeTypeTable = ({ searchText }) => {
             </tr>
         );
     };
-
     return (
         <Card border="light" className="table-wrapper table-responsive shadow-sm">
             <Card.Body className="pt-0">

@@ -6,12 +6,9 @@ import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown }
 import { Link, useHistory } from "react-router-dom";
 import { OfficeTable } from "./officeTable";
 const API = `http://122.176.101.76:8085/api/api/Office/GetOffice`;
-
 export default () => {
-
     const history = useHistory();
     const [Search, setSearch] = useState("");
-
     const createOffice = () => {
         history.push("/mainOfficeDetail")
     }
@@ -28,7 +25,6 @@ export default () => {
           </ButtonGroup>
         </div> */}
             </div>
-
             <div className="table-settings mb-4">
                 <Row className="justify-content-between align-items-center">
                     <Col>
@@ -65,7 +61,6 @@ export default () => {
                     </Col>
                 </Row>
             </div>
-
             <OfficeTable searchText={Search} />
         </>
     );

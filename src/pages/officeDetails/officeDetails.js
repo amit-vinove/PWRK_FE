@@ -5,11 +5,8 @@ import Datetime from "react-datetime";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-
-
 export default () => {
   const [birthday, setBirthday] = useState("");
-
   return (
     <> 
     <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -81,7 +78,6 @@ export default () => {
               </Form.Group>
             </Col>
           </Row>
-
           <h5 className="my-4">Address</h5>
           <Row>
             <Col sm={9} className="mb-3">

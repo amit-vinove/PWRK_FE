@@ -9,10 +9,8 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
-
     const [disttId, setDisstId] = useState(0);
     const [stateId, setStateId] = useState(0);
     const [stateNameError, setStateNameError] = useState("");
@@ -30,11 +28,9 @@ export default () => {
     const handleCancel = () => {
         history.push("/district")
     }
-
     useEffect(() => {
         handleChangeDisstName();
     }, [distShortName])
-
     const handleChangeDisstName = () => {
         if (!distShortName) return;
         if (distShortName.length > 50 && distShortName.length < 2) {
@@ -45,7 +41,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (distName === "") {
@@ -73,7 +68,6 @@ export default () => {
                 .then((response) => {
                     console.log(response.data);
                     Swal.fire("Save", "Title Saved Sucessfully", "success");
-
                     history.push("/district")
                 })
                 .catch((error) => {
@@ -132,7 +126,6 @@ export default () => {
                                         onChange={(e) => {
                                             setDistShortName(e.target.value);
                                             setDistShortNameError("");
-
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -151,7 +144,6 @@ export default () => {
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
-
                                 </Row>
                             </Col>
                         </Row>

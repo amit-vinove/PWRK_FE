@@ -9,14 +9,11 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
-
     const [pageMode, setPageMode] = useState("create");
     const [moduleId, setModuleId] = useState(0);
     const [maduleName, setMaduleName] = useState("");
-
     const [moduleNameError, setModuleNameError] = useState("");
     const [moduleNameShort, setModuleNameShort] = useState("");
     const [moduleNameShortError, setModuleNameShortError] = useState("");
@@ -33,11 +30,9 @@ export default () => {
     const handleCancel = () => {
         history.push("/module")
     }
-
     useEffect(() => {
         handleChangeModule();
     }, [maduleName])
-
     const handleChangeModule = () => {
         if (!maduleName) return;
         if (maduleName.length > 50 && maduleName.length < 2) {
@@ -48,7 +43,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (maduleName === "") {
@@ -68,7 +62,6 @@ export default () => {
                 updateon: updateon,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/Module/SetModule`,
                 payload
@@ -76,7 +69,6 @@ export default () => {
                 .then((response) => {
                     console.log(response.data);
                     Swal.fire("Save", "Module Saved Sucessfully", "success");
-
                     history.push("/module")
                 })
                 .catch((error) => {
@@ -119,7 +111,6 @@ export default () => {
                                         onChange={(e) => {
                                             setModuleNameShort(e.target.value);
                                             setModuleNameShortError("");
-
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -135,7 +126,6 @@ export default () => {
                                         onChange={(e) => {
                                             setModuleUrl(e.target.value);
                                             // setDistShortNameError("");
-
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -154,7 +144,6 @@ export default () => {
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
-
                                 </Row>
                             </Col>
                         </Row>

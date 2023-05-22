@@ -9,10 +9,8 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
-
     const [rtiDesigId, setrtiDesigId] = useState(0);
     const [rtiDesignation, setrtiDesignation] = useState("");
     const [rtiDesignationError, setRtiDesignationError] = useState("");
@@ -28,11 +26,9 @@ export default () => {
     const handleCancel = () => {
         history.push("/rti-designations")
     }
-
     useEffect(() => {
         handleChangeState();
     }, [rtiDesignation])
-
     const handleChangeState = () => {
         if (!rtiDesignation) return;
         if (rtiDesignation.length > 50 && rtiDesignation.length < 2) {
@@ -43,7 +39,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (rtiDesignation === "") {
@@ -61,7 +56,6 @@ export default () => {
                 updateon: updateon,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/RTIDesignation/SetRTIDesignation`,
                 payload
@@ -69,7 +63,6 @@ export default () => {
                 .then((response) => {
                     console.log(response.data);
                     Swal.fire("Save", "RTI designation Saved Sucessfully", "success");
-
                     history.push("/rti-designations")
                 })
                 .catch((error) => {
@@ -117,11 +110,9 @@ export default () => {
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
-
                                 </Row>
                             </Col>
                         </Row>
-
                         <div className="mt-3">
                             <Button variant="primary" type="submit" onClick={handleCancel} >Cancel</Button>
                             <Button variant="primary" type="submit" style={{ marginLeft: 10 }} onClick={handleSubmit}>Save All</Button>

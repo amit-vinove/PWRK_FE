@@ -12,7 +12,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 const API = `http://122.176.101.76:8085/api/OfficeUnit/GetOfficeUnit`;
 export const OfficeUnitTable = ({ searchText }) => {
     const [officeUnitData, setOfficeUnitData] = useState([]);
@@ -156,7 +155,6 @@ export const OfficeUnitTable = ({ searchText }) => {
                         <tr>
                             <th className="border-bottom">Sr No</th>
                             <th className="border-bottom">Office Unit Id</th>
-
                             <th className="border-bottom">Office</th>
                             <th className="border-bottom">Desigantion</th>
                             <th className="border-bottom">Unit Name</th>

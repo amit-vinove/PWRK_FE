@@ -9,10 +9,8 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
-
     const [pageMode, setPageMode] = useState("create");
     const [roleId, setRoleId] = useState(0);
     const [officeTypeId, setofficeTypeId] = useState("");
@@ -34,11 +32,9 @@ export default () => {
     const handleCancel = () => {
         history.push("/role")
     }
-
     useEffect(() => {
         handleChangeRole();
     }, [officeTypeId])
-
     const handleChangeRole = () => {
         if (!officeTypeId) return;
         if (officeTypeId.length > 50 && officeTypeId.length < 2) {
@@ -49,13 +45,11 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (officeTypeId === "") {
             setOfficeTypeError("Office Type Name is Required");
         }
-
         if (formValid) {
             const payload = {
                 roleId: roleId,
@@ -70,7 +64,6 @@ export default () => {
                 updateon: updateon,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/Role/SetRole`,
                 payload
@@ -78,7 +71,6 @@ export default () => {
                 .then((response) => {
                     console.log(response.data);
                     Swal.fire("Save", "Role Saved Sucessfully", "success");
-
                     history.push("/role")
                 })
                 .catch((error) => {
@@ -121,7 +113,6 @@ export default () => {
                                         onChange={(e) => {
                                             setofficeTypeId(e.target.value);
                                             //setModuleNameShortError("");
-
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -150,13 +141,10 @@ export default () => {
                                         onChange={(e) => {
                                             setChecker(e.target.value);
                                             //setModuleNameShortError("");
-
                                         }} />
                                 </Form.Group>
                             </Col>
                         </Row>
-
-
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
@@ -181,14 +169,10 @@ export default () => {
                                         onChange={(e) => {
                                             setViewer(e.target.value);
                                             //setModuleNameShortError("");
-
                                         }} />
                                 </Form.Group>
                             </Col>
                         </Row>
-
-
-
                         <Row>
 
                             <Col md={6} className="mb-3" >
@@ -206,7 +190,6 @@ export default () => {
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
-
                                 </Row>
                             </Col>
                         </Row>

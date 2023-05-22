@@ -66,9 +66,6 @@ import officeUnitDetail from './officeUnit/officeUnitDetail';
 import mainOfficeDetail from './office/mainOfficeDetail';
 import mainOfficeAccDetail from './officeAccDetail/mainOfficeAccDetail';
 
-
-
-
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {

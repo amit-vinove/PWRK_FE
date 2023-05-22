@@ -6,17 +6,12 @@ import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown }
 import { Link, useHistory } from "react-router-dom";
 import { OfficeTypeTable } from "./officeTypeTable";
 const API = `http://122.176.101.76:8085/api/OfficeType/GetOfficeType`;
-
 export default () => {
-
     const history = useHistory();
     const [Search, setSearch] = useState("");
-
     const createModule = () => {
         history.push("/officeTypeDetail")
     }
-
-
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -30,7 +25,6 @@ export default () => {
           </ButtonGroup>
         </div> */}
             </div>
-
             <div className="table-settings mb-4">
                 <Row className="justify-content-between align-items-center">
                     <Col>
@@ -67,7 +61,6 @@ export default () => {
                     </Col>
                 </Row>
             </div>
-
             <OfficeTypeTable searchText={Search} />
         </>
     );

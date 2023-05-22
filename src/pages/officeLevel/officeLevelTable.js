@@ -7,15 +7,11 @@ import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `http://122.176.101.76:8085/api/OfficeLevel/GetOfficeLevel`;
-
-
 export const OfficeLevelTable = ({ searchText }) => {
-
     const [officeLevelData, setOfficeLevelData] = useState([]);
     const [officeLevelId, setOfficeLevelId] = useState(0);
     console.log(officeLevelData, "officeLevelData")
     const [tempOfficeLevelData, setTempOfficeLevelData] = useState([]);
-
     const totalCount = officeLevelData.length;
     async function getOfficeLevel() {
         await axios.get(API).then((response) => {
@@ -23,16 +19,13 @@ export const OfficeLevelTable = ({ searchText }) => {
             setTempOfficeLevelData(response.data);
         });
     }
-
     async function searchState(searchText) {
         setOfficeLevelData(
             tempOfficeLevelData.filter((i) =>
                 i.officeLevel.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
-
     const handleDelete = (id) => {
-
         Swal.fire({
             title: "Do You Want To Delete?",
             showCancelButton: true,
@@ -61,22 +54,16 @@ export const OfficeLevelTable = ({ searchText }) => {
             }
         });
     };
-
     useEffect(() => {
         getOfficeLevel();
     }, []);
-
     useEffect(() => {
         searchState(searchText);
     }, [searchText])
-
     const TableRow = (props) => {
-
         const { srNo, officeTypeid, officeLevelId, officeLevel } = props;
         //const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-
         console.log(officeLevelId)
-
         return (
             <tr>
                 <td>
@@ -99,7 +86,6 @@ export const OfficeLevelTable = ({ searchText }) => {
                         {officeLevel}
                     </span>
                 </td>
-
                 <td>
                     <Dropdown as={ButtonGroup}>
                         <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
@@ -127,7 +113,6 @@ export const OfficeLevelTable = ({ searchText }) => {
             </tr>
         );
     };
-
     return (
         <Card border="light" className="table-wrapper table-responsive shadow-sm">
             <Card.Body className="pt-0">

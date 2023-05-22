@@ -9,10 +9,8 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
   const history = useHistory();
-
   const [titleId, setTitleId] = useState(0);
   const [titleName, setTitleName] = useState("");
   const [titleNameError, setTitleNameError] = useState("");
@@ -26,11 +24,9 @@ export default () => {
   const handleCancel = () => {
     history.push("/title")
   }
-
   useEffect(() => {
     handleChangeTitleName();
   }, [titleName])
-
   const handleChangeTitleName = () => {
     if (!titleName) return;
     if (titleName.length > 50) {
@@ -41,7 +37,6 @@ export default () => {
       setFormValid(true)
     }
   }
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (titleName === "") {
@@ -67,7 +62,6 @@ export default () => {
         .then((response) => {
           console.log(response.data);
           Swal.fire("Save", "Title Saved Sucessfully", "success");
-
           history.push("/title")
         })
         .catch((error) => {
@@ -116,7 +110,6 @@ export default () => {
                   <Col md={5} className="mb-2" >
                     <Form.Label>Status</Form.Label>
                   </Col>
-
                 </Row>
               </Col>
             </Row>

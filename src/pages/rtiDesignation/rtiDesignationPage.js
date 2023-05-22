@@ -6,16 +6,12 @@ import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown }
 import { Link, useHistory } from "react-router-dom";
 import { RTIDesignationTable } from "./rtiDesignationTable";
 const API = `http://122.176.101.76:8085/api/Designation/GetDesignation`;
-
 export default () => {
-
   const history = useHistory();
   const [Search, setSearch] = useState("");
-
   const createRtiDesignation = () => {
     history.push("/rtiDesignationDetail")
   }
-
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -29,7 +25,6 @@ export default () => {
           </ButtonGroup>
         </div> */}
       </div>
-
       <div className="table-settings mb-4">
         <Row className="justify-content-between align-items-center">
           <Col>
@@ -66,7 +61,6 @@ export default () => {
           </Col>
         </Row>
       </div>
-
       <RTIDesignationTable searchText={Search} />
     </>
   );

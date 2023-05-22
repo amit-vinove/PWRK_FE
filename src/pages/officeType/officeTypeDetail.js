@@ -9,10 +9,8 @@ import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-
 export default () => {
     const history = useHistory();
-
     const [pageMode, setPageMode] = useState("create");
     const [officeTypeId, setofficeTypeId] = useState(0);
     const [officeTypeError, setOfficeTypeError] = useState("");
@@ -21,7 +19,6 @@ export default () => {
     const [titleError, setTitleError] = useState("");
     const [officeTypeNameShort, setofficeTypeNameShort] = useState("");
     const [officeTypeNameShortError, setOfficeTypeNameShortError] = useState("");
-
     const [isActive, setIsActive] = useState(true);
     const [ipAddress, setipAddress] = useState("");
     const [ipAddressError, setIpAddressError] = useState("");
@@ -34,11 +31,9 @@ export default () => {
     const handleCancel = () => {
         history.push("/module")
     }
-
     useEffect(() => {
         handleChangeOfficeType();
     }, [officeTypeName])
-
     const handleChangeOfficeType = () => {
         if (!officeTypeName) return;
         if (officeTypeName.length > 50 && officeTypeName.length < 2) {
@@ -49,7 +44,6 @@ export default () => {
             setFormValid(true)
         }
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (officeTypeName === "") {
@@ -63,13 +57,11 @@ export default () => {
                 officeTypeId: officeTypeId,
                 officeTypeName: officeTypeName,
                 officeTypeNameShort: officeTypeNameShort,
-
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
                 ipAddress: "ipAddress",
             };
-
             Axios.post(
                 `http://122.176.101.76:8085/api/OfficeType/SetOfficeType`,
                 payload
@@ -77,7 +69,6 @@ export default () => {
                 .then((response) => {
                     console.log(response.data);
                     Swal.fire("Save", "Office Type Saved Sucessfully", "success");
-
                     history.push("/officeType")
                 })
                 .catch((error) => {
@@ -126,7 +117,6 @@ export default () => {
                             </Col>
                         </Row>
                         <Row>
-
                             <Col md={6} className="mb-3" >
                                 <Row >
                                     <Form.Label> <br /> </Form.Label>
@@ -142,7 +132,6 @@ export default () => {
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
-
                                 </Row>
                             </Col>
                         </Row>
