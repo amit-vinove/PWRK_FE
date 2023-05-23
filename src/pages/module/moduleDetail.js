@@ -30,26 +30,60 @@ export default () => {
     const handleCancel = () => {
         history.push("/module")
     }
+
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
+
     useEffect(() => {
-        handleChangeModule();
+        handleChangeModuleName();
     }, [maduleName])
-    const handleChangeModule = () => {
+    const handleChangeModuleName = () => {
         if (!maduleName) return;
-        if (maduleName.length > 50 && maduleName.length < 2) {
-            setModuleNameShort("Title Name must be less 50 words");
+        if (maduleName.length <= 3 || maduleName.length >= 150) {
+            setModuleNameError("module Name must be between 3 to 150 charecters");
             setFormValid(false)
         } else {
-            setModuleNameShort("");
+            setModuleNameError("");
             setFormValid(true)
         }
     }
+    useEffect(() => {
+        handleChangeModuleNameShort();
+    }, [moduleNameShort])
+    const handleChangeModuleNameShort = () => {
+        if (!moduleNameShort) return;
+        if (moduleNameShort.length <= 3 || moduleNameShort.length >= 50) {
+            setModuleNameShortError("module Name Short must be between 3 to 50 charecters");
+            setFormValid(false)
+        } else {
+            setModuleNameShortError("");
+            setFormValid(true)
+        }
+    }
+    useEffect(() => {
+        fetchIp();
+    }, [])
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (maduleName === "") {
-            setMaduleName("District Name is Required");
+            setModuleNameError("module name is Required")
         }
-        else if (maduleName.length > 50) {
-            setMaduleName("title Name must be less 50 words");
+        else if (maduleName.length <= 3 || moduleNameShort.length >= 150) {
+            setModuleNameError("madule Name must be between 3 to 150 charecters");
+        } else {
+            setModuleNameError("")
+        }
+        if (moduleNameShort === "") {
+            setModuleNameShortError("module name is Required")
+        }
+        else if (moduleNameShort.length <= 3 || moduleNameShort.length >= 50) {
+            setModuleNameShortError("madule Name Short must be between 3 to 50 charecters");
+        } else {
+            setModuleNameShortError("")
         }
         if (formValid) {
             const payload = {
@@ -60,10 +94,10 @@ export default () => {
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/Module/SetModule`,
+                `${process.env.REACT_APP_API}Module/SetModule`,
                 payload
             )
                 .then((response) => {
@@ -98,6 +132,7 @@ export default () => {
                                         onChange={(e) => {
                                             setMaduleName(e.target.value);
                                             setModuleNameError("");
+                                            handleChangeModuleName();
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -111,6 +146,7 @@ export default () => {
                                         onChange={(e) => {
                                             setModuleNameShort(e.target.value);
                                             setModuleNameShortError("");
+                                            handleChangeModuleNameShort();
                                         }} />
                                 </Form.Group>
                             </Col>

@@ -11,7 +11,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [officeTypeId, setofficeTypeId] = useState("");
+    const [officeTypeId, setofficeTypeId] = useState(0);
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [officeTypeError, setOfficeTypeError] = useState("");
     const [designationName, setdesignationName] = useState("");
@@ -31,27 +31,82 @@ export default () => {
     const handleCancel = () => {
         history.push("/designations")
     }
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
+    const handleOfficeTypeChange = (event) => {
+        setofficeTypeId(event.target.value);
+
+        //setUserNameError("");
+    };
+
+    const getAllOfficeType = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+        setOfficeTypeDropdownData(result.data);
+    };
+
     useEffect(() => {
-        handleChangedesignation();
+        getAllOfficeType();
+        fetchIp();
+    }, []);
+
+    useEffect(() => {
+        handleChangeDesignationName();
     }, [designationName])
-    const handleChangedesignation = () => {
+    const handleChangeDesignationName = () => {
         if (!designationName) return;
-        if (designationName.length > 50 && designationName.length < 2) {
-            setDesignationNameError("Title Name must be less 50 words");
+        if (designationName.length < 3 ||
+            designationName.length > 150) {
+            setDesignationNameError("Designation Name must be between 3 to 150 words");
             setFormValid(false)
         } else {
             setDesignationNameError("");
             setFormValid(true)
         }
     }
+    useEffect(() => {
+        handleChangeDesignationShort();
+    }, [designationShort])
+    const handleChangeDesignationShort = () => {
+        if (!designationShort) return;
+        if (designationShort.length <= 2 ||
+            designationShort.length > 150) {
+            setDesignationShortError("Designation Name must be between 3 to 150 words");
+            setFormValid(false)
+        } else {
+            setDesignationShortError("");
+            setFormValid(true)
+        }
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (designationName === "") {
-            setDesignationNameError("Designation Name is Required");
+        if (designationName === null || designationName === "") {
+            setDesignationNameError("designation is required");
+
+        } else if (designationName.length <= 2 ||
+            designationName.length > 150) {
+            setDesignationNameError("Designation Name must be between 3 to 150 words");
         }
-        else if (designationName.length > 50) {
-            setDesignationShortError("Designation Name must be less 50 words");
+        else {
+            setDesignationNameError("");
+
         }
+        if (designationShort === null || designationShort === "") {
+            setDesignationShortError("designation short is required");
+
+        } else if (designationShort.length <= 2 ||
+            designationShort.length > 150) {
+            setDesignationShortError("Designation Name must be between 3 to 150 words");
+        }
+
+        else { setDesignationShortError(""); }
+
+        if (officeTypeId === "") {
+            setOfficeTypeError("Office Type is required/Input Only Numereic value");
+
+        } else { setOfficeTypeError(""); }
         if (formValid) {
             const payload = {
                 officeTypeId: officeTypeId,
@@ -61,7 +116,7 @@ export default () => {
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
             Axios.post(
                 `http://122.176.101.76:8085/api/Designation/SetDesignation`,
@@ -96,11 +151,14 @@ export default () => {
                                     {officeTypeError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter office type here" value={officeTypeId}
-                                        onChange={(e) => {
-                                            setofficeTypeId(e.target.value);
-                                            setOfficeTypeError("");
-                                        }} />
+                                    <Form.Select onChange={handleOfficeTypeChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                    >
+                                        {officeTypeDropdownData.map((s) => <option value={s.officeTypeId}>{s.officeTypeId}</option>)}
+                                        {/* Add other menu items here */}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -113,7 +171,7 @@ export default () => {
                                         onChange={(e) => {
                                             setdesignationName(e.target.value);
                                             setDesignationNameError("");
-                                            handleChangedesignation()
+                                            handleChangeDesignationName()
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -129,6 +187,7 @@ export default () => {
                                         onChange={(e) => {
                                             setdesignationShort(e.target.value);
                                             setDesignationShortError("");
+                                            handleChangeDesignationShort();
                                         }} />
                                 </Form.Group>
                             </Col>

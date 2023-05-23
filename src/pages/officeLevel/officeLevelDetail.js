@@ -58,7 +58,7 @@ export default () => {
                 ipAddress: "ipAddress",
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/OfficeLevel/SetOfficeLevel`,
+                `${process.env.REACT_APP_API}OfficeLevel/SetOfficeLevel`,
                 payload
             )
                 .then((response) => {

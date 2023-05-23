@@ -6,6 +6,7 @@ import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
+import MenuItem from '@material-ui/core/MenuItem';
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
@@ -13,6 +14,7 @@ export default () => {
     const history = useHistory();
     const [disttId, setDisstId] = useState(0);
     const [stateId, setStateId] = useState(0);
+    const [stateDropdownData, setStateDropdownData] = useState([]);
     const [stateNameError, setStateNameError] = useState("");
     const [distName, setDistName] = useState("");
     const [distNameError, setDistNameError] = useState("");
@@ -28,26 +30,75 @@ export default () => {
     const handleCancel = () => {
         history.push("/district")
     }
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
+    const handleStateChange = (event) => {
+        setStateId(event.target.value);
+
+        //setUserNameError("");
+    };
+    const getAllState = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
+        setStateDropdownData(result.data);
+    };
+    console.log(stateDropdownData, "statedropdown");
     useEffect(() => {
-        handleChangeDisstName();
-    }, [distShortName])
-    const handleChangeDisstName = () => {
-        if (!distShortName) return;
-        if (distShortName.length > 50 && distShortName.length < 2) {
-            setDistNameError("Title Name must be less 50 words");
+        getAllState();
+        fetchIp();
+    }, []);
+    useEffect(() => {
+        handleChangeDistName();
+    }, [distName])
+    const handleChangeDistName = () => {
+        if (!distName) return;
+        if (distName.length <= 2 || distName.length >= 150) {
+            setDistNameError("District Name must be between 3 to 150 words");
             setFormValid(false)
         } else {
             setDistNameError("");
             setFormValid(true)
         }
     }
+    useEffect(() => {
+        handleChangeDistShortName();
+    }, [distShortName])
+    const handleChangeDistShortName = () => {
+        if (!distShortName) return;
+        if (distShortName.length <= 2 || distShortName.length >= 50) {
+            setDistShortNameError("District Name must be between 3 to 150 words");
+            setFormValid(false)
+        } else {
+            setDistShortNameError("");
+            setFormValid(true)
+        }
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
         if (distName === "") {
-            setDistNameError("District Name is Required");
+            setDistNameError("District name is Required");
         }
-        else if (distName.length > 50) {
-            setDistNameError("title Name must be less 50 words");
+        else if (distName.length <= 2 || distName.length >= 150) {
+            setDistNameError("District Name must be between 3 to 150 words");
+        }
+        else {
+            setDistNameError("");
+        }
+        if (distShortName === "") {
+            setDistShortNameError("District short name is Required");
+        } else if (distShortName.length <= 2 || distShortName.length >= 50) {
+            setDistShortNameError("District Name must be between 3 to 150 words");
+        }
+        else {
+            setDistShortNameError("");
+        }
+        if (ipAddress === "") {
+            setipAddressError("ipAddress is Required");
+        }
+        else {
+            setipAddressError("");
         }
         if (formValid) {
             const payload = {
@@ -58,9 +109,8 @@ export default () => {
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress
             };
-            console.log(disttId, "disttId");
             Axios.post(
                 `http://122.176.101.76:8085/api/District/SetDistrict`,
                 payload
@@ -93,13 +143,26 @@ export default () => {
                                     {stateNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={stateId}
-                                        onChange={(e) => {
-                                            setStateId(e.target.value);
-                                            setStateNameError("");
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleStateChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose....
+                                        </option>
+                                        {stateDropdownData.map((s) => (
+                                            <option key={s.stateId} value={s.stateId}>
+                                                {s.stateName}
+                                            </option>
+                                        ))}
+                                        {/* Add other menu items here */}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
+
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>District Name</Form.Label>
@@ -110,7 +173,7 @@ export default () => {
                                         onChange={(e) => {
                                             setDistName(e.target.value);
                                             setDistNameError("");
-                                            handleChangeDisstName()
+                                            handleChangeDistName()
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -126,6 +189,7 @@ export default () => {
                                         onChange={(e) => {
                                             setDistShortName(e.target.value);
                                             setDistShortNameError("");
+                                            handleChangeDistShortName()
                                         }} />
                                 </Form.Group>
                             </Col>

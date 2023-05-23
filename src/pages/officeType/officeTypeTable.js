@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-const API = `http://122.176.101.76:8085/api/OfficeType/GetOfficeType`;
+const API = `${process.env.REACT_APP_API}OfficeType/GetOfficeType`;
 export const OfficeTypeTable = ({ searchText }) => {
     const [officeTypeData, setOfficeTypeData] = useState([]);
     const [officeTypeId, setOfficeTypeId] = useState(0);
@@ -38,7 +38,7 @@ export const OfficeTypeTable = ({ searchText }) => {
             if (result.isConfirmed) {
                 axios
                     .post(
-                        `http://122.176.101.76:8085/api/OfficeType/deleteOfficeType/${id}`
+                        `${process.env.REACT_APP_API}OfficeType/deleteOfficeType/${id}`
                     )
                     .then((res) => {
                         Swal.fire({

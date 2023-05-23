@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-const API = `http://122.176.101.76:8085/api/OfficeUnit/GetOfficeUnit`;
+const API = `${process.env.REACT_APP_API}OfficeUnit/GetOfficeUnit`;
 export const OfficeUnitTable = ({ searchText }) => {
     const [officeUnitData, setOfficeUnitData] = useState([]);
     const [officeUnitId, setOfficeUnitId] = useState(0);
@@ -43,7 +43,7 @@ export const OfficeUnitTable = ({ searchText }) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 axios
-                    .post(`http://122.176.101.76:8085/api/OfficeUnit/deleteOfficeUnit/${id}`)
+                    .post(`${process.env.REACT_APP_API}OfficeUnit/deleteOfficeUnit/${id}`)
                     .then((res) => {
                         Swal.fire({
                             icon: "success",

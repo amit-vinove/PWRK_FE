@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-const API = `http://122.176.101.76:8085/api/OfficeAccountDetails/GetOfficeAccountDetails`;
+const API = `${process.env.REACT_APP_API}OfficeAccountDetails/GetOfficeAccountDetails`;
 export const OtherOfficeTable = ({ searchText }) => {
     const [officeAccDetailData, setOfficeAccDetailData] = useState([]);
     const [officeAccDetailId, setOfficeAccDetailId] = useState(0);
@@ -36,7 +36,7 @@ export const OtherOfficeTable = ({ searchText }) => {
             if (result.isConfirmed) {
                 axios
                     .post(
-                        `http://122.176.101.76:8085/api/OfficeAccountDetail/deleteOfficeAccountDetail/${id}`
+                        `${process.env.REACT_APP_API}OfficeAccountDetail/deleteOfficeAccountDetail/${id}`
                     )
                     .then((res) => {
                         Swal.fire({

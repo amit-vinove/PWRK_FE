@@ -27,12 +27,13 @@ export default () => {
         history.push("/rti-designations")
     }
     useEffect(() => {
-        handleChangeState();
+        handleChangeRtiDesignation();
     }, [rtiDesignation])
-    const handleChangeState = () => {
+    const handleChangeRtiDesignation = () => {
         if (!rtiDesignation) return;
-        if (rtiDesignation.length > 50 && rtiDesignation.length < 2) {
-            setRtiDesignationError("state Name  must be less 50 words");
+        if (rtiDesignation.length <= 2 ||
+            rtiDesignation.length > 100) {
+            setRtiDesignationError("RTI Designation Must Be Between 3 to 100 Letter");
             setFormValid(false)
         } else {
             setRtiDesignationError("");
@@ -42,11 +43,16 @@ export default () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (rtiDesignation === "") {
-            setRtiDesignationError("District Name is Required");
+            setRtiDesignationError("RTI Designation is Required");
+        } else if (rtiDesignation.length <= 2 ||
+            rtiDesignation.length > 100) {
+            setRtiDesignationError("RTI Designation Must Be Between 3 to 100 Letter");
         }
-        else if (rtiDesignation.length > 50) {
-            setRtiDesignationError("rti designation Name must be less 50 words");
+
+        else {
+            setRtiDesignationError("");
         }
+
         if (formValid) {
             const payload = {
                 rtiDesigId: rtiDesigId,
@@ -57,7 +63,7 @@ export default () => {
                 ipAddress: "ipAddress",
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/RTIDesignation/SetRTIDesignation`,
+                `${process.env.REACT_APP_API}RTIDesignation/SetRTIDesignation`,
                 payload
             )
                 .then((response) => {
@@ -92,6 +98,7 @@ export default () => {
                                         onChange={(e) => {
                                             setrtiDesignation(e.target.value);
                                             setRtiDesignationError("");
+                                            handleChangeRtiDesignation();
                                         }} />
                                 </Form.Group>
                             </Col>

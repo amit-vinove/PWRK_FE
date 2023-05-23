@@ -88,7 +88,7 @@ export default () => {
                 ipAddress: "ipAddress",
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/OfficeUnit/SetOfficeUnit`,
+                `${process.env.REACT_APP_API}OfficeUnit/SetOfficeUnit`,
                 payload
             )
                 .then((response) => {

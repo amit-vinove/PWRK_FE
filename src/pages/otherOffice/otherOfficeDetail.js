@@ -80,7 +80,7 @@ export default () => {
                 ipAddress: "ipAddress",
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/OfficeAccountDetails/SetOfficeAccountDetails`,
+                `${process.env.REACT_APP_API}OfficeAccountDetails/SetOfficeAccountDetails`,
                 payload
             )
                 .then((response) => {

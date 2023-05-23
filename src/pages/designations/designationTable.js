@@ -4,7 +4,7 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-const API = `http://122.176.101.76:8085/api/Designation/GetDesignation`;
+const API = `${process.env.REACT_APP_API}Designation/GetDesignation`;
 export const DesignationTable = ({ searchText }) => {
   const [designationData, setDesignationData] = useState([]);
   const [tempDesignationData, setTempDesignationData] = useState([]);

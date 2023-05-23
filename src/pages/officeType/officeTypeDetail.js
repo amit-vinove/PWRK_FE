@@ -63,7 +63,7 @@ export default () => {
                 ipAddress: "ipAddress",
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/OfficeType/SetOfficeType`,
+                `${process.env.REACT_APP_API}OfficeType/SetOfficeType`,
                 payload
             )
                 .then((response) => {

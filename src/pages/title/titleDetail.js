@@ -24,6 +24,14 @@ export default () => {
   const handleCancel = () => {
     history.push("/title")
   }
+  const fetchIp = async () => {
+    const res = await axios.get('https://geolocation-db.com/json/')
+    console.log(res.data.IPv4);
+    setipAddress(res.data.IPv4)
+  }
+  useEffect(() => {
+    fetchIp();
+  }, [])
   useEffect(() => {
     handleChangeTitleName();
   }, [titleName])
@@ -56,7 +64,7 @@ export default () => {
       };
       console.log(titleId, "titleId");
       Axios.post(
-        `http://122.176.101.76:8085/api/Title/SetTitle`,
+        `${process.env.REACT_APP_API}Title/SetTitle`,
         payload
       )
         .then((response) => {

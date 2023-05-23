@@ -28,23 +28,36 @@ export default () => {
     const handleCancel = () => {
         history.push("/ddoType")
     }
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
     useEffect(() => {
-        handleChangeDisstName();
+        handleChangeDDoType();
     }, [ddoType])
-    const handleChangeDisstName = () => {
+    const handleChangeDDoType = () => {
         if (!ddoType) return;
-        if (ddoType.length > 50 && ddoType.length < 2) {
-            setDdoTypeError("Title Name must be less 50 words");
+        if (ddoType.length >= 50) {
+            setDdoTypeError("ddo type does no more the 50 letters");
             setFormValid(false)
         } else {
             setDdoTypeError("");
             setFormValid(true)
         }
     }
+    useEffect(() => {
+        fetchIp();
+    }, [])
     const handleSubmit = (e) => {
         e.preventDefault();
         if (ddoType === "") {
-            setDdoTypeError("Ddo Type is Required");
+            setDdoTypeError("DdoType is Required");
+        } else if (ddoType.length >= 50) {
+            setDdoTypeError("ddo type does no more the 50 letters");
+        }
+        else {
+            setDdoTypeError("");
         }
         if (formValid) {
             const payload = {
@@ -53,10 +66,10 @@ export default () => {
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/DDOType/SetDDOType`,
+                `${process.env.REACT_APP_API}DDOType/SetDDOType`,
                 payload
             )
                 .then((response) => {
@@ -95,19 +108,22 @@ export default () => {
                                         }} />
                                 </Form.Group>
                             </Col>
-                            <Form.Label>  <br /></Form.Label>
-                            <Col md={1} className="mb-1" >
-                                <input
-                                    class="form-check-input" type="checkbox"
-                                    checked={isActive}
-                                    onChange={(e) => {
-                                        setIsActive(e.target.checked);
-                                    }}
-                                    value={isActive}
-                                    id="defaultCheck1"
-                                /></Col>
-                            <Col md={5} className="mb-2" >
-                                <Form.Label>Status</Form.Label>
+                            <Col md={6} className="mb-3" >
+                                <Row >
+                                    <Form.Label> <br /> </Form.Label>
+                                    <Col md={1} className="mb-1" >   <input
+                                        class="form-check-input" type="checkbox"
+                                        checked={isActive}
+                                        onChange={(e) => {
+                                            setIsActive(e.target.checked);
+                                        }}
+                                        value={isActive}
+                                        id="defaultCheck1"
+                                    /></Col>
+                                    <Col md={5} className="mb-2" >
+                                        <Form.Label>Status</Form.Label>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                         <div className="mt-3">

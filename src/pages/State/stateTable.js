@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-const API = `http://122.176.101.76:8085/api/State/GetState`;
+const API = `${process.env.REACT_APP_API}State/GetState`;
 export const StateTable = ({ searchText }) => {
     const [stateData, setStateData] = useState([]);
     const [stateId, setStateId] = useState(0);

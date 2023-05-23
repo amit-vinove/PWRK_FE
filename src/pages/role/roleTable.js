@@ -28,7 +28,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-const API = `http://122.176.101.76:8085/api/Role/GetRole`;
+const API = `${process.env.REACT_APP_API}Role/GetRole`;
 export const RoleTable = ({ searchText }) => {
     const [roleData, setRoleData] = useState([]);
     const [roleId, setRoleId] = useState(0);
@@ -59,7 +59,7 @@ export const RoleTable = ({ searchText }) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 axios
-                    .post(`http://122.176.101.76:8085/api/Role/deleteRole/${id}`)
+                    .post(`${process.env.REACT_APP_API}Role/deleteRole/${id}`)
                     .then((res) => {
                         Swal.fire({
                             icon: "success",

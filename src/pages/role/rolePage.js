@@ -5,7 +5,7 @@ import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-ic
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
 import { RoleTable } from "./roleTable";
 import { Link, useHistory } from "react-router-dom";
-const API = `http://122.176.101.76:8085/api/Role/GetRole`;
+const API = `${process.env.REACT_APP_API}Role/GetRole`;
 export default () => {
     const history = useHistory();
     const [Search, setSearch] = useState("");

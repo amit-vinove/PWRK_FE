@@ -5,7 +5,7 @@ import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-ic
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
 import { StateTable } from "./stateTable";
-const API = `http://122.176.101.76:8085/api/State/GetState`;
+const API = `${process.env.REACT_APP_API}State/GetState`;
 export default () => {
     const history = useHistory();
     const [Search, setSearch] = useState("");

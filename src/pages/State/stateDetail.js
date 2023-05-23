@@ -27,6 +27,14 @@ export default () => {
     const handleCancel = () => {
         history.push("/state")
     }
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
+    useEffect(() => {
+        fetchIp();
+    }, [])
     useEffect(() => {
         handleChangeState();
     }, [stateName])
@@ -55,10 +63,10 @@ export default () => {
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/State/SetState`,
+                `${process.env.REACT_APP_API}State/SetState`,
                 payload
             )
                 .then((response) => {
