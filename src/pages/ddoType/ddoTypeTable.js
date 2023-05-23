@@ -4,6 +4,8 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}DDOType/getDDOType`;
 export const DDOTypeTable = ({ searchText }) => {
     const [ddoTypeData, setDDOTypeData] = useState([]);
@@ -21,6 +23,36 @@ export const DDOTypeTable = ({ searchText }) => {
                 i.districtName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Do You Want To Delete?",
+            showCancelButton: true,
+            icon: "warning",
+            confirmButtonText: "Yes, delete it!",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios
+                    .post(
+                        `${process.env.REACT_APP_API}DDOType/deleteDDOType/${id}`
+                    )
+                    .then((res) => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Your work has been Deleted",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        getDDOType();
+                    })
+                    .catch(() => {
+                        Swal.fire("DDO type not deleted.");
+                    });
+                console.log(id, "DDO");
+            }
+        });
+    };
     useEffect(() => {
         getDDOType();
     }, []);
@@ -28,7 +60,7 @@ export const DDOTypeTable = ({ searchText }) => {
         searchDDOType(searchText);
     }, [searchText])
     const TableRow = (props) => {
-        const { srNo, ddoType, isActive } = props;
+        const { srNo, ddoTypeId, ddoType, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
         return (
             <tr>
@@ -61,7 +93,7 @@ export const DDOTypeTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
-                            <Dropdown.Item className="text-danger">
+                            <Dropdown.Item className="text-danger" onClick={() => { handleDelete(ddoTypeId) }}>
                                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
                             </Dropdown.Item>
                         </Dropdown.Menu>

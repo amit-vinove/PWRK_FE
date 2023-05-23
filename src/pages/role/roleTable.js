@@ -1,15 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faAngleDown,
-    faAngleUp,
-    faArrowDown,
-    faArrowUp,
-    faEdit,
-    faEllipsisH,
-    faExternalLinkAlt,
-    faEye,
-    faTrashAlt,
+    faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     Col,
@@ -82,7 +74,7 @@ export const RoleTable = ({ searchText }) => {
         searchState(searchText);
     }, [searchText]);
     const TableRow = (props) => {
-        const { srNo, roleName, isActive } = props;
+        const { srNo, roleId, roleName, isActive } = props;
         const statusVariant = isActive
             ? "success"
             : !isActive
@@ -124,7 +116,6 @@ export const RoleTable = ({ searchText }) => {
                             <Dropdown.Item
                                 className="text-danger"
                                 onClick={() => {
-                                    setRoleId(props.roleId);
                                     handleDelete(roleId);
                                 }}
                             >

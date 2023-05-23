@@ -65,6 +65,8 @@ import ddoTypeDetail from './ddoType/ddoTypeDetail';
 import officeUnitDetail from './officeUnit/officeUnitDetail';
 import mainOfficeDetail from './office/mainOfficeDetail';
 import mainOfficeAccDetail from './officeAccDetail/mainOfficeAccDetail';
+import userPage from './user/userPage';
+import userDetail from './user/userDetail';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -128,6 +130,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.ModuleDetail.path} component={moduleDetail} />
     <RouteWithSidebar exact path={Routes.TitleDetail.path} component={titleDetail} />
     <RouteWithSidebar exact path={Routes.RoleDetail.path} component={roleDetail} />
+    <RouteWithSidebar exact path={Routes.UserDetail.path} component={userDetail} />
     <RouteWithSidebar exact path={Routes.RtiDesignationDetail.path} component={rtidesignationdetail} />
     <RouteWithSidebar exact path={Routes.DistrictDetail.path} component={districtDetail} />
     <RouteWithSidebar exact path={Routes.StateDetail.path} component={stateDetail} />
@@ -146,6 +149,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.OfficeAccDetail.path} component={officeAccDeataiPage} />
     <RouteWithSidebar exact path={Routes.OtherOffice.path} component={otherOfficePage} />
     <RouteWithSidebar exact path={Routes.Role.path} component={rolePage} />
+    <RouteWithSidebar exact path={Routes.User.path} component={userPage} />
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
     {/* components */}

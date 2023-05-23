@@ -151,13 +151,21 @@ export default () => {
                                     {officeTypeError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )}
-                                    <Form.Select onChange={handleOfficeTypeChange}
+                                    <Form.Select
+                                        onChange={handleOfficeTypeChange}
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
                                     >
-                                        {officeTypeDropdownData.map((s) => <option value={s.officeTypeId}>{s.officeTypeId}</option>)}
-                                        {/* Add other menu items here */}
+                                        <option value="" disabled>
+                                            Choose office type....
+                                        </option>
+                                        {officeTypeDropdownData.map((s) => (
+                                            <option key={s.officeTypeId} value={s.officeTypeId}>
+                                                {s.officeTypeId}
+                                            </option>
+                                        ))}
                                     </Form.Select>
                                 </Form.Group>
                             </Col>

@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment-timezone";
 import Datetime from "react-datetime";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+    Col,
+    Row,
+    Card,
+    Form,
+    Button,
+    InputGroup,
+} from "@themesberg/react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
@@ -55,31 +62,98 @@ export default () => {
     const [updateOfficeId, setUpdateOfficeId] = useState(0);
     const [ipAddress, setipAddress] = useState("");
     const [updateby, setupdateby] = useState(0);
-    const jsonData = { updateby: "123", };
+    const jsonData = { updateby: "123" };
     const [updateon, setupdateon] = useState(new Date());
-    const handleCancel = () => {
-        history.push("/office")
-    }
     const [formValid, setFormValid] = useState(false);
+
+    const handleCancel = () => {
+        history.push("/office");
+    };
+    const fetchIp = async () => {
+        const res = await axios.get("https://geolocation-db.com/json/");
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4);
+    };
+    const handleOfficeTypeChange = (event) => {
+        setofficeTypeId(event.target.value);
+    };
+    const getAllOfficeType = async () => {
+        let result = await Axios.get(
+            `${process.env.REACT_APP_API}OfficeType/GetOfficeType`
+        );
+        setOfficeTypeDropdownData(result.data);
+    };
+    const handleStateChange = (event) => {
+        setStateId(event.target.value);
+    };
+    const getAllState = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
+        setStateDData(result.data);
+    };
+    const handleDistrictChange = (event) => {
+        setDisttId(event.target.value);
+    };
+    const getAllDistrict = async () => {
+        let result = await Axios.get(
+            `${process.env.REACT_APP_API}District/GetDistrict`
+        );
+        setDisttDData(result.data);
+    };
+    const handleOfficeLevelChange = (event) => {
+        setOfficeLevelId(event.target.value);
+    };
+    const getAllOfficeLevel = async () => {
+        let result = await Axios.get(
+            `${process.env.REACT_APP_API}OfficeLevel/GetOfficeLevel`
+        );
+        setOfficeLevelDData(result.data);
+    };
+    const handleDesignationChange = (event) => {
+        setdesignationId(event.target.value);
+    };
+    const getAllDesignation = async () => {
+        let result = await Axios.get(
+            `${process.env.REACT_APP_API}Designation/GetDesignation`
+        );
+        setdesignationDData(result.data);
+    };
+    const handleRTIDesignationChange = (event) => {
+        setRtiDesigId(event.target.value);
+    };
+    const getAllRTIDesignation = async () => {
+        let result = await Axios.get(
+            `${process.env.REACT_APP_API}RTIDesignation/GetRTIDesignation`
+        );
+        setRtiDesigDData(result.data);
+    };
+
+    useEffect(() => {
+        getAllState();
+        getAllDistrict();
+        getAllOfficeType();
+        getAllOfficeLevel();
+        getAllDesignation();
+        getAllRTIDesignation();
+        fetchIp();
+    }, []);
     useEffect(() => {
         handleChangeOffice();
-    }, [officeName])
+    }, [officeName]);
     const handleChangeOffice = () => {
         if (!officeName) return;
         if (officeName.length > 50 && officeName.length < 2) {
             setofficeNameError("Office  Name must be less 50 words");
-            setFormValid(false)
+            setFormValid(false);
         } else {
             setofficeNameError("");
-            setFormValid(true)
+            setFormValid(true);
         }
-    }
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         if (officeName === "") {
             setofficeNameError("Office Name is Required");
-        }
-        else if (officeNameHindi.length > 50) {
+        } else if (officeNameHindi.length > 50) {
             setOfficeNameHindiError("Office name hindi Name must be less 50 words");
         }
         if (formValid) {
@@ -120,23 +194,20 @@ export default () => {
                 updateOfficeTypeId: updateOfficeTypeId,
                 updateOfficeId: updateOfficeId,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}Office/SetOffice`,
-                payload
-            )
+            Axios.post(`${process.env.REACT_APP_API}Office/SetOffice`, payload)
                 .then((response) => {
                     console.log(response.data);
                     Swal.fire("Save", "Office Saved Sucessfully", "success");
 
-                    history.push("/office")
+                    history.push("/office");
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-        };
-    }
+        }
+    };
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -151,29 +222,44 @@ export default () => {
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Office Type</Form.Label>
-                                    {/* {officetype && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeTypeId}
-                                        onChange={(e) => {
-                                            setofficeTypeId(e.target.value);
-                                            //setStateNameError("");
-                                        }} />
+                                    <Form.Label>Office Type Id</Form.Label>
+                                    <Form.Select
+                                        onChange={handleOfficeTypeChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose office type....
+                                        </option>
+                                        {officeTypeDropdownData.map((s) => (
+                                            <option key={s.officeTypeId} value={s.officeTypeId}>
+                                                {s.officeTypeId}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Office Name</Form.Label>
                                     {officeNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeNameError}</p>
+                                        <p style={{ color: "red", fontSize: "15px" }}>
+                                            *{officeNameError}
+                                        </p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeName}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={officeName}
                                         onChange={(e) => {
                                             setOfficeName(e.target.value);
                                             setofficeNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -184,11 +270,16 @@ export default () => {
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeNameHindi}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={officeNameHindi}
                                         onChange={(e) => {
                                             setOfficeNameHindi(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -197,12 +288,17 @@ export default () => {
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeCode}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={officeCode}
                                         onChange={(e) => {
                                             setOfficeCode(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -213,25 +309,37 @@ export default () => {
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={address}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={address}
                                         onChange={(e) => {
                                             setAddress(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>State Name</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={stateId}
-                                        onChange={(e) => {
-                                            setStateId(e.target.value);
-                                            //setDistNameError("");
-                                            //handleChangeDisstName()
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleStateChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose state name....
+                                        </option>
+                                        {stateDData.map((s) => (
+                                            <option key={s.stateId} value={s.stateId}>
+                                                {s.stateName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -239,14 +347,22 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>District Name</Form.Label>
-                                    {/* {officetype && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={disttId}
-                                        onChange={(e) => {
-                                            setDisttId(e.target.value);
-                                            //setStateNameError("");
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleDistrictChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose district name....
+                                        </option>
+                                        {disttDData.map((s) => (
+                                            <option key={s.disttId} value={s.disttId}>
+                                                {s.distName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -255,12 +371,17 @@ export default () => {
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={pinCode}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={pinCode}
                                         onChange={(e) => {
                                             setPinCode(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -271,11 +392,16 @@ export default () => {
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={stdCode}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={stdCode}
                                         onChange={(e) => {
                                             setStdCode(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -284,12 +410,17 @@ export default () => {
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={contactNo}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={contactNo}
                                         onChange={(e) => {
                                             setContactNo(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -300,11 +431,16 @@ export default () => {
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={emailId}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={emailId}
                                         onChange={(e) => {
                                             setEmailId(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -313,157 +449,219 @@ export default () => {
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={longitude}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={longitude}
                                         onChange={(e) => {
                                             setLongitude(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Latitude</Form.Label>
+                                    {/* {distNameError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
+                                    )} */}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={latitude}
+                                        onChange={(e) => {
+                                            setLatitude(e.target.value);
+                                            //setDistNameError("");
+                                            //handleChangeDisstName()
+                                        }}
+                                    />
+                                </Form.Group>
+                            </Col>
+
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 1</Form.Label>
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={parentId1}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={parentId1}
                                         onChange={(e) => {
                                             setParentId1(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
+                        </Row>
+                        <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 1 WEF</Form.Label>
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={parentId1WEF}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={parentId1WEF}
                                         onChange={(e) => {
                                             setParentId1WEF(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
-                        </Row>
-                        <Row>
+
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 2</Form.Label>
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={parentId2}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={parentId2}
                                         onChange={(e) => {
                                             setParentId2(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
+                        </Row>
+                        <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 2 WEF</Form.Label>
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={parentId2WEF}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={parentId2WEF}
                                         onChange={(e) => {
                                             setParentId2WEF(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
-                        </Row>
-                        <Row>
+
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 3</Form.Label>
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={parentId3}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={parentId3}
                                         onChange={(e) => {
                                             setParentId3(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
+                        </Row>
+                        <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 3 WEF</Form.Label>
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={parentId3WEF}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={parentId3WEF}
                                         onChange={(e) => {
                                             setParentId3WEF(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
-                        </Row>
-                        <Row>
+
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 4</Form.Label>
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={parentId4}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={parentId4}
                                         onChange={(e) => {
                                             setParentId4(e.target.value);
                                             //setStateNameError("");
-                                        }} />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Parent Id 4 WEF</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={parentId4WEF}
-                                        onChange={(e) => {
-                                            setParentId4WEF(e.target.value);
-                                            //setDistNameError("");
-                                            //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Designation</Form.Label>
-                                    {/* {officetype && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
+                                    <Form.Label>Parent Id 4 WEF</Form.Label>
+                                    {/* {distNameError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={designationId}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={parentId4WEF}
                                         onChange={(e) => {
-                                            setdesignationId(e.target.value);
-                                            //setStateNameError("");
-                                        }} />
+                                            setParentId4WEF(e.target.value);
+                                            //setDistNameError("");
+                                            //handleChangeDisstName()
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Office</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeId}
-                                        onChange={(e) => {
-                                            setofficeId(e.target.value);
-                                            //setDistNameError("");
-                                            //handleChangeDisstName()
-                                        }} />
+                                    <Form.Label>Designation</Form.Label>
+                                    <Form.Select
+                                        onChange={handleDesignationChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose designation....
+                                        </option>
+                                        {designationDData.map((s) => (
+                                            <option key={s.designationId} value={s.designationId}>
+                                                {s.designationName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -471,28 +669,43 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Office Level</Form.Label>
-                                    {/* {officetype && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeLevelId}
-                                        onChange={(e) => {
-                                            setOfficeLevelId(e.target.value);
-                                            //setStateNameError("");
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleOfficeLevelChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose office level....
+                                        </option>
+                                        {officeLevelDData.map((s) => (
+                                            <option key={s.officeLevelId} value={s.officeLevelId}>
+                                                {s.officeLevel}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>RTI Designation</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={rtiDesigId}
-                                        onChange={(e) => {
-                                            setRtiDesigId(e.target.value);
-                                            //setDistNameError("");
-                                            //handleChangeDisstName()
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleRTIDesignationChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose RTI designation....
+                                        </option>
+                                        {rtiDesigDData.map((s) => (
+                                            <option key={s.rtiDesigId} value={s.rtiDesigId}>
+                                                {s.rtiDesignation}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -503,11 +716,16 @@ export default () => {
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={rtiJuris}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={rtiJuris}
                                         onChange={(e) => {
                                             setRtiJuris(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -516,12 +734,17 @@ export default () => {
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={jurisdiction}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={jurisdiction}
                                         onChange={(e) => {
                                             setJurisDiction(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -532,11 +755,16 @@ export default () => {
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={comment}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={comment}
                                         onChange={(e) => {
                                             setComment(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -545,46 +773,65 @@ export default () => {
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={seqId}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={seqId}
                                         onChange={(e) => {
                                             setSeqId(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={6} className="mb-3" >
-                                <Row >
-                                    <Form.Label> <br /> </Form.Label>
-                                    <Col md={1} className="mb-1" >   <input
-                                        class="form-check-input" type="checkbox"
-                                        checked={isActive}
-                                        onChange={(e) => {
-                                            setIsActive(e.target.checked);
-                                        }}
-                                        value={isActive}
-                                        id="defaultCheck1"
-                                    /></Col>
-                                    <Col md={5} className="mb-2" >
+                            <Col md={6} className="mb-3">
+                                <Row>
+                                    <Form.Label>
+                                        {" "}
+                                        <br />{" "}
+                                    </Form.Label>
+                                    <Col md={1} className="mb-1">
+                                        {" "}
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            checked={isActive}
+                                            onChange={(e) => {
+                                                setIsActive(e.target.checked);
+                                            }}
+                                            value={isActive}
+                                            id="defaultCheck1"
+                                        />
+                                    </Col>
+                                    <Col md={5} className="mb-2">
                                         <Form.Label>Status</Form.Label>
                                     </Col>
                                 </Row>
                             </Col>
                             <Col md={6} className="mb-3">
-                                <Row >
-                                    <Form.Label> <br /> </Form.Label>
-                                    <Col md={1} className="mb-1" >   <input
-                                        class="form-check-input" type="checkbox"
-                                        checked={isVisible}
-                                        onChange={(e) => {
-                                            setIsVisible(e.target.checked);
-                                        }}
-                                        value={isActive}
-                                        id="defaultCheck1"
-                                    /></Col>
-                                    <Col md={5} className="mb-2" >
+                                <Row>
+                                    <Form.Label>
+                                        {" "}
+                                        <br />{" "}
+                                    </Form.Label>
+                                    <Col md={1} className="mb-1">
+                                        {" "}
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            checked={isVisible}
+                                            onChange={(e) => {
+                                                setIsVisible(e.target.checked);
+                                            }}
+                                            value={isActive}
+                                            id="defaultCheck1"
+                                        />
+                                    </Col>
+                                    <Col md={5} className="mb-2">
                                         <Form.Label>Is Visible</Form.Label>
                                     </Col>
                                 </Row>
@@ -597,11 +844,16 @@ export default () => {
                                     {/* {officetype && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={updateOfficeTypeId}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={updateOfficeTypeId}
                                         onChange={(e) => {
                                             setUpdateOfficeTypeId(e.target.value);
                                             //setStateNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -610,18 +862,32 @@ export default () => {
                                     {/* {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={updateOfficeId}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Title here"
+                                        value={updateOfficeId}
                                         onChange={(e) => {
                                             setUpdateOfficeId(e.target.value);
                                             //setDistNameError("");
                                             //handleChangeDisstName()
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <div className="mt-3">
-                            <Button variant="primary" type="submit" onClick={handleCancel} >Cancel</Button>
-                            <Button variant="primary" type="submit" style={{ marginLeft: 10 }} onClick={handleSubmit}>Save All</Button>
+                            <Button variant="primary" type="submit" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="primary"
+                                type="submit"
+                                style={{ marginLeft: 10 }}
+                                onClick={handleSubmit}
+                            >
+                                Save All
+                            </Button>
                         </div>
                     </Form>
                 </Card.Body>

@@ -4,6 +4,8 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}District/GetDistrict`;
 export const DistrictTable = ({ searchText }) => {
   const [districtData, setDistrictData] = useState([]);
@@ -21,6 +23,39 @@ export const DistrictTable = ({ searchText }) => {
         i.districtName.toLowerCase().includes(searchText.toLowerCase())
       ))
   }
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Do You Want To Delete?",
+      showCancelButton: true,
+      icon: "warning",
+      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .post(
+            `${process.env.REACT_APP_API}District/deleteDistrict/${id}`
+          )
+          .then((res) => {
+            Swal.fire({
+              icon: "success",
+              title: "Your work has been Deleted",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            getDistrict();
+          })
+          .catch(() => {
+            Swal.fire("district not deleted.");
+          });
+        console.log(id, "districtId");
+      }
+    });
+  };
+
+
   useEffect(() => {
     getDistrict();
   }, []);
@@ -28,7 +63,7 @@ export const DistrictTable = ({ searchText }) => {
     searchDistrict(searchText);
   }, [searchText])
   const TableRow = (props) => {
-    const { srNo, stateId, distName, distShortName, isActive } = props;
+    const { srNo, stateId, disttId, distName, distShortName, isActive } = props;
     const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
     return (
       <tr>
@@ -71,7 +106,7 @@ export const DistrictTable = ({ searchText }) => {
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
-              <Dropdown.Item className="text-danger">
+              <Dropdown.Item className="text-danger" onClick={() => { handleDelete(disttId) }}>
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
               </Dropdown.Item>
             </Dropdown.Menu>

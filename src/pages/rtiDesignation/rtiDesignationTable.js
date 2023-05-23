@@ -4,12 +4,14 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}RTIDesignation/GetRTIDesignation`;
 export const RTIDesignationTable = ({ searchText }) => {
   const [designationData, setDesignationData] = useState([]);
   const [tempDesignationData, setTempDesignationData] = useState([]);
   const totalCount = designationData.length;
-  async function getDesignation() {
+  async function getRtiDesignation() {
     await axios.get(API).then((response) => {
       setDesignationData(response.data);
       setTempDesignationData(response.data);
@@ -21,8 +23,40 @@ export const RTIDesignationTable = ({ searchText }) => {
         i.designationName.toLowerCase().includes(searchText.toLowerCase())
       ))
   }
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Do You Want To Delete?",
+      showCancelButton: true,
+      icon: "warning",
+      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .post(
+            `${process.env.REACT_APP_API}RTIDesignation/deleteRTIDesignation/${id}`
+          )
+          .then((res) => {
+            Swal.fire({
+              icon: "success",
+              title: "Your work has been Deleted",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            getRtiDesignation();
+          })
+          .catch(() => {
+            Swal.fire("RTI Designation not deleted.");
+          });
+        console.log(id, "RTI DESIGNATION ID");
+      }
+    });
+  };
+
   useEffect(() => {
-    getDesignation();
+    getRtiDesignation();
   }, []);
   useEffect(() => {
     searchDesignation(searchText);
@@ -61,7 +95,7 @@ export const RTIDesignationTable = ({ searchText }) => {
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
-              <Dropdown.Item className="text-danger">
+              <Dropdown.Item className="text-danger" onClick={() => { handleDelete(rtiDesigId) }}>
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
               </Dropdown.Item>
             </Dropdown.Menu>

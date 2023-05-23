@@ -3,6 +3,8 @@ export const Routes = {
     Signin: { path: "/" },
     DashboardOverview: { path: "/dashboard" },
     Designations: { path: "/designations" },
+    User: { path: "/user" },
+    UserDetail: { path: "/userDetail" },
     Title: { path: "/title" },
     District: { path: "/district" },
     State: { path: "/state" },

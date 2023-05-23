@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/volt-react-dashboard/static/css/main.070f092e.css",
-    "main.js": "/volt-react-dashboard/static/js/main.e6cb2786.js",
+    "main.css": "/volt-react-dashboard/static/css/main.73722946.css",
+    "main.js": "/volt-react-dashboard/static/js/main.8269d29b.js",
     "static/media/profile-picture-1.jpg": "/volt-react-dashboard/static/media/profile-picture-1.e783b80fc08aa743b526.jpg",
     "static/media/profile-picture-4.jpg": "/volt-react-dashboard/static/media/profile-picture-4.97bdda51efaf61fc8e69.jpg",
     "static/media/profile-picture-5.jpg": "/volt-react-dashboard/static/media/profile-picture-5.fff93226a753730ae1a9.jpg",
@@ -25,11 +25,11 @@
     "static/media/france.svg": "/volt-react-dashboard/static/media/france.40c79af5ce5231775ae018679c075255.svg",
     "static/media/italy.svg": "/volt-react-dashboard/static/media/italy.2b31e5a9b8b01c282c2bd29d19aeb338.svg",
     "static/media/japan.svg": "/volt-react-dashboard/static/media/japan.382df14ffa58a6b46ba7a8819f58c9c4.svg",
-    "main.070f092e.css.map": "/volt-react-dashboard/static/css/main.070f092e.css.map",
-    "main.e6cb2786.js.map": "/volt-react-dashboard/static/js/main.e6cb2786.js.map"
+    "main.73722946.css.map": "/volt-react-dashboard/static/css/main.73722946.css.map",
+    "main.8269d29b.js.map": "/volt-react-dashboard/static/js/main.8269d29b.js.map"
   },
   "entrypoints": [
-    "static/css/main.070f092e.css",
-    "static/js/main.e6cb2786.js"
+    "static/css/main.73722946.css",
+    "static/js/main.8269d29b.js"
   ]
 }

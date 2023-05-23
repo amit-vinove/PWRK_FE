@@ -35,27 +35,51 @@ export default () => {
     useEffect(() => {
         fetchIp();
     }, [])
+
+
     useEffect(() => {
-        handleChangeState();
-    }, [stateName])
+        handleChangeCountry();
+    }, [country])
+    const handleChangeCountry = () => {
+        if (!country) return;
+        if (country.length <= 2 || country.length >= 100) {
+            setCountryError("country name must be between 3 letter to 100 letters");
+            setFormValid(false)
+        } else {
+            setCountryError("");
+            setFormValid(true)
+        }
+    }
     const handleChangeState = () => {
         if (!stateName) return;
-        if (stateName.length > 50 && stateName.length < 2) {
-            setStateError("state Name  must be less 50 words");
+        if (stateName.length < 2 || stateName.length >= 150) {
+            setStateError("state name must be between 3 letter to 150 letters");
             setFormValid(false)
         } else {
             setStateError("");
             setFormValid(true)
         }
     }
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (country === "") {
+            setCountryError("country Name is Required");
+        }
+        else if (country.length < 2 || country.length >= 100) {
+            setCountryError("country name must be between 3 letter to 100 letters");
+        }
+        else {
+            setCountryError("");
+        }
         if (stateName === "") {
-            setStateError("District Name is Required");
+            setStateError("State Name is Required");
         }
-        else if (stateName.length > 50) {
-            setCountryError("Country Name must be less 50 words");
+        else if (stateName.length < 2 || stateName.length >= 150) {
+            setStateError("state name must be between 3 letter to 150 letters");
         }
+        else { setStateError(""); }
+
         if (formValid) {
             const payload = {
                 country: country,
@@ -102,6 +126,7 @@ export default () => {
                                         onChange={(e) => {
                                             setCountry(e.target.value);
                                             setCountryError("");
+                                            handleChangeCountry();
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -111,11 +136,11 @@ export default () => {
                                     {stateError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={stateName}
+                                    <Form.Control required type="text" placeholder="Enter State here" value={stateName}
                                         onChange={(e) => {
                                             setStateName(e.target.value);
                                             setStateError("");
-                                            handleChangeState()
+                                            handleChangeState();
                                         }} />
                                 </Form.Group>
                             </Col>

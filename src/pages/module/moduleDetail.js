@@ -42,7 +42,7 @@ export default () => {
     }, [maduleName])
     const handleChangeModuleName = () => {
         if (!maduleName) return;
-        if (maduleName.length <= 3 || maduleName.length >= 150) {
+        if (maduleName.length <= 2 || maduleName.length >= 150) {
             setModuleNameError("module Name must be between 3 to 150 charecters");
             setFormValid(false)
         } else {
@@ -55,7 +55,7 @@ export default () => {
     }, [moduleNameShort])
     const handleChangeModuleNameShort = () => {
         if (!moduleNameShort) return;
-        if (moduleNameShort.length <= 3 || moduleNameShort.length >= 50) {
+        if (moduleNameShort.length <= 2 || moduleNameShort.length >= 50) {
             setModuleNameShortError("module Name Short must be between 3 to 50 charecters");
             setFormValid(false)
         } else {
@@ -72,7 +72,7 @@ export default () => {
         if (maduleName === "") {
             setModuleNameError("module name is Required")
         }
-        else if (maduleName.length <= 3 || moduleNameShort.length >= 150) {
+        else if (maduleName.length <= 2 || moduleNameShort.length >= 150) {
             setModuleNameError("madule Name must be between 3 to 150 charecters");
         } else {
             setModuleNameError("")
@@ -80,7 +80,7 @@ export default () => {
         if (moduleNameShort === "") {
             setModuleNameShortError("module name is Required")
         }
-        else if (moduleNameShort.length <= 3 || moduleNameShort.length >= 50) {
+        else if (moduleNameShort.length <= 2 || moduleNameShort.length >= 50) {
             setModuleNameShortError("madule Name Short must be between 3 to 50 charecters");
         } else {
             setModuleNameShortError("")

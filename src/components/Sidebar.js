@@ -84,8 +84,10 @@ export default (props = {}) => {
               <NavItem title="Office Unit" icon={faHandHoldingUsd} link={Routes.OfficeUnit.path} />
               <NavItem title="Office Account Detail" icon={faHandHoldingUsd} link={Routes.OfficeAccDetail.path} />
               <NavItem title="Other Office" icon={faHandHoldingUsd} link={Routes.OtherOffice.path} />
+              <NavItem title="User" icon={faTable} link={Routes.User.path} />
               <NavItem title="OfficeDetail" icon={faTable} link={Routes.OfficeDetail.path} />
               <NavItem title="Profile" icon={faUser} link={Routes.Profile.path} />
+
               {/* <NavItem title="Table2" link={Routes.BootstrapTables.path} icon={faTable} /> */}
               <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} />
               <CollapsableNavItem eventKey="examples/" title="Auth Pages" icon={faFileAlt}>

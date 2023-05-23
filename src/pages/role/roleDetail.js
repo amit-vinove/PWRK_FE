@@ -32,6 +32,22 @@ export default () => {
     const handleCancel = () => {
         history.push("/role")
     }
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
+    const handleOfficeTypeChange = (event) => {
+        setofficeTypeId(event.target.value);
+    };
+    const getAllOfficeType = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+        setOfficeTypeDropdownData(result.data);
+    };
+    useEffect(() => {
+        getAllOfficeType();
+        fetchIp();
+    }, []);
     useEffect(() => {
         handleChangeRole();
     }, [officeTypeId])
@@ -62,7 +78,7 @@ export default () => {
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
             Axios.post(
                 `${process.env.REACT_APP_API}Role/SetRole`,
@@ -106,14 +122,25 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Office Type Id</Form.Label>
-                                    {/* {moduleNameShortError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameShortError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeTypeId}
-                                        onChange={(e) => {
-                                            setofficeTypeId(e.target.value);
-                                            //setModuleNameShortError("");
-                                        }} />
+                                    {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )}
+                                    <Form.Select
+                                        onChange={handleOfficeTypeChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose office type....
+                                        </option>
+                                        {officeTypeDropdownData.map((s) => (
+                                            <option key={s.officeTypeId} value={s.officeTypeId}>
+                                                {s.officeTypeId}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                         </Row>

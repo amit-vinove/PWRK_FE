@@ -37,7 +37,7 @@ export const StateTable = ({ searchText }) => {
             if (result.isConfirmed) {
                 axios
                     .post(
-                        `https://localhost:5001/api/State/deleteState/${id}`
+                        `${process.env.REACT_APP_API}State/deleteState/${id}`
                     )
                     .then((res) => {
                         Swal.fire({

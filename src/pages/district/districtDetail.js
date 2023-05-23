@@ -68,7 +68,7 @@ export default () => {
     const handleChangeDistShortName = () => {
         if (!distShortName) return;
         if (distShortName.length <= 2 || distShortName.length >= 50) {
-            setDistShortNameError("District Name must be between 3 to 150 words");
+            setDistShortNameError("District Name must be between 3 to 50 words");
             setFormValid(false)
         } else {
             setDistShortNameError("");
@@ -89,7 +89,7 @@ export default () => {
         if (distShortName === "") {
             setDistShortNameError("District short name is Required");
         } else if (distShortName.length <= 2 || distShortName.length >= 50) {
-            setDistShortNameError("District Name must be between 3 to 150 words");
+            setDistShortNameError("District Name must be between 3 to 50 words");
         }
         else {
             setDistShortNameError("");
@@ -151,7 +151,7 @@ export default () => {
                                         defaultValue="" // Set the default value to an empty string
                                     >
                                         <option value="" disabled>
-                                            Choose....
+                                            Choose state name....
                                         </option>
                                         {stateDropdownData.map((s) => (
                                             <option key={s.stateId} value={s.stateId}>
@@ -169,7 +169,7 @@ export default () => {
                                     {distNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={distName}
+                                    <Form.Control required type="text" placeholder="Enter district name here" value={distName}
                                         onChange={(e) => {
                                             setDistName(e.target.value);
                                             setDistNameError("");
@@ -185,7 +185,7 @@ export default () => {
                                     {distShortNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distShortNameError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={distShortName}
+                                    <Form.Control required type="text" placeholder="Enter district short name here" value={distShortName}
                                         onChange={(e) => {
                                             setDistShortName(e.target.value);
                                             setDistShortNameError("");
