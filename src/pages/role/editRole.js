@@ -92,6 +92,7 @@ export default () => {
             setOfficeTypeIdError("");
         }
         if (formValid) {
+            let UserID = localStorage.getItem("UserId")
             const payload = {
                 roleId: roleId,
                 officeTypeId: officeTypeId,
@@ -101,7 +102,7 @@ export default () => {
                 approver: approver,
                 viewer: viewer,
                 isActive: isActive,
-                updateby: updateby,
+                updateby: UserID,
                 updateon: updateon,
                 ipAddress: ipAddress,
             };

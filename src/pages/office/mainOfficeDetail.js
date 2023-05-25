@@ -157,6 +157,7 @@ export default () => {
             setOfficeNameHindiError("Office name hindi Name must be less 50 words");
         }
         if (formValid) {
+            let UserID = localStorage.getItem("UserId");
             const payload = {
                 officeId: officeId,
                 officeTypeId: officeTypeId,
@@ -190,7 +191,7 @@ export default () => {
                 seqId: seqId,
                 isActive: isActive,
                 isVisible: isVisible,
-                updateby: updateby,
+                updateby: UserID,
                 updateOfficeTypeId: updateOfficeTypeId,
                 updateOfficeId: updateOfficeId,
                 updateon: updateon,

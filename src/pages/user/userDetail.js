@@ -108,6 +108,7 @@ export default () => {
     }
 
     if (true) {
+      let UserID = localStorage.getItem("UserId")
       const payload = {
         userId: userId,
         empId: empId,
@@ -132,7 +133,7 @@ export default () => {
         updateOfficeTypeId: updateOfficeTypeId,
         updateOfficeId: updateOfficeId,
         ipAddress: ipAddress,
-        updateby: updateby,
+        updateby: UserID,
       };
       Axios.post(
         `${process.env.REACT_APP_API}User/SetUser`,

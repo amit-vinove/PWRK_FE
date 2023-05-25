@@ -31,6 +31,12 @@ export default () => {
     const handleCancel = () => {
         history.push("/module")
     }
+
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
     const query = new URLSearchParams(window.location.search);
     const id = query.get("id");
     useEffect(() => {
@@ -44,6 +50,9 @@ export default () => {
             }).catch((err) => {
                 console.log(err);
             })
+    }, [])
+    useEffect(() => {
+        fetchIp();
     }, [])
     useEffect(() => {
         handleChangeOfficeType();
@@ -68,14 +77,16 @@ export default () => {
             setOfficeTypeNameShortError("title Name must be less 50 words");
         }
         if (formValid) {
+            let UserID = localStorage.getItem("UserId");
             const payload = {
+
                 officeTypeId: officeTypeId,
                 officeTypeName: officeTypeName,
                 officeTypeNameShort: officeTypeNameShort,
                 isActive: isActive,
-                updateby: updateby,
+                updateby: UserID,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
             Swal.fire({
                 title: "Do You Want To Save Changes?",

@@ -79,11 +79,12 @@ export default () => {
         else { setStateError(""); }
 
         if (formValid) {
+            let UserID = localStorage.getItem("UserId")
             const payload = {
                 country: country,
                 stateName: stateName,
                 isActive: isActive,
-                updateby: updateby,
+                updateby: UserID,
                 updateon: updateon,
                 ipAddress: ipAddress,
             };

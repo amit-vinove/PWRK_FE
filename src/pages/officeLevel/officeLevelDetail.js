@@ -49,11 +49,12 @@ export default () => {
         //     setDistNameError("title Name must be less 50 words");
         // }
         if (formValid) {
+            let UserID = localStorage.getItem("UserId");
             const payload = {
                 officeTypeid: officeTypeid,
                 officeLevelId: officeLevelId,
                 officeLevel: officeLevel,
-                updateBy: updateBy,
+                updateBy: UserID,
                 updateOn: updateOn,
                 ipAddress: ipAddress,
             };

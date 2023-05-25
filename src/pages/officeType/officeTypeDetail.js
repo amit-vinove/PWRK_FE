@@ -29,7 +29,12 @@ export default () => {
     };
     const [updateon, setupdateon] = useState(new Date());
     const handleCancel = () => {
-        history.push("/module")
+        history.push("/officeType")
+    }
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
     }
     useEffect(() => {
         handleChangeOfficeType();
@@ -44,6 +49,9 @@ export default () => {
             setFormValid(true)
         }
     }
+    useEffect(() => {
+        fetchIp();
+    }, [])
     const handleSubmit = (e) => {
         e.preventDefault();
         if (officeTypeName === "") {

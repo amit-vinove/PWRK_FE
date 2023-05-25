@@ -125,13 +125,14 @@ export default () => {
 
         } else { setOfficeTypeError(""); }
         if (formValid) {
+            let UserID = localStorage.getItem("UserId");
             const payload = {
                 officeTypeId: officeTypeId,
                 designationName: designationName,
                 designationShort: designationShort,
                 designationOrderId: designationOrderId,
                 isActive: isActive,
-                updateby: updateby,
+                updateby: UserID,
                 updateon: updateon,
                 ipAddress: ipAddress,
             };

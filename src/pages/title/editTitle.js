@@ -71,11 +71,12 @@ export default () => {
       setTitleNameError("title Name must be less 50 words");
     }
     if (formValid) {
+      let UserID = localStorage.getItem("UserId")
       const payload = {
         titleId: titleId,
         titleName: titleName,
         isActive: isActive,
-        updateby: updateby,
+        updateby: UserID,
         updateon: updateon,
         ipAddress: ipAddress,
       };

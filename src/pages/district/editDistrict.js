@@ -126,13 +126,14 @@ export default () => {
             setipAddressError("");
         }
         if (formValid) {
+            let UserID = localStorage.getItem("UserId");
             const payload = {
                 disttId: disttId,
                 stateId: stateId,
                 distName: distName,
                 distShortName: distShortName,
                 isActive: isActive,
-                updateby: updateby,
+                updateby: UserID,
                 updateon: updateon,
                 ipAddress: ipAddress
             };

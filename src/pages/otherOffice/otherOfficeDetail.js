@@ -38,7 +38,15 @@ export default () => {
     const handleCancel = () => {
         history.push("/otherOffice")
     }
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
     const [formValid, setFormValid] = useState(false);
+    useEffect(() => {
+        fetchIp();
+    }, [])
     useEffect(() => {
         handleChangeOfficeAcc();
     }, [ddoCodeName])
@@ -61,6 +69,7 @@ export default () => {
             setPanError("Pan must be less 50 words");
         }
         if (formValid) {
+            let UserID = localStorage.getItem("UserId")
             const payload = {
                 officeId: officeId,
                 ddoTypeId: ddoTypeId,
@@ -73,11 +82,11 @@ export default () => {
                 bankAddress: bankAddress,
                 bankIFSC: bankIFSC,
                 isActive: isActive,
-                updateBy: updateBy,
+                updateBy: UserID,
                 updateOfficeTypeId: updateOfficeTypeId,
                 updateOfficeId: updateOfficeId,
                 updateon: updateon,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
             Axios.post(
                 `${process.env.REACT_APP_API}OfficeAccountDetails/SetOfficeAccountDetails`,

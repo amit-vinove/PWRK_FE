@@ -62,11 +62,12 @@ export default () => {
         }
 
         if (formValid) {
+            let UserID = localStorage.getItem("UserId")
             const payload = {
                 rtiDesigId: rtiDesigId,
                 rtiDesignation: rtiDesignation,
                 isActive: isActive,
-                updateby: updateby,
+                updateby: UserID,
                 updateon: updateon,
                 ipAddress: ipAddress,
             };

@@ -36,16 +36,24 @@ export default () => {
     const [seqId, setSeqId] = useState("");
     const [updateOfficeTypeId, setUpdateOfficeTypeId] = useState("");
     const [updateOfficeId, setUpdateOfficeId] = useState();
-    const [ipAddress, setIpAddress] = useState(0);
+    const [ipAddress, setipAddress] = useState(0);
     const [updatedby, setUpdatedBy] = useState(0);
     const [formValid, setFormValid] = useState(0);
     const jsonData = {
         updateby: "123",
     };
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
     const [updateon, setupdateon] = useState(new Date());
     const handleCancel = () => {
         history.push("/officeUnit")
     }
+    useEffect(() => {
+        fetchIp();
+    }, [])
     useEffect(() => {
         handleChangeOfficeUnit();
     }, [officeTypeError])
@@ -68,6 +76,7 @@ export default () => {
             setContactError("Contact Number Name must be 10 ");
         }
         if (formValid) {
+            let UserID = localStorage.getItem("UserId");
             const payload = {
                 officeUnitId: officeUnitId,
                 officeTypeId: officeTypeId,
@@ -84,8 +93,8 @@ export default () => {
                 updateOfficeTypeId: updateOfficeTypeId,
                 updateOfficeId: updateOfficeId,
                 updatedOn: updateon,
-                updatedBy: updatedby,
-                ipAddress: "ipAddress",
+                updatedBy: UserID,
+                ipAddress: ipAddress,
             };
             Axios.post(
                 `${process.env.REACT_APP_API}OfficeUnit/SetOfficeUnit`,
