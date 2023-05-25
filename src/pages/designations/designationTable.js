@@ -21,9 +21,10 @@ const API = `${process.env.REACT_APP_API}Designation/GetDesignation`;
 
 export const DesignationTable = ({ searchText }) => {
   const [designationData, setDesignationData] = useState([]);
-  const [tempDesignationData, setTempDesignationData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [showPreviousButton, setShowPreviousButton] = useState(false);
+  const [showNextButton, setShowNextButton] = useState(true);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -60,40 +61,38 @@ export const DesignationTable = ({ searchText }) => {
     getDesignation();
   }, []);
 
-  useEffect(() => {
-    searchDesignation(searchText);
-  }, [searchText]);
-
   const getDesignation = async () => {
     try {
       const response = await axios.get(API);
-      setDesignationData(response.data);
-      setTempDesignationData(response.data);
+      const filteredData = response.data.filter(
+        (item) =>
+          item.designationName.toLowerCase().includes(searchText.toLowerCase()) ||
+          item.designationShort.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setDesignationData(filteredData);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const searchDesignation = (searchText) => {
-    setDesignationData(
-      tempDesignationData.filter(
-        (i) =>
-          i.designationName.toLowerCase().includes(searchText.toLowerCase()) ||
-          i.designationShort.toLowerCase().includes(searchText.toLowerCase())
-      )
-    );
+  const handlePrev = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+    setShowPreviousButton(true);
+    setShowNextButton(true);
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+    setShowPreviousButton(true);
+    if (currentPage + 1 === Math.ceil(designationData.length / itemsPerPage)) {
+      setShowNextButton(false);
+    }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = designationData.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+  const currentItems = designationData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(designationData.length / itemsPerPage);
 
   const TableRow = (props) => {
     const {
@@ -148,6 +147,7 @@ export const DesignationTable = ({ searchText }) => {
     );
   };
 
+
   return (
     <>
       <Card border="light" className="table-wrapper table-responsive shadow-sm">
@@ -173,27 +173,16 @@ export const DesignationTable = ({ searchText }) => {
       </Card>
       <div className="d-flex justify-content-center">
         <Pagination>
-          <Pagination.Prev
-            disabled={currentPage === 1}
-            onClick={() => paginate(currentPage - 1)}
-          />
-          {designationData.length > itemsPerPage && (
-            <>
-              {Array.from({ length: Math.ceil(designationData.length / itemsPerPage) }).map((_, index) => (
-                <Pagination.Item
-                  key={index}
-                  active={index + 1 === currentPage}
-                  onClick={() => paginate(index + 1)}
-                >
-                  {index + 1}
-                </Pagination.Item>
-              ))}
-            </>
+          {showPreviousButton && (
+            <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+              Prev. Page
+            </Pagination.Prev>
           )}
-          <Pagination.Next
-            disabled={currentPage === Math.ceil(designationData.length / itemsPerPage)}
-            onClick={() => paginate(currentPage + 1)}
-          />
+          {showNextButton && (
+            <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+              Next Page
+            </Pagination.Next>
+          )}
         </Pagination>
       </div>
     </>

@@ -1,35 +1,70 @@
-import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAngleDown,
+  faAngleUp,
+  faArrowDown,
+  faArrowUp,
+  faEdit,
+  faEllipsisH,
+  faExternalLinkAlt,
+  faEye,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  Col,
+  Row,
+  Nav,
+  Card,
+  Image,
+  Button,
+  Table,
+  Dropdown,
+  ProgressBar,
+  Pagination,
+  ButtonGroup,
+} from "@themesberg/react-bootstrap";
+import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
+
 const API = `${process.env.REACT_APP_API}District/GetDistrict`;
+
 export const DistrictTable = ({ searchText }) => {
   const history = useHistory();
   const [districtData, setDistrictData] = useState([]);
   const [tempDistrictData, setTempDistrictData] = useState([]);
-  const totalCount = districtData.length;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
   async function getDistrict() {
     await axios.get(API).then((response) => {
       setDistrictData(response.data);
       setTempDistrictData(response.data);
     });
   }
+
   async function searchDistrict(searchText) {
     setDistrictData(
-      tempDistrictData.filter((i) =>
-        i.districtName.toLowerCase().includes(searchText.toLowerCase()) ||
-        i.districtShortName.toLowerCase().includes(searchText.toLowerCase())
-      ))
+      tempDistrictData.filter(
+        (i) =>
+          i.districtName.toLowerCase().includes(searchText.toLowerCase()) ||
+          i.districtShortName.toLowerCase().includes(searchText.toLowerCase())
+      )
+    );
   }
 
   const handleEdit = (id) => {
-    history.push(`/editDistrict?id=${id}`)
+    history.push(`/editDistrict?id=${id}`);
+  };
 
+  const handlePrev = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
   };
 
   const handleDelete = (id) => {
@@ -43,9 +78,7 @@ export const DistrictTable = ({ searchText }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .post(
-            `${process.env.REACT_APP_API}District/deleteDistrict/${id}`
-          )
+          .post(`${process.env.REACT_APP_API}District/deleteDistrict/${id}`)
           .then((res) => {
             Swal.fire({
               icon: "success",
@@ -66,33 +99,31 @@ export const DistrictTable = ({ searchText }) => {
   useEffect(() => {
     getDistrict();
   }, []);
+
   useEffect(() => {
     searchDistrict(searchText);
-  }, [searchText])
+  }, [searchText]);
+
   const TableRow = (props) => {
     const { srNo, stateId, disttId, distName, distShortName, isActive } = props;
-    const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
+    const statusVariant = isActive
+      ? "success"
+      : !isActive
+        ? "danger"
+        : "primary";
     return (
       <tr>
         <td>
-          <Card.Link className="fw-normal">
-            {srNo}
-          </Card.Link>
+          <Card.Link className="fw-normal">{srNo}</Card.Link>
         </td>
         <td>
-          <span className="fw-normal">
-            {stateId}
-          </span>
+          <span className="fw-normal">{stateId}</span>
         </td>
         <td>
-          <span className="fw-normal">
-            {distName}
-          </span>
+          <span className="fw-normal">{distName}</span>
         </td>
         <td>
-          <span className="fw-normal">
-            {distShortName}
-          </span>
+          <span className="fw-normal">{distShortName}</span>
         </td>
         <td>
           <span className={`fw-normal text-${statusVariant}`}>
@@ -101,7 +132,12 @@ export const DistrictTable = ({ searchText }) => {
         </td>
         <td>
           <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
+            >
               <span className="icon icon-sm">
                 <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
               </span>
@@ -110,10 +146,13 @@ export const DistrictTable = ({ searchText }) => {
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => { handleEdit(disttId) }}>
+              <Dropdown.Item onClick={() => handleEdit(disttId)}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
-              <Dropdown.Item className="text-danger" onClick={() => { handleDelete(disttId) }}>
+              <Dropdown.Item
+                className="text-danger"
+                onClick={() => handleDelete(disttId)}
+              >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -122,45 +161,48 @@ export const DistrictTable = ({ searchText }) => {
       </tr>
     );
   };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = districtData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(districtData.length / itemsPerPage);
+
   return (
-    <Card border="light" className="table-wrapper table-responsive shadow-sm">
-      <Card.Body className="pt-0">
-        <Table hover className="user-table align-items-center">
-          <thead>
-            <tr>
-              <th className="border-bottom">Sr No</th>
-              <th className="border-bottom">State</th>
-              <th className="border-bottom">District Name</th>
-              <th className="border-bottom">District Short Name</th>
-              <th className="border-bottom">Status</th>
-              <th className="border-bottom">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {districtData && districtData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
-          </tbody>
-        </Table>
-        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-          <Nav>
-            <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>
-                Previous
-              </Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Item>4</Pagination.Item>
-              <Pagination.Item>5</Pagination.Item>
-              <Pagination.Next>
-                Next
-              </Pagination.Next>
-            </Pagination>
-          </Nav>
-          <small className="fw-bold">
-            Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-          </small>
-        </Card.Footer>
-      </Card.Body>
-    </Card>
+    <>
+      <Card border="light" className="table-wrapper table-responsive shadow-sm">
+        <Card.Body className="pt-0">
+          <Table hover className="user-table align-items-center">
+            <thead>
+              <tr>
+                <th className="border-bottom">Sr No</th>
+                <th className="border-bottom">State</th>
+                <th className="border-bottom">District Name</th>
+                <th className="border-bottom">District Short Name</th>
+                <th className="border-bottom">Status</th>
+                <th className="border-bottom">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((t) => (
+                <TableRow key={`transaction-${t.srNo}`} {...t} />
+              ))}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
+      <div className="d-flex justify-content-center">
+        <Pagination>
+          <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+            Prev. Page
+          </Pagination.Prev>
+          <Pagination.Next
+            disabled={currentPage === totalPages}
+            onClick={handleNext}
+          >
+            Next Page
+          </Pagination.Next>
+        </Pagination>
+      </div>
+    </>
   );
 };

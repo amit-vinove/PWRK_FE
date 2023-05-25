@@ -15,6 +15,8 @@ export const StateTable = ({ searchText }) => {
     const [tempStateData, setTempStateData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
+    const [showPreviousButton, setShowPreviousButton] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(true);
 
     useEffect(() => {
         getState();
@@ -40,6 +42,19 @@ export const StateTable = ({ searchText }) => {
                 i.stateName.toLowerCase().includes(searchText.toLowerCase())
             )
         );
+    };
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
+        setShowPreviousButton(true);
+        setShowNextButton(true);
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+        setShowPreviousButton(true);
+        if (currentPage + 1 === Math.ceil(stateData.length / itemsPerPage)) {
+            setShowNextButton(false);
+        }
     };
 
     const handleDelete = (id) => {
@@ -77,10 +92,9 @@ export const StateTable = ({ searchText }) => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = stateData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(stateData.length / itemsPerPage);
 
-    const paginate = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
+
 
     const TableRow = (props) => {
         const { srNo, stateId, country, stateName, isActive } = props;
@@ -160,27 +174,16 @@ export const StateTable = ({ searchText }) => {
 
             <div className="d-flex justify-content-center">
                 <Pagination>
-                    <Pagination.Prev
-                        disabled={currentPage === 1}
-                        onClick={() => paginate(currentPage - 1)}
-                    />
-                    {stateData.length > itemsPerPage && (
-                        <>
-                            {Array.from({ length: Math.ceil(stateData.length / itemsPerPage) }).map((_, index) => (
-                                <Pagination.Item
-                                    key={index}
-                                    active={index + 1 === currentPage}
-                                    onClick={() => paginate(index + 1)}
-                                >
-                                    {index + 1}
-                                </Pagination.Item>
-                            ))}
-                        </>
+                    {showPreviousButton && (
+                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                            Prev. Page
+                        </Pagination.Prev>
                     )}
-                    <Pagination.Next
-                        disabled={currentPage === Math.ceil(stateData.length / itemsPerPage)}
-                        onClick={() => paginate(currentPage + 1)}
-                    />
+                    {showNextButton && (
+                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                            Next Page
+                        </Pagination.Next>
+                    )}
                 </Pagination>
             </div>
         </>
