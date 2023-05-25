@@ -11,7 +11,6 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [pageMode, setPageMode] = useState("create");
     const [country, setCountry] = useState("");
     const [countryError, setCountryError] = useState("");
     const [stateName, setStateName] = useState("");
@@ -29,7 +28,6 @@ export default () => {
     }
     const fetchIp = async () => {
         const res = await axios.get('https://geolocation-db.com/json/')
-        console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
     useEffect(() => {
@@ -94,7 +92,6 @@ export default () => {
                 payload
             )
                 .then((response) => {
-                    console.log(response.data);
                     Swal.fire("Save", "State Saved Sucessfully", "success");
 
                     history.push("/state")

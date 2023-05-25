@@ -21,7 +21,7 @@ export default () => {
     const [designationOrderId, setdesignationOrderId] = useState("1");
     const [isActive, setIsActive] = useState(true);
     const [ipAddress, setipAddress] = useState("");
-    const [ipAddressError, setIpAddressError] = useState("");
+    const [ipAddressError, setIpAddressError] = useState(0);
     const [updateby, setupdateby] = useState(0);
     const [formValid, setFormValid] = useState(false);
     const [updateon, setupdateon] = useState(new Date());
@@ -163,7 +163,7 @@ export default () => {
                                         </option>
                                         {officeTypeDropdownData.map((s) => (
                                             <option key={s.officeTypeId} value={s.officeTypeId}>
-                                                {s.officeTypeId}
+                                                {s.officeTypeName}
                                             </option>
                                         ))}
                                     </Form.Select>

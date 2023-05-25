@@ -1,28 +1,29 @@
-import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEllipsisH,
+  faEdit,
+  faEye,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  Card,
+  Table,
+  Dropdown,
+  Pagination,
+  Button,
+  ButtonGroup,
+} from "@themesberg/react-bootstrap";
+import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+
 const API = `${process.env.REACT_APP_API}Designation/GetDesignation`;
+
 export const DesignationTable = ({ searchText }) => {
   const [designationData, setDesignationData] = useState([]);
   const [tempDesignationData, setTempDesignationData] = useState([]);
-  const totalCount = designationData.length;
-  async function getDesignation() {
-    await axios.get(API).then((response) => {
-      setDesignationData(response.data);
-      setTempDesignationData(response.data);
-    });
-  }
-  async function searchDesignation(searchText) {
-    setDesignationData(
-      tempDesignationData.filter((i) =>
-        i.designationName.toLowerCase().includes(searchText.toLowerCase()) ||
-        i.designationShort.toLowerCase().includes(searchText.toLowerCase())
-      ))
-  }
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -58,33 +59,65 @@ export const DesignationTable = ({ searchText }) => {
   useEffect(() => {
     getDesignation();
   }, []);
+
   useEffect(() => {
     searchDesignation(searchText);
-  }, [searchText])
+  }, [searchText]);
+
+  const getDesignation = async () => {
+    try {
+      const response = await axios.get(API);
+      setDesignationData(response.data);
+      setTempDesignationData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const searchDesignation = (searchText) => {
+    setDesignationData(
+      tempDesignationData.filter(
+        (i) =>
+          i.designationName.toLowerCase().includes(searchText.toLowerCase()) ||
+          i.designationShort.toLowerCase().includes(searchText.toLowerCase())
+      )
+    );
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = designationData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   const TableRow = (props) => {
-    const { designationId, designationName, designationOrderId, designationShort, ipAddress, isActive } = props;
+    const {
+      designationId,
+      designationName,
+      designationOrderId,
+      designationShort,
+      ipAddress,
+      isActive,
+    } = props;
     const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
     return (
       <tr>
         <td>
-          <Card.Link className="fw-normal">
-            {designationId}
-          </Card.Link>
+          <Card.Link className="fw-normal">{designationId}</Card.Link>
         </td>
         <td>
-          <span className="fw-normal">
-            {designationName}
-          </span>
+          <span className="fw-normal">{designationName}</span>
         </td>
         <td>
-          <span className="fw-normal">
-            {designationOrderId}
-          </span>
+          <span className="fw-normal">{designationOrderId}</span>
         </td>
         <td>
-          <span className="fw-normal">
-            {designationShort}
-          </span>
+          <span className="fw-normal">{designationShort}</span>
         </td>
         <td>
           <span className={`fw-normal text-${statusVariant}`}>
@@ -114,45 +147,55 @@ export const DesignationTable = ({ searchText }) => {
       </tr>
     );
   };
+
   return (
-    <Card border="light" className="table-wrapper table-responsive shadow-sm">
-      <Card.Body className="pt-0">
-        <Table hover className="user-table align-items-center">
-          <thead>
-            <tr>
-              <th className="border-bottom">Id</th>
-              <th className="border-bottom">Designation Name</th>
-              <th className="border-bottom">Designation OrderId</th>
-              <th className="border-bottom">Designation Short</th>
-              <th className="border-bottom">Status</th>
-              <th className="border-bottom">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {designationData && designationData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
-          </tbody>
-        </Table>
-        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-          <Nav>
-            <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>
-                Previous
-              </Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Item>4</Pagination.Item>
-              <Pagination.Item>5</Pagination.Item>
-              <Pagination.Next>
-                Next
-              </Pagination.Next>
-            </Pagination>
-          </Nav>
-          <small className="fw-bold">
-            Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-          </small>
-        </Card.Footer>
-      </Card.Body>
-    </Card>
+    <>
+      <Card border="light" className="table-wrapper table-responsive shadow-sm">
+        <Card.Body className="pt-0">
+          <Table hover className="user-table align-items-center">
+            <thead>
+              <tr>
+                <th className="border-bottom">Id</th>
+                <th className="border-bottom">Designation Name</th>
+                <th className="border-bottom">Designation OrderId</th>
+                <th className="border-bottom">Designation Short</th>
+                <th className="border-bottom">Status</th>
+                <th className="border-bottom">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((t) => (
+                <TableRow key={`transaction-${t.srNo}`} {...t} />
+              ))}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
+      <div className="d-flex justify-content-center">
+        <Pagination>
+          <Pagination.Prev
+            disabled={currentPage === 1}
+            onClick={() => paginate(currentPage - 1)}
+          />
+          {designationData.length > itemsPerPage && (
+            <>
+              {Array.from({ length: Math.ceil(designationData.length / itemsPerPage) }).map((_, index) => (
+                <Pagination.Item
+                  key={index}
+                  active={index + 1 === currentPage}
+                  onClick={() => paginate(index + 1)}
+                >
+                  {index + 1}
+                </Pagination.Item>
+              ))}
+            </>
+          )}
+          <Pagination.Next
+            disabled={currentPage === Math.ceil(designationData.length / itemsPerPage)}
+            onClick={() => paginate(currentPage + 1)}
+          />
+        </Pagination>
+      </div>
+    </>
   );
 };

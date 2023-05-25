@@ -23,7 +23,7 @@ export default () => {
     const [approver, setApprover] = useState("");
     const [updateby, setupdateby] = useState(0);
     const [isActive, setIsActive] = useState(true);
-    const [ipAddress, setipAddress] = useState("");
+    const [ipAddress, setipAddress] = useState(0);
     const [formValid, setFormValid] = useState("");
     const jsonData = {
         updateby: "123",

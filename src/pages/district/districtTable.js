@@ -4,10 +4,12 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}District/GetDistrict`;
 export const DistrictTable = ({ searchText }) => {
+  const history = useHistory();
   const [districtData, setDistrictData] = useState([]);
   const [tempDistrictData, setTempDistrictData] = useState([]);
   const totalCount = districtData.length;
@@ -20,9 +22,15 @@ export const DistrictTable = ({ searchText }) => {
   async function searchDistrict(searchText) {
     setDistrictData(
       tempDistrictData.filter((i) =>
-        i.districtName.toLowerCase().includes(searchText.toLowerCase())
+        i.districtName.toLowerCase().includes(searchText.toLowerCase()) ||
+        i.districtShortName.toLowerCase().includes(searchText.toLowerCase())
       ))
   }
+
+  const handleEdit = (id) => {
+    history.push(`/editDistrict?id=${id}`)
+
+  };
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -54,7 +62,6 @@ export const DistrictTable = ({ searchText }) => {
       }
     });
   };
-
 
   useEffect(() => {
     getDistrict();
@@ -103,7 +110,7 @@ export const DistrictTable = ({ searchText }) => {
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={() => { handleEdit(disttId) }}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
               <Dropdown.Item className="text-danger" onClick={() => { handleDelete(disttId) }}>

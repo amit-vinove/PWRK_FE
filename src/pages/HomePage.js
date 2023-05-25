@@ -67,6 +67,9 @@ import mainOfficeDetail from './office/mainOfficeDetail';
 import mainOfficeAccDetail from './officeAccDetail/mainOfficeAccDetail';
 import userPage from './user/userPage';
 import userDetail from './user/userDetail';
+import editDistrict from './district/editDistrict';
+import editTitle from './title/editTitle';
+import editState from './State/editState';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -133,10 +136,13 @@ export default () => (
     <RouteWithSidebar exact path={Routes.UserDetail.path} component={userDetail} />
     <RouteWithSidebar exact path={Routes.RtiDesignationDetail.path} component={rtidesignationdetail} />
     <RouteWithSidebar exact path={Routes.DistrictDetail.path} component={districtDetail} />
+    <RouteWithSidebar exact path={Routes.EditDistrict.path} component={editDistrict} />
     <RouteWithSidebar exact path={Routes.StateDetail.path} component={stateDetail} />
+    <RouteWithSidebar exact path={Routes.EditState.path} component={editState} />
     <RouteWithSidebar exact path={Routes.Profile.path} component={ProfilePage} />
     <RouteWithSidebar exact path={Routes.OfficeDetail.path} component={officeDetails} />
     <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />
+    <RouteWithSidebar exact path={Routes.EditTitle.path} component={editTitle} />
     <RouteWithSidebar exact path={Routes.DDOType.path} component={ddoTypePage} />
     <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
     <RouteWithSidebar exact path={Routes.OfficeLevelDetail.path} component={officeLevelDetail} />

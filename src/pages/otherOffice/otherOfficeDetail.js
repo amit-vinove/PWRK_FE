@@ -31,7 +31,7 @@ export default () => {
     const [updateOfficeTypeId, setUpdateOfficeTypeId] = useState(0);
     const [updateOfficeId, setUpdateOfficeId] = useState(0);
     const [updateon, setUpdateOn] = useState(new Date());
-    const [ipAddress, setIpAddress] = useState("");
+    const [ipAddress, setIpAddress] = useState(0);
     const jsonData = {
         updateby: "123",
     };

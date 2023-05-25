@@ -60,7 +60,7 @@ export default () => {
     const [isVisible, setIsVisible] = useState(true);
     const [updateOfficeTypeId, setUpdateOfficeTypeId] = useState(0);
     const [updateOfficeId, setUpdateOfficeId] = useState(0);
-    const [ipAddress, setipAddress] = useState("");
+    const [ipAddress, setipAddress] = useState(0);
     const [updateby, setupdateby] = useState(0);
     const jsonData = { updateby: "123" };
     const [updateon, setupdateon] = useState(new Date());
@@ -235,7 +235,7 @@ export default () => {
                                         </option>
                                         {officeTypeDropdownData.map((s) => (
                                             <option key={s.officeTypeId} value={s.officeTypeId}>
-                                                {s.officeTypeId}
+                                                {s.officeTypeName}
                                             </option>
                                         ))}
                                     </Form.Select>
@@ -252,7 +252,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={officeName}
                                         onChange={(e) => {
                                             setOfficeName(e.target.value);
@@ -273,7 +273,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={officeNameHindi}
                                         onChange={(e) => {
                                             setOfficeNameHindi(e.target.value);
@@ -291,7 +291,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={officeCode}
                                         onChange={(e) => {
                                             setOfficeCode(e.target.value);
@@ -312,7 +312,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={address}
                                         onChange={(e) => {
                                             setAddress(e.target.value);
@@ -374,7 +374,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={pinCode}
                                         onChange={(e) => {
                                             setPinCode(e.target.value);
@@ -395,7 +395,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={stdCode}
                                         onChange={(e) => {
                                             setStdCode(e.target.value);
@@ -413,7 +413,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={contactNo}
                                         onChange={(e) => {
                                             setContactNo(e.target.value);
@@ -434,7 +434,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={emailId}
                                         onChange={(e) => {
                                             setEmailId(e.target.value);
@@ -452,7 +452,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={longitude}
                                         onChange={(e) => {
                                             setLongitude(e.target.value);
@@ -473,7 +473,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={latitude}
                                         onChange={(e) => {
                                             setLatitude(e.target.value);
@@ -493,7 +493,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={parentId1}
                                         onChange={(e) => {
                                             setParentId1(e.target.value);
@@ -513,7 +513,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={parentId1WEF}
                                         onChange={(e) => {
                                             setParentId1WEF(e.target.value);
@@ -533,7 +533,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={parentId2}
                                         onChange={(e) => {
                                             setParentId2(e.target.value);
@@ -553,7 +553,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={parentId2WEF}
                                         onChange={(e) => {
                                             setParentId2WEF(e.target.value);
@@ -573,7 +573,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={parentId3}
                                         onChange={(e) => {
                                             setParentId3(e.target.value);
@@ -593,7 +593,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={parentId3WEF}
                                         onChange={(e) => {
                                             setParentId3WEF(e.target.value);
@@ -613,7 +613,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={parentId4}
                                         onChange={(e) => {
                                             setParentId4(e.target.value);
@@ -633,7 +633,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={parentId4WEF}
                                         onChange={(e) => {
                                             setParentId4WEF(e.target.value);
@@ -719,7 +719,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={rtiJuris}
                                         onChange={(e) => {
                                             setRtiJuris(e.target.value);
@@ -737,7 +737,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={jurisdiction}
                                         onChange={(e) => {
                                             setJurisDiction(e.target.value);
@@ -758,7 +758,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={comment}
                                         onChange={(e) => {
                                             setComment(e.target.value);
@@ -776,7 +776,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={seqId}
                                         onChange={(e) => {
                                             setSeqId(e.target.value);
@@ -847,7 +847,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={updateOfficeTypeId}
                                         onChange={(e) => {
                                             setUpdateOfficeTypeId(e.target.value);
@@ -865,7 +865,7 @@ export default () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter Title here"
+                                        placeholder="Enter value here"
                                         value={updateOfficeId}
                                         onChange={(e) => {
                                             setUpdateOfficeId(e.target.value);

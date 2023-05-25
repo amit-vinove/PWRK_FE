@@ -4,6 +4,7 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}Title/GetTitle`;
@@ -11,6 +12,7 @@ export const TitleTable = ({ searchText }) => {
     const [titleData, setTitleData] = useState([]);
     const [tempTitleData, setTempTitleData] = useState([]);
     const totalCount = titleData.length;
+    const history = useHistory();
     async function getTitle() {
         await axios.get(API).then((response) => {
             setTitleData(response.data);
@@ -23,6 +25,7 @@ export const TitleTable = ({ searchText }) => {
                 i.titleName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
+
     const handleDelete = (id) => {
         Swal.fire({
             title: "Do You Want To Delete?",
@@ -56,6 +59,9 @@ export const TitleTable = ({ searchText }) => {
     useEffect(() => {
         getTitle();
     }, []);
+    const handleEdit = (id) => {
+        history.push(`/editTitle?id=${id}`);
+    }
     useEffect(() => {
         searchTitle(searchText);
     }, [searchText])
@@ -90,7 +96,7 @@ export const TitleTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleEdit(titleId) }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item className="text-danger" onClick={() => { handleDelete(titleId) }}>
