@@ -16,9 +16,9 @@ export default () => {
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [officeLevelError, setOfficeLevelError] = useState("");
     const [officeLevelId, setOfficeLevelId] = useState(0);
-    const [officeLevel, setOfficeLevel] = useState(0);
+    const [officeLevel, setOfficeLevel] = useState("");
     const [formValid, setFormValid] = useState("");
-    const [ipAddress, setIpAddress] = useState("");
+    const [ipAddress, setIpAddress] = useState(0);
     const [updateBy, setUpdateBy] = useState(0);
     const [updateOn, setUpdateOn] = useState(new Date()); // initialize with current date and time
     const jsonData = {
@@ -55,7 +55,7 @@ export default () => {
                 officeLevel: officeLevel,
                 updateBy: updateBy,
                 updateOn: updateOn,
-                ipAddress: "ipAddress",
+                ipAddress: ipAddress,
             };
             Axios.post(
                 `${process.env.REACT_APP_API}OfficeLevel/SetOfficeLevel`,

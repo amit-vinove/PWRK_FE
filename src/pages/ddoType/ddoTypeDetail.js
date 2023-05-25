@@ -34,6 +34,10 @@ export default () => {
         setipAddress(res.data.IPv4)
     }
     useEffect(() => {
+        fetchIp();
+    }, [])
+
+    useEffect(() => {
         handleChangeDDoType();
     }, [ddoType])
     const handleChangeDDoType = () => {
@@ -46,11 +50,9 @@ export default () => {
             setFormValid(true)
         }
     }
-    useEffect(() => {
-        fetchIp();
-    }, [])
     const handleSubmit = (e) => {
         e.preventDefault();
+
         if (ddoType === "") {
             setDdoTypeError("DdoType is Required");
         } else if (ddoType.length >= 50) {
@@ -101,10 +103,11 @@ export default () => {
                                     {ddoTypeError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{ddoTypeError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={ddoType}
+                                    <Form.Control required type="text" placeholder="Enter Ddo type here" value={ddoType}
                                         onChange={(e) => {
                                             setDdoType(e.target.value);
                                             setDdoTypeError("");
+                                            handleChangeDDoType();
                                         }} />
                                 </Form.Group>
                             </Col>

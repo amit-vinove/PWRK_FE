@@ -112,7 +112,7 @@ export default () => {
                 ipAddress: ipAddress
             };
             Axios.post(
-                `http://122.176.101.76:8085/api/District/SetDistrict`,
+                `${process.env.REACT_APP_API}District/SetDistrict`,
                 payload
             )
                 .then((response) => {

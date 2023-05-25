@@ -4,7 +4,7 @@ import Datetime from "react-datetime";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -26,6 +26,25 @@ export default () => {
     const handleCancel = () => {
         history.push("/rti-designations")
     }
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_API}RtiDesignation/GetRtiDesignation/${id}`)
+
+            .then((res) => {
+                setrtiDesignation(res.data.rtiDesignation);
+                setIsActive(res.data.isActive);
+
+            }).catch((err) => {
+                console.log(err)
+            })
+    }, []);
+
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setipAddress(res.data.IPv4)
+    }
     useEffect(() => {
         handleChangeRtiDesignation();
     }, [rtiDesignation])
@@ -40,14 +59,6 @@ export default () => {
             setFormValid(true)
         }
     }
-    const fetchIp = async () => {
-        const res = await axios.get('https://geolocation-db.com/json/')
-        console.log(res.data.IPv4);
-        setipAddress(res.data.IPv4)
-    }
-    useEffect(() => {
-        fetchIp();
-    }, [])
     const handleSubmit = (e) => {
         e.preventDefault();
         if (rtiDesignation === "") {
@@ -71,7 +82,7 @@ export default () => {
                 ipAddress: ipAddress,
             };
             Axios.post(
-                `${process.env.REACT_APP_API}RTIDesignation/SetRTIDesignation`,
+                `${process.env.REACT_APP_API}RTIDesignation/UpdateRTIDesignation`,
                 payload
             )
                 .then((response) => {

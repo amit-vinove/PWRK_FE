@@ -4,13 +4,21 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
+
+
 const API = `${process.env.REACT_APP_API}DDOType/getDDOType`;
+const itemsPerPage = 10;
+const defaultPage = 1;
 export const DDOTypeTable = ({ searchText }) => {
     const [ddoTypeData, setDDOTypeData] = useState([]);
     const [tempDDoTypeData, setTempDDoTypeData] = useState([]);
-    const totalCount = ddoTypeData.length;
+    const [currentPage, setCurrentPage] = useState(defaultPage);
+    const [showPreviousButton, setShowPreviousButton] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(true);
+    const history = useHistory();
     async function getDDOType() {
         await axios.get(API).then((response) => {
             setDDOTypeData(response.data);
@@ -53,12 +61,37 @@ export const DDOTypeTable = ({ searchText }) => {
             }
         });
     };
+    const handleEdit = (id) => {
+        history.push(`/editDdoType?id=${id}`)
+    }
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+    };
     useEffect(() => {
         getDDOType();
     }, []);
     useEffect(() => {
         searchDDOType(searchText);
+        setCurrentPage(defaultPage);
     }, [searchText])
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = ddoTypeData.slice(
+        indexOfFirstItem,
+        indexOfLastItem
+    );
+    const totalPages = Math.ceil(ddoTypeData.length / itemsPerPage);
+
+    useEffect(() => {
+        setShowPreviousButton(currentPage > 1);
+        setShowNextButton(currentPage < totalPages);
+    }, [currentPage, totalPages]);
+
     const TableRow = (props) => {
         const { srNo, ddoTypeId, ddoType, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
@@ -90,7 +123,7 @@ export const DDOTypeTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleEdit(ddoTypeId) }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item className="text-danger" onClick={() => { handleDelete(ddoTypeId) }}>
@@ -103,42 +136,40 @@ export const DDOTypeTable = ({ searchText }) => {
         );
     };
     return (
-        <Card border="light" className="table-wrapper table-responsive shadow-sm">
-            <Card.Body className="pt-0">
-                <Table hover className="user-table align-items-center">
-                    <thead>
-                        <tr>
-                            <th className="border-bottom">Sr No</th>
-                            <th className="border-bottom">DDO Type</th>
-                            <th className="border-bottom">Status</th>
-                            <th className="border-bottom">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ddoTypeData && ddoTypeData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
-                    </tbody>
-                </Table>
-                <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-                    <Nav>
-                        <Pagination className="mb-2 mb-lg-0">
-                            <Pagination.Prev>
-                                Previous
-                            </Pagination.Prev>
-                            <Pagination.Item active>1</Pagination.Item>
-                            <Pagination.Item>2</Pagination.Item>
-                            <Pagination.Item>3</Pagination.Item>
-                            <Pagination.Item>4</Pagination.Item>
-                            <Pagination.Item>5</Pagination.Item>
-                            <Pagination.Next>
-                                Next
-                            </Pagination.Next>
-                        </Pagination>
-                    </Nav>
-                    <small className="fw-bold">
-                        Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-                    </small>
-                </Card.Footer>
-            </Card.Body>
-        </Card>
+        <>
+            <Card border="light" className="table-wrapper table-responsive shadow-sm">
+                <Card.Body className="pt-0">
+                    <Table hover className="user-table align-items-center">
+                        <thead>
+                            <tr>
+                                <th className="border-bottom">Sr No</th>
+                                <th className="border-bottom">DDO Type</th>
+                                <th className="border-bottom">Status</th>
+                                <th className="border-bottom">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems && currentItems.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
+                        </tbody>
+                    </Table>
+                </Card.Body>
+            </Card>
+            <div className="d-flex justify-content-center">
+                <Pagination>
+                    <Pagination.Prev
+                        disabled={currentPage === 1}
+                        onClick={handlePrev}
+                    >
+                        Prev. Page
+                    </Pagination.Prev>
+                    <Pagination.Next
+                        disabled={currentPage === totalPages}
+                        onClick={handleNext}
+                    >
+                        Next Page
+                    </Pagination.Next>
+                </Pagination>
+            </div>
+        </>
     );
 };

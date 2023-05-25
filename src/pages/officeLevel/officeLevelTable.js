@@ -37,7 +37,7 @@ export const OfficeLevelTable = ({ searchText }) => {
             if (result.isConfirmed) {
                 axios
                     .post(
-                        `http://122.176.101.76:8085/api/OfficeLevel/deleteOfficeLevel/${id}`
+                        `${process.env.REACT_APP_API}OfficeLevel/deleteOfficeLevel/${id}`
                     )
                     .then((res) => {
                         Swal.fire({

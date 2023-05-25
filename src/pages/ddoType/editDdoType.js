@@ -4,91 +4,121 @@ import Datetime from "react-datetime";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [rtiDesigId, setrtiDesigId] = useState(0);
-    const [rtiDesignation, setrtiDesignation] = useState("");
-    const [rtiDesignationError, setRtiDesignationError] = useState("");
+    const [ddoType, setDdoType] = useState("");
+    const [ddoTypeId, setDdoTypeId] = useState(0);
+    const [ddoTypeError, setDdoTypeError] = useState("");
     const [isActive, setIsActive] = useState(true);
     const [ipAddress, setipAddress] = useState(0);
-    const [ipAddressError, setipAddresserror] = useState("");
-    const [updateby, setupdateby] = useState(0);
+    const [ipAddressError, setIpaddressError] = useState("");
     const [formValid, setFormValid] = useState("");
+    const [updateby, setupdateby] = useState(0);
+    const [updateon, setupdateon] = useState(new Date());
     const jsonData = {
         updateby: "123",
     };
-    const [updateon, setupdateon] = useState(new Date());
     const handleCancel = () => {
-        history.push("/rti-designations")
-    }
-    useEffect(() => {
-        handleChangeRtiDesignation();
-    }, [rtiDesignation])
-    const handleChangeRtiDesignation = () => {
-        if (!rtiDesignation) return;
-        if (rtiDesignation.length <= 2 ||
-            rtiDesignation.length > 100) {
-            setRtiDesignationError("RTI Designation Must Be Between 3 to 100 Letter");
-            setFormValid(false)
-        } else {
-            setRtiDesignationError("");
-            setFormValid(true)
-        }
+        history.push("/ddoType")
     }
     const fetchIp = async () => {
         const res = await axios.get('https://geolocation-db.com/json/')
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
+
     useEffect(() => {
         fetchIp();
     }, [])
+
+
+    useEffect(() => {
+        axios
+            .get(
+                `${process.env.REACT_APP_API}DDOType/GetDDOType/${id}`
+            ).then((res) => {
+                setDdoType(res.data.ddoType);
+                setIsActive(res.data.isActive);
+            })
+    }, [])
+
+    useEffect(() => {
+        handleChangeDDoType();
+    }, [ddoType])
+    const handleChangeDDoType = () => {
+        if (!ddoType) return;
+        if (ddoType.length >= 50) {
+            setDdoTypeError("ddo type does no more the 50 letters");
+            setFormValid(false)
+        } else {
+            setDdoTypeError("");
+            setFormValid(true)
+        }
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (rtiDesignation === "") {
-            setRtiDesignationError("RTI Designation is Required");
-        } else if (rtiDesignation.length <= 2 ||
-            rtiDesignation.length > 100) {
-            setRtiDesignationError("RTI Designation Must Be Between 3 to 100 Letter");
-        }
 
+        if (ddoType === "") {
+            setDdoTypeError("DdoType is Required");
+        } else if (ddoType.length >= 50) {
+            setDdoTypeError("ddo type does no more the 50 letters");
+        }
         else {
-            setRtiDesignationError("");
+            setDdoTypeError("");
         }
 
         if (formValid) {
             const payload = {
-                rtiDesigId: rtiDesigId,
-                rtiDesignation: rtiDesignation,
+                ddoTypeId: ddoTypeId,
+                ddotype: ddoType,
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}RTIDesignation/SetRTIDesignation`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "RTI designation Saved Sucessfully", "success");
-                    history.push("/rti-designations")
-                })
-                .catch((error) => {
-                    console.log(error);
+            Swal.fire({
+                title: "Do You Want To Save Changes?",
+                showCancelButton: true,
+                icon: "warning",
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Axios.post(
+                            `${process.env.REACT_APP_API}DDOType/UpdateDDOType`,
+                            payload
+                        )
+                            .then((res) => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your work has been successfully update",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                history.push("/ddoType")
+                            })
+                            .catch(() => {
+                                Swal.fire("DDO Type not Update.");
+                            });
+                    }
                 });
-        };
+        }
     }
+
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
                 <div className="d-block mb-4 mb-md-0">
-                    <h4>RTI Designation Details</h4>
+                    <h4>DDO Type Details</h4>
                 </div>
             </div>
             <Card border="light" className="bg-white shadow-sm mb-4">
@@ -98,15 +128,14 @@ export default () => {
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Rti Designation Name</Form.Label>
-                                    {rtiDesignationError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{rtiDesignationError}</p>
+                                    <Form.Label>DDO Type</Form.Label>
+                                    {ddoTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{ddoTypeError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Rti designation here" value={rtiDesignation}
+                                    <Form.Control required type="text" placeholder="Enter Ddo type here" value={ddoType}
                                         onChange={(e) => {
-                                            setrtiDesignation(e.target.value);
-                                            setRtiDesignationError("");
-                                            handleChangeRtiDesignation();
+                                            setDdoType(e.target.value);
+                                            setDdoTypeError("");
                                         }} />
                                 </Form.Group>
                             </Col>

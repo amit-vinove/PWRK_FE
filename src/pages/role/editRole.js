@@ -14,7 +14,7 @@ export default () => {
     const [pageMode, setPageMode] = useState("create");
     const [roleId, setRoleId] = useState(0);
     const [officeTypeId, setofficeTypeId] = useState("");
-    const [officeTypeError, setOfficeTypeError] = useState("");
+    const [officeTypeIdError, setOfficeTypeIdError] = useState("");
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [roleName, setRoleName] = useState("");
     const [maker, setMaker] = useState("");
@@ -28,15 +28,38 @@ export default () => {
     const jsonData = {
         updateby: "123",
     };
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
     const [updateon, setupdateon] = useState(new Date());
     const handleCancel = () => {
         history.push("/role")
     }
+
     const fetchIp = async () => {
         const res = await axios.get('https://geolocation-db.com/json/')
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
+
+    useEffect(() => {
+        Axios.post(
+            `${process.env.REACT_APP_API}Role/GetRole/${id}`,
+        )
+            .then((res) => {
+                setofficeTypeId(res.data.officeTypeId);
+                setRoleName(res.data.roleName);
+                setMaker(res.data.maker);
+                setChecker(res.data.checker);
+                setViewer(res.data.viewer)
+                setApprover(res.data.approver);
+                setIsActive(res.data.isActive);
+            }).catch((err) => {
+                console.log(err)
+            })
+    }, [])
+
+
+
     const handleOfficeTypeChange = (event) => {
         setofficeTypeId(event.target.value);
     };
@@ -53,18 +76,20 @@ export default () => {
     }, [officeTypeId])
     const handleChangeRole = () => {
         if (!officeTypeId) return;
-        if (officeTypeId.length > 50 && officeTypeId.length < 2) {
-            setOfficeTypeError("Title Name must be less 50 words");
+        if (officeTypeId === "") {
+            setOfficeTypeIdError("Office Type is Required");
             setFormValid(false)
         } else {
-            setRoleName("");
+            setOfficeTypeIdError("");
             setFormValid(true)
         }
     }
     const handleSubmit = (e) => {
         e.preventDefault();
         if (officeTypeId === "") {
-            setOfficeTypeError("Office Type Name is Required");
+            setOfficeTypeIdError("Office Type is Required");
+        } else {
+            setOfficeTypeIdError("");
         }
         if (formValid) {
             const payload = {
@@ -80,19 +105,35 @@ export default () => {
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}Role/SetRole`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "Role Saved Sucessfully", "success");
-                    history.push("/role")
-                })
-                .catch((error) => {
-                    console.log(error);
+            Swal.fire({
+                title: "Do You Want To Save Changes?",
+                showCancelButton: true,
+                icon: "warning",
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Axios.post(
+                            `${process.env.REACT_APP_API}Role/UpdateRole`,
+                            payload
+                        )
+                            .then((res) => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your work has been successfully update",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                history.push("/Role")
+                            })
+                            .catch(() => {
+                                Swal.fire("Role not Update.");
+                            });
+                    }
                 });
-        };
+        }
     }
     return (
         <>
@@ -122,8 +163,8 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Office Type Id</Form.Label>
-                                    {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    {officeTypeIdError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeIdError}</p>
                                     )}
                                     <Form.Select
                                         onChange={handleOfficeTypeChange}

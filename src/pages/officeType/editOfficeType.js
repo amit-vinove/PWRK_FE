@@ -4,105 +4,78 @@ import Datetime from "react-datetime";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [country, setCountry] = useState("");
-    const [countryError, setCountryError] = useState("");
-    const [stateName, setStateName] = useState("");
-    const [stateError, setStateError] = useState("");
+    const [pageMode, setPageMode] = useState("create");
+    const [officeTypeId, setofficeTypeId] = useState(0);
+    const [officeTypeError, setOfficeTypeError] = useState("");
+    const [officeTypeName, setofficeTypeName] = useState("");
+    const [officeTypeNameError, setOfficeTypeNameError] = useState("");
+    const [titleError, setTitleError] = useState("");
+    const [officeTypeNameShort, setofficeTypeNameShort] = useState("");
+    const [officeTypeNameShortError, setOfficeTypeNameShortError] = useState("");
     const [isActive, setIsActive] = useState(true);
-    const [ipAddress, setipAddress] = useState("");
+    const [ipAddress, setipAddress] = useState(0);
+    const [ipAddressError, setIpAddressError] = useState("");
     const [updateby, setupdateby] = useState(0);
-    const [formValid, setFormValid] = useState("");
+    const [formValid, setFormValid] = useState(0);
     const jsonData = {
         updateby: "123",
     };
-    const query = new URLSearchParams(window.location.search);
-    const id = query.get("id");
-
-
     const [updateon, setupdateon] = useState(new Date());
     const handleCancel = () => {
-        history.push("/state")
+        history.push("/module")
     }
-    const fetchIp = async () => {
-        const res = await axios.get('https://geolocation-db.com/json/')
-        setipAddress(res.data.IPv4)
-    }
-
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
     useEffect(() => {
-        fetchIp();
-    }, [])
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API}State/GetState/${id}`
-        )
-            .then((res) => {
-
-                setCountry(res.data.country);
-                setStateName(res.data.stateName);
-                setIsActive(res.data.isActive)
-            })
-            .catch((err) => {
+        axios
+            .get(
+                `${process.env.REACT_APP_API}OfficeType/GetOfficeType/${id}`
+            ).then((res) => {
+                setofficeTypeName(res.data.officeTypeName);
+                setofficeTypeNameShort(res.data.officeTypeNameShort);
+                setIsActive(res.data.isActive);
+            }).catch((err) => {
                 console.log(err);
             })
     }, [])
-
     useEffect(() => {
-        handleChangeCountry();
-    }, [country])
-    const handleChangeCountry = () => {
-        if (!country) return;
-        if (country.length <= 2 || country.length >= 100) {
-            setCountryError("country name must be between 3 letter to 100 letters");
+        handleChangeOfficeType();
+    }, [officeTypeName])
+    const handleChangeOfficeType = () => {
+        if (!officeTypeName) return;
+        if (officeTypeName.length > 50 && officeTypeName.length < 2) {
+            setOfficeTypeNameError("Title Name must be less 50 words");
             setFormValid(false)
         } else {
-            setCountryError("");
-            setFormValid(true)
-        }
-    }
-    const handleChangeState = () => {
-        if (!stateName) return;
-        if (stateName.length < 2 || stateName.length >= 150) {
-            setStateError("state name must be between 3 letter to 150 letters");
-            setFormValid(false)
-        } else {
-            setStateError("");
+            setOfficeTypeError("");
             setFormValid(true)
         }
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (country === "") {
-            setCountryError("country Name is Required");
+        if (officeTypeName === "") {
+            setOfficeTypeNameError("District Name is Required");
         }
-        else if (country.length < 2 || country.length >= 100) {
-            setCountryError("country name must be between 3 letter to 100 letters");
+        else if (officeTypeNameShort.length > 50) {
+            setOfficeTypeNameShortError("title Name must be less 50 words");
         }
-        else {
-            setCountryError("");
-        }
-        if (stateName === "") {
-            setStateError("State Name is Required");
-        }
-        else if (stateName.length < 2 || stateName.length >= 150) {
-            setStateError("state name must be between 3 letter to 150 letters");
-        }
-        else { setStateError(""); }
-
         if (formValid) {
             const payload = {
-                country: country,
-                stateName: stateName,
+                officeTypeId: officeTypeId,
+                officeTypeName: officeTypeName,
+                officeTypeNameShort: officeTypeNameShort,
                 isActive: isActive,
                 updateby: updateby,
                 updateon: updateon,
-                ipAddress: ipAddress,
+                ipAddress: "ipAddress",
             };
             Swal.fire({
                 title: "Do You Want To Save Changes?",
@@ -115,31 +88,31 @@ export default () => {
                 .then((result) => {
                     if (result.isConfirmed) {
                         Axios.post(
-                            `${process.env.REACT_APP_API}State/UpdateState`,
+                            `${process.env.REACT_APP_API}OfficeType/UpdateOfficeType`,
                             payload
                         )
                             .then((res) => {
-
                                 Swal.fire({
                                     icon: "success",
                                     title: "Your work has been successfully update",
                                     showConfirmButton: false,
                                     timer: 1500,
                                 });
-                                history.push("/state")
+                                history.push("/officeType")
                             })
                             .catch(() => {
-                                Swal.fire("State not Update.");
+                                Swal.fire("Office type not Update.");
                             });
                     }
                 });
         }
     }
+
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
                 <div className="d-block mb-4 mb-md-0">
-                    <h4>State Details</h4>
+                    <h4>Office Type Details</h4>
                 </div>
             </div>
             <Card border="light" className="bg-white shadow-sm mb-4">
@@ -149,29 +122,28 @@ export default () => {
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Country Name</Form.Label>
-                                    {countryError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{countryError}</p>
+                                    <Form.Label>Office Type Name</Form.Label>
+                                    {officeTypeNameError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeNameError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Country here" value={country}
+                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeTypeName}
                                         onChange={(e) => {
-                                            setCountry(e.target.value);
-                                            setCountryError("");
-                                            handleChangeCountry();
+                                            setofficeTypeName(e.target.value);
+                                            setOfficeTypeNameError("");
                                         }} />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>State Name</Form.Label>
-                                    {stateError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateError}</p>
+                                    <Form.Label>Office Type Short Name</Form.Label>
+                                    {officeTypeNameShortError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeNameShortError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter State here" value={stateName}
+                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeTypeNameShort}
                                         onChange={(e) => {
-                                            setStateName(e.target.value);
-                                            setStateError("");
-                                            handleChangeState();
+                                            setofficeTypeNameShort(e.target.value);
+                                            setOfficeTypeNameShortError("");
+
                                         }} />
                                 </Form.Group>
                             </Col>

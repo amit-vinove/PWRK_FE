@@ -4,7 +4,7 @@ import Datetime from "react-datetime";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-import { Link, useHistory } from "react-router-dom";
+import {useHistory } from "react-router-dom";
 import Axios from "axios";
 import MenuItem from '@material-ui/core/MenuItem';
 import axios from "axios";
@@ -147,7 +147,7 @@ export default () => {
                 .then((result) => {
                     if (result.isConfirmed) {
                         Axios.post(
-                            `http://122.176.101.76:8085/api/District/UpdateDistrict`,
+                            `${process.env.REACT_APP_API}District/UpdateDistrict`,
                             payload
                         )
                             .then((res) => {

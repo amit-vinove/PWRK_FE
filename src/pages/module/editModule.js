@@ -11,7 +11,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [pageMode, setPageMode] = useState("create");
+
     const [moduleId, setModuleId] = useState(0);
     const [maduleName, setMaduleName] = useState("");
     const [moduleNameError, setModuleNameError] = useState("");
@@ -30,6 +30,8 @@ export default () => {
     const handleCancel = () => {
         history.push("/module")
     }
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
 
     const fetchIp = async () => {
         const res = await axios.get('https://geolocation-db.com/json/')
@@ -64,6 +66,19 @@ export default () => {
         }
     }
     useEffect(() => {
+        axios
+            .get(
+                `${process.env.REACT_APP_API}Module/GetModule/${id}`
+            ).then((res) => {
+                setMaduleName(res.data.maduleName);
+                setModuleNameShort(res.data.moduleNameShort);
+                setModuleUrl(res.data.moduleUrl);
+                setIsActive(res.data.isActive);
+            }).catch((err) => {
+                console.log(err);
+            })
+    }, [])
+    useEffect(() => {
         fetchIp();
     }, [])
 
@@ -96,19 +111,35 @@ export default () => {
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}Module/SetModule`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "Module Saved Sucessfully", "success");
-                    history.push("/module")
-                })
-                .catch((error) => {
-                    console.log(error);
+            Swal.fire({
+                title: "Do You Want To Save Changes?",
+                showCancelButton: true,
+                icon: "warning",
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Axios.post(
+                            `${process.env.REACT_APP_API}Module/UpdateModule`,
+                            payload
+                        )
+                            .then((res) => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your work has been successfully update",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                history.push("/module")
+                            })
+                            .catch(() => {
+                                Swal.fire("Module not Update.");
+                            });
+                    }
                 });
-        };
+        }
     }
     return (
         <>
@@ -128,7 +159,7 @@ export default () => {
                                     {moduleNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter module name here" value={maduleName}
+                                    <Form.Control required type="text" placeholder="Enter value here" value={maduleName}
                                         onChange={(e) => {
                                             setMaduleName(e.target.value);
                                             setModuleNameError("");
@@ -142,7 +173,7 @@ export default () => {
                                     {moduleNameShortError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameShortError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter module name short here" value={moduleNameShort}
+                                    <Form.Control required type="text" placeholder="Enter value here" value={moduleNameShort}
                                         onChange={(e) => {
                                             setModuleNameShort(e.target.value);
                                             setModuleNameShortError("");
@@ -158,7 +189,7 @@ export default () => {
                                     {/* {distShortNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{distShortNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter module url here" value={moduleUrl}
+                                    <Form.Control required type="text" placeholder="Enter value here" value={moduleUrl}
                                         onChange={(e) => {
                                             setModuleUrl(e.target.value);
                                             // setDistShortNameError("");

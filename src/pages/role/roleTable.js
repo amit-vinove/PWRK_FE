@@ -39,7 +39,9 @@ export const RoleTable = ({ searchText }) => {
             )
         );
     };
-
+    const handleEdit = () => {
+        (`/editRole?id=${id}`)
+    }
     const handleDelete = (id) => {
         Swal.fire({
             title: "Do You Want To Delete?",
@@ -109,7 +111,9 @@ export const RoleTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => {
+                                handleEdit(roleId);
+                            }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item

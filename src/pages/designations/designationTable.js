@@ -15,6 +15,7 @@ import {
   ButtonGroup,
 } from "@themesberg/react-bootstrap";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 
 const API = `${process.env.REACT_APP_API}Designation/GetDesignation`;
@@ -23,9 +24,12 @@ export const DesignationTable = ({ searchText }) => {
   const [designationData, setDesignationData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const history = useHistory();
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
-
+  const handleEdit = (id) => {
+    history.push(`/editDesignations?id=${id}`)
+  }
   const handleDelete = (id) => {
     Swal.fire({
       title: "Do You Want To Delete?",
@@ -79,6 +83,7 @@ export const DesignationTable = ({ searchText }) => {
     setCurrentPage((prevPage) => prevPage - 1);
     setShowPreviousButton(true);
     setShowNextButton(true);
+
   };
 
   const handleNext = () => {
@@ -134,7 +139,7 @@ export const DesignationTable = ({ searchText }) => {
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={() => { handleEdit(designationId) }}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
               <Dropdown.Item className="text-danger" onClick={() => { handleDelete(designationId) }}>

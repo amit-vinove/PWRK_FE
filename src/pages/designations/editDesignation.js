@@ -41,7 +41,24 @@ export default () => {
 
         //setUserNameError("");
     };
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
+    useEffect(() => {
 
+        axios
+            .get(
+                `${process.env.REACT_APP_API}Designation/GetDesignation/${id}`
+            )
+            .then((res) => {
+                setofficeTypeId(res.data.officeTypeId);
+                setdesignationName(res.data.designationName);
+                setdesignationShort(res.data.designationShort);
+                setdesignationOrderId(res.data.designationShort);
+            }).catch((err) => {
+                console.log(err);
+            })
+
+    }, [])
     const getAllOfficeType = async () => {
         let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
         setOfficeTypeDropdownData(result.data);
@@ -118,20 +135,35 @@ export default () => {
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}Designation/SetDesignation`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "Designation Saved Sucessfully", "success");
-
-                    history.push("/designations")
-                })
-                .catch((error) => {
-                    console.log(error);
+            Swal.fire({
+                title: "Do You Want To Save Changes?",
+                showCancelButton: true,
+                icon: "warning",
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Axios.post(
+                            `${process.env.REACT_APP_API}Designation/UpdateDesignation`,
+                            payload
+                        )
+                            .then((res) => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your work has been successfully update",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                history.push("/designation")
+                            })
+                            .catch(() => {
+                                Swal.fire("Designation not Update.");
+                            });
+                    }
                 });
-        };
+        }
     }
     return (
         <>
@@ -154,9 +186,10 @@ export default () => {
                                     <Form.Select
                                         onChange={handleOfficeTypeChange}
                                         disablePortal
+                                        value={officeTypeId}
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        defaultValue=""
                                     >
                                         <option value="" disabled>
                                             Choose office type....
@@ -175,7 +208,7 @@ export default () => {
                                     {designationNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{designationNameError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Designation name here" value={designationName}
+                                    <Form.Control required type="text" placeholder="Enter designation name here" value={designationName}
                                         onChange={(e) => {
                                             setdesignationName(e.target.value);
                                             setDesignationNameError("");
@@ -205,7 +238,7 @@ export default () => {
                                     {/* {designationNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{designationNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter designation Order here" value={designationOrderId}
+                                    <Form.Control required type="text" placeholder="Enter designation order here" value={designationOrderId}
                                         onChange={(e) => {
                                             setdesignationOrderId(e.target.value);
                                         }} />

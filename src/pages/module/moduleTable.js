@@ -4,12 +4,18 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 const API = `${process.env.REACT_APP_API}Module/GetModule`;
+const itemsPerPage = 10;
+const defaultPage = 1;
 export const ModuleTable = ({ searchText }) => {
   const [moduleData, setModuleData] = useState([]);
   const [tempModuleData, setTempModuleData] = useState([]);
-  const totalCount = moduleData.length;
+  const [currentPage, setCurrentPage] = useState(defaultPage);
+  const [showPreviousButton, setShowPreviousButton] = useState(false);
+  const [showNextButton, setShowNextButton] = useState(true);
+  const history = useHistory();
   async function getModules() {
     await axios.get(API).then((response) => {
       setModuleData(response.data);
@@ -19,10 +25,13 @@ export const ModuleTable = ({ searchText }) => {
   async function searchModule(searchText) {
     setModuleData(
       tempModuleData.filter((i) =>
-        i.maduleName.toLowerCase().includes(searchText.toLowerCase())
+        i.maduleName.toLowerCase().includes(searchText.toLowerCase()) ||
+        i.moduleNameShort.toLowerCase().includes(searchText.toLowerCase())
       ))
   }
-
+  const handleEdit = (id) => {
+    history.push(`editModule?id=${id}`)
+  }
   const handleDelete = (id) => {
     Swal.fire({
       title: "Do You Want To Delete?",
@@ -54,13 +63,35 @@ export const ModuleTable = ({ searchText }) => {
     });
   };
 
+  const handlePrev = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
 
+  const handleNext = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
   useEffect(() => {
     getModules();
   }, []);
   useEffect(() => {
     searchModule(searchText);
+    setCurrentPage(defaultPage);
   }, [searchText])
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = moduleData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(moduleData.length / itemsPerPage);
+
+
+  useEffect(() => {
+    setShowPreviousButton(currentPage > 1);
+    setShowNextButton(currentPage < totalPages);
+  }, [currentPage, totalPages]);
+
   const TableRow = (props) => {
     const { moduleId, maduleName, moduleNameShort, moduleUrl, isActive } = props;
     const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
@@ -102,9 +133,9 @@ export const ModuleTable = ({ searchText }) => {
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={() => { handleEdit(moduleId) }}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
-              </Dropdown.Item>
+              </Dropdown.Item >
               <Dropdown.Item className="text-danger" onClick={() => { handleDelete(moduleId) }}>
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
               </Dropdown.Item>
@@ -115,44 +146,43 @@ export const ModuleTable = ({ searchText }) => {
     );
   };
   return (
-    <Card border="light" className="table-wrapper table-responsive shadow-sm">
-      <Card.Body className="pt-0">
-        <Table hover className="user-table align-items-center">
-          <thead>
-            <tr>
-              <th className="border-bottom">Id</th>
-              <th className="border-bottom">Module Name</th>
-              <th className="border-bottom">Module Name Short</th>
-              <th className="border-bottom">Module URL</th>
-              <th className="border-bottom">Status</th>
-              <th className="border-bottom">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {moduleData && moduleData.map(t => <TableRow key={`module-${t.srNo}`} {...t} />)}
-          </tbody>
-        </Table>
-        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-          <Nav>
-            <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>
-                Previous
-              </Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Item>4</Pagination.Item>
-              <Pagination.Item>5</Pagination.Item>
-              <Pagination.Next>
-                Next
-              </Pagination.Next>
-            </Pagination>
-          </Nav>
-          <small className="fw-bold">
-            Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-          </small>
-        </Card.Footer>
-      </Card.Body>
-    </Card>
+    <>
+      <Card border="light" className="table-wrapper table-responsive shadow-sm">
+        <Card.Body className="pt-0">
+          <Table hover className="user-table align-items-center">
+            <thead>
+              <tr>
+                <th className="border-bottom">Id</th>
+                <th className="border-bottom">Module Name</th>
+                <th className="border-bottom">Module Name Short</th>
+                <th className="border-bottom">Module URL</th>
+                <th className="border-bottom">Status</th>
+                <th className="border-bottom">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems && currentItems.map(t => <TableRow key={`module-${t.srNo}`} {...t} />)}
+            </tbody>
+          </Table>
+
+        </Card.Body>
+      </Card>
+      <div className="d-flex justify-content-center">
+        <Pagination>
+          <Pagination.Prev
+            disabled={currentPage === 1}
+            onClick={handlePrev}
+          >
+            Prev. Page
+          </Pagination.Prev>
+          <Pagination.Next
+            disabled={currentPage === totalPages}
+            onClick={handleNext}
+          >
+            Next Page
+          </Pagination.Next>
+        </Pagination>
+      </div>
+    </>
   );
 };

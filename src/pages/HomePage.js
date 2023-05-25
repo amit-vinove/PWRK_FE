@@ -70,6 +70,12 @@ import userDetail from './user/userDetail';
 import editDistrict from './district/editDistrict';
 import editTitle from './title/editTitle';
 import editState from './State/editState';
+import editDesignation from './designations/editDesignation';
+import editRtiDesignation from './rtiDesignation/editRtiDesignation';
+import editDdoType from './ddoType/editDdoType';
+import editModule from './module/editModule';
+import editOfficeType from './officeType/editOfficeType';
+import editRole from './role/editRole';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -123,14 +129,17 @@ export default () => (
     {/* pages */}
     <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
     <RouteWithSidebar exact path={Routes.Designations.path} component={Designations} />
+    <RouteWithSidebar exact path={Routes.EditDesignations.path} component={editDesignation} />
     <RouteWithSidebar exact path={Routes.DesignationDetail.path} component={designationDetail} />
     <RouteWithSidebar exact path={Routes.RTIDesignations.path} component={RTIDesignationPage} />
+    <RouteWithSidebar exact path={Routes.EditRtiDesignations.path} component={editRtiDesignation} />
     <RouteWithSidebar exact path={Routes.Module.path} component={Module} />
     <RouteWithSidebar exact path={Routes.MainOfficeAccDetail.path} component={mainOfficeAccDetail} />
     <RouteWithSidebar exact path={Routes.OfficeUnitDetail.path} component={officeUnitDetail} />
     <RouteWithSidebar exact path={Routes.MainOfficeDetail.path} component={mainOfficeDetail} />
     <RouteWithSidebar exact path={Routes.DdoTypeDetail.path} component={ddoTypeDetail} />
     <RouteWithSidebar exact path={Routes.ModuleDetail.path} component={moduleDetail} />
+    <RouteWithSidebar exact path={Routes.EditModule.path} component={editModule} />
     <RouteWithSidebar exact path={Routes.TitleDetail.path} component={titleDetail} />
     <RouteWithSidebar exact path={Routes.RoleDetail.path} component={roleDetail} />
     <RouteWithSidebar exact path={Routes.UserDetail.path} component={userDetail} />
@@ -142,11 +151,14 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Profile.path} component={ProfilePage} />
     <RouteWithSidebar exact path={Routes.OfficeDetail.path} component={officeDetails} />
     <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />
+    <RouteWithSidebar exact path={Routes.EditRole.path} component={editRole} />
     <RouteWithSidebar exact path={Routes.EditTitle.path} component={editTitle} />
     <RouteWithSidebar exact path={Routes.DDOType.path} component={ddoTypePage} />
+    <RouteWithSidebar exact path={Routes.EditDdoType.path} component={editDdoType} />
     <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
     <RouteWithSidebar exact path={Routes.OfficeLevelDetail.path} component={officeLevelDetail} />
     <RouteWithSidebar exact path={Routes.OfficeTypeDetail.path} component={officeTypeDetail} />
+    <RouteWithSidebar exact path={Routes.EditOfficeType.path} component={editOfficeType} />
     <RouteWithSidebar exact path={Routes.State.path} component={statePage} />
     <RouteWithSidebar exact path={Routes.Office.path} component={officePage} />
     <RouteWithSidebar exact path={Routes.OfficeLevel.path} component={officeLevelPage} />

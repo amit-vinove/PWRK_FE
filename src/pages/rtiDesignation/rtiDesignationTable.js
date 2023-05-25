@@ -4,24 +4,35 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
+
 const API = `${process.env.REACT_APP_API}RTIDesignation/GetRTIDesignation`;
+const itemsPerPage = 10;
+const defaultPage = 1;
+
 export const RTIDesignationTable = ({ searchText }) => {
-  const [designationData, setDesignationData] = useState([]);
+  const [rtiDesignationData, setDesignationData] = useState([]);
   const [tempDesignationData, setTempDesignationData] = useState([]);
-  const totalCount = designationData.length;
+  const [currentPage, setCurrentPage] = useState(defaultPage);
+  const [showPreviousButton, setShowPreviousButton] = useState(false);
+  const [showNextButton, setShowNextButton] = useState(true);
+  const history = useHistory();
+
   async function getRtiDesignation() {
     await axios.get(API).then((response) => {
       setDesignationData(response.data);
       setTempDesignationData(response.data);
     });
   }
+
   async function searchDesignation(searchText) {
     setDesignationData(
       tempDesignationData.filter((i) =>
         i.designationName.toLowerCase().includes(searchText.toLowerCase())
-      ))
+      )
+    );
   }
 
   const handleDelete = (id) => {
@@ -50,31 +61,58 @@ export const RTIDesignationTable = ({ searchText }) => {
           .catch(() => {
             Swal.fire("RTI Designation not deleted.");
           });
-        console.log(id, "RTI DESIGNATION ID");
       }
     });
+  };
+
+  const handleEdit = (id) => {
+    history.push(`/editRtiDesignations?id=${id}`);
+  };
+
+  const handlePrev = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
   };
 
   useEffect(() => {
     getRtiDesignation();
   }, []);
+
   useEffect(() => {
     searchDesignation(searchText);
-  }, [searchText])
+    setCurrentPage(defaultPage);
+  }, [searchText]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = rtiDesignationData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(rtiDesignationData.length / itemsPerPage);
+
+  useEffect(() => {
+    setShowPreviousButton(currentPage > 1);
+    setShowNextButton(currentPage < totalPages);
+  }, [currentPage, totalPages]);
+
   const TableRow = (props) => {
     const { rtiDesigId, rtiDesignation, ipAddress, isActive } = props;
-    const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
+    const statusVariant = isActive
+      ? "success"
+      : !isActive
+        ? "danger"
+        : "primary";
     return (
       <tr>
         <td>
-          <Card.Link className="fw-normal">
-            {rtiDesigId}
-          </Card.Link>
+          <Card.Link className="fw-normal">{rtiDesigId}</Card.Link>
         </td>
         <td>
-          <span className="fw-normal">
-            {rtiDesignation}
-          </span>
+          <span className="fw-normal">{rtiDesignation}</span>
         </td>
         <td>
           <span className={`fw-normal text-${statusVariant}`}>
@@ -83,19 +121,30 @@ export const RTIDesignationTable = ({ searchText }) => {
         </td>
         <td>
           <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
+            >
               <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                <FontAwesomeIcon
+                  icon={faEllipsisH}
+                  className="icon-dark"
+                />
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={() => handleEdit(rtiDesigId)}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
-              <Dropdown.Item className="text-danger" onClick={() => { handleDelete(rtiDesigId) }}>
+              <Dropdown.Item
+                className="text-danger"
+                onClick={() => handleDelete(rtiDesigId)}
+              >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -104,43 +153,45 @@ export const RTIDesignationTable = ({ searchText }) => {
       </tr>
     );
   };
+
   return (
-    <Card border="light" className="table-wrapper table-responsive shadow-sm">
-      <Card.Body className="pt-0">
-        <Table hover className="user-table align-items-center">
-          <thead>
-            <tr>
-              <th className="border-bottom">Id</th>
-              <th className="border-bottom">Rti Designation Name</th>
-              <th className="border-bottom">Status</th>
-              <th className="border-bottom">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {designationData && designationData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
-          </tbody>
-        </Table>
-        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-          <Nav>
-            <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>
-                Previous
-              </Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Item>4</Pagination.Item>
-              <Pagination.Item>5</Pagination.Item>
-              <Pagination.Next>
-                Next
-              </Pagination.Next>
-            </Pagination>
-          </Nav>
-          <small className="fw-bold">
-            Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-          </small>
-        </Card.Footer>
-      </Card.Body>
-    </Card>
+    <>
+      <Card border="light" className="table-wrapper table-responsive shadow-sm">
+        <Card.Body className="pt-0">
+          <Table hover className="user-table align-items-center">
+            <thead>
+              <tr>
+                <th className="border-bottom">Id</th>
+                <th className="border-bottom">Rti Designation Name</th>
+                <th className="border-bottom">Status</th>
+                <th className="border-bottom">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems &&
+                currentItems.map((t) => (
+                  <TableRow key={`transaction-${t.srNo}`} {...t} />
+                ))}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
+      <div className="d-flex justify-content-center">
+        <Pagination>
+          <Pagination.Prev
+            disabled={currentPage === 1}
+            onClick={handlePrev}
+          >
+            Prev. Page
+          </Pagination.Prev>
+          <Pagination.Next
+            disabled={currentPage === totalPages}
+            onClick={handleNext}
+          >
+            Next Page
+          </Pagination.Next>
+        </Pagination>
+      </div>
+    </>
   );
 };

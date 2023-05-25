@@ -4,6 +4,7 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}OfficeType/GetOfficeType`;
@@ -11,6 +12,7 @@ export const OfficeTypeTable = ({ searchText }) => {
     const [officeTypeData, setOfficeTypeData] = useState([]);
     const [officeTypeId, setOfficeTypeId] = useState(0);
     console.log(officeTypeData, "state Data")
+    const history = useHistory();
     const [tempOfficeTypeData, setTempOfficeTypeData] = useState([]);
     const totalCount = officeTypeData.length;
     async function getOfficeType() {
@@ -55,6 +57,9 @@ export const OfficeTypeTable = ({ searchText }) => {
             }
         });
     };
+    const handleEdit = (id) => {
+        history.push(`editOfficeType?id=${id}`)
+    }
     useEffect(() => {
         getOfficeType();
     }, []);
@@ -62,9 +67,9 @@ export const OfficeTypeTable = ({ searchText }) => {
         searchState(searchText);
     }, [searchText])
     const TableRow = (props) => {
-        const { srNo, officeTypeName, officeTypeNameShort, isActive } = props;
+        const { srNo, officeTypeName, officeTypeId, officeTypeNameShort, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-        console.log(officeTypeId)
+        console.log(officeTypeId, "office Type id");
         return (
             <tr>
                 <td>
@@ -98,14 +103,10 @@ export const OfficeTypeTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleEdit(officeTypeId) }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
-                            <Dropdown.Item className="text-danger" onClick={() => {
-                                setOfficeTypeId(props.officeTypeId)
-                                handleDelete(officeTypeId)
-                            }
-                            }>
+                            <Dropdown.Item className="text-danger" onClick={() => { handleDelete(officeTypeId) }}>
                                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
                             </Dropdown.Item>
                         </Dropdown.Menu>
