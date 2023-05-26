@@ -8,6 +8,7 @@ import {
     Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar,
     Pagination, ButtonGroup
 } from "@themesberg/react-bootstrap";
+import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -16,9 +17,12 @@ const API = `${process.env.REACT_APP_API}OfficeUnit/GetOfficeUnit`;
 export const OfficeUnitTable = ({ searchText }) => {
     const [officeUnitData, setOfficeUnitData] = useState([]);
     const [officeUnitId, setOfficeUnitId] = useState(0);
-    console.log(officeUnitData, "state Data");
     const [tempOfficeUnitData, setTempOfficeUnitData] = useState([]);
-    const totalCount = officeUnitData.length;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const history = useHistory();
+    const [showPreviousButton, setShowPreviousButton] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(true);
     async function getOfficeUnit() {
         await axios.get(API).then((response) => {
             setOfficeUnitData(response.data);
@@ -32,6 +36,26 @@ export const OfficeUnitTable = ({ searchText }) => {
             )
         );
     }
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
+        setShowPreviousButton(true);
+        setShowNextButton(true);
+
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+        setShowPreviousButton(true);
+        if (currentPage + 1 === Math.ceil(officeUnitData.length / itemsPerPage)) {
+            setShowNextButton(false);
+        }
+    };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = officeUnitData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(officeUnitData.length / itemsPerPage);
+
     const handleDelete = (id) => {
         Swal.fire({
             title: "Do You Want To Delete?",
@@ -148,54 +172,55 @@ export const OfficeUnitTable = ({ searchText }) => {
         );
     };
     return (
-        <Card border="light" className="table-wrapper table-responsive shadow-sm">
-            <Card.Body className="pt-0">
-                <Table hover className="user-table align-items-center">
-                    <thead>
-                        <tr>
-                            <th className="border-bottom">Sr No</th>
-                            <th className="border-bottom">Office Unit Id</th>
-                            <th className="border-bottom">Office</th>
-                            <th className="border-bottom">Desigantion</th>
-                            <th className="border-bottom">Unit Name</th>
-                            <th className="border-bottom">Unit Address</th>
-                            <th className="border-bottom">Email Id</th>
-                            <th className="border-bottom">Contact Number</th>
-                            <th className="border-bottom">Longitude</th>
-                            <th className="border-bottom">Latitude</th>
-                            <th className="border-bottom">Comment</th>
-                            <th className="border-bottom">Seq Id</th>
-                            <th className="border-bottom">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {officeUnitData &&
-                            officeUnitData.map((t) => (
-                                <TableRow
-                                    key={`transaction-${t.officeUnitId}`}
-                                    {...t}
-                                    officeUnitId={t.officeUnitId}
-                                />
-                            ))}
-                    </tbody>
-                </Table>
-                <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-                    <Nav>
-                        <Pagination className="mb-2 mb-lg-0">
-                            <Pagination.Prev>Previous</Pagination.Prev>
-                            <Pagination.Item active>1</Pagination.Item>
-                            <Pagination.Item>2</Pagination.Item>
-                            <Pagination.Item>3</Pagination.Item>
-                            <Pagination.Item>4</Pagination.Item>
-                            <Pagination.Item>5</Pagination.Item>
-                            <Pagination.Next>Next</Pagination.Next>
-                        </Pagination>
-                    </Nav>
-                    <small className="fw-bold">
-                        Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-                    </small>
-                </Card.Footer>
-            </Card.Body>
-        </Card>
+        <>
+            <Card border="light" className="table-wrapper table-responsive shadow-sm">
+                <Card.Body className="pt-0">
+                    <Table hover className="user-table align-items-center">
+                        <thead>
+                            <tr>
+                                <th className="border-bottom">Sr No</th>
+                                <th className="border-bottom">Office Unit Id</th>
+                                <th className="border-bottom">Office</th>
+                                <th className="border-bottom">Desigantion</th>
+                                <th className="border-bottom">Unit Name</th>
+                                <th className="border-bottom">Unit Address</th>
+                                <th className="border-bottom">Email Id</th>
+                                <th className="border-bottom">Contact Number</th>
+                                <th className="border-bottom">Longitude</th>
+                                <th className="border-bottom">Latitude</th>
+                                <th className="border-bottom">Comment</th>
+                                <th className="border-bottom">Seq Id</th>
+                                <th className="border-bottom">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems &&
+                                currentItems.map((t) => (
+                                    <TableRow
+                                        key={`transaction-${t.officeUnitId}`}
+                                        {...t}
+                                        officeUnitId={t.officeUnitId}
+                                    />
+                                ))}
+                        </tbody>
+                    </Table>
+
+                </Card.Body>
+            </Card>
+            <div className="d-flex justify-content-center">
+                <Pagination>
+                    {showPreviousButton && (
+                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                            Prev. Page
+                        </Pagination.Prev>
+                    )}
+                    {showNextButton && (
+                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                            Next Page
+                        </Pagination.Next>
+                    )}
+                </Pagination>
+            </div>
+        </>
     );
 };

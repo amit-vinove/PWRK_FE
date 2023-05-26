@@ -4,15 +4,19 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}OfficeAccountDetails/GetOfficeAccountDetails`;
 export const OfficeAccDetailTable = ({ searchText }) => {
     const [officeAccDetailData, setOfficeAccDetailData] = useState([]);
     const [officeAccDetailId, setOfficeAccDetailId] = useState(0);
-    console.log(officeAccDetailData, "officeAccDetailData")
     const [tempOfficeAccDetailData, setTempOfficeAccDetailData] = useState([]);
-    const totalCount = officeAccDetailData.length;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const history = useHistory();
+    const [showPreviousButton, setShowPreviousButton] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(true);
     async function getOfficeAccountDetail() {
         await axios.get(API).then((response) => {
             setOfficeAccDetailData(response.data);
@@ -25,6 +29,26 @@ export const OfficeAccDetailTable = ({ searchText }) => {
                 i.stateName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
+        setShowPreviousButton(true);
+        setShowNextButton(true);
+
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+        setShowPreviousButton(true);
+        if (currentPage + 1 === Math.ceil(officeAccDetailData.length / itemsPerPage)) {
+            setShowNextButton(false);
+        }
+    };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = officeAccDetailData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(officeAccDetailData.length / itemsPerPage);
+
     const handleDelete = (id) => {
         Swal.fire({
             title: "Do You Want To Delete?",
@@ -173,55 +197,51 @@ export const OfficeAccDetailTable = ({ searchText }) => {
         );
     };
     return (
-        <Card border="light" className="table-wrapper table-responsive shadow-sm">
-            <Card.Body className="pt-0">
-                <Table hover className="user-table align-items-center">
-                    <thead>
-                        <tr>
-                            <th className="border-bottom">Sr No</th>
-                            <th className="border-bottom">Office Id</th>
-                            <th className="border-bottom">Ddo Type Id</th>
-                            <th className="border-bottom">Ddo Code</th>
-                            <th className="border-bottom">Ddo Code Name</th>
-                            <th className="border-bottom">PAN Number</th>
-                            <th className="border-bottom">GST</th>
-                            <th className="border-bottom">Bank Account Number</th>
-                            <th className="border-bottom">Bank Name</th>
-                            <th className="border-bottom">Bank Address</th>
-                            <th className="border-bottom">Bank IFSC</th>
-                            <th className="border-bottom">Status</th>
-                            <th className="border-bottom">Updated by</th>
-                            <th className="border-bottom">Updated Office Type Id</th>
-                            <th className="border-bottom">updated Office Id</th>
-                            <th className="border-bottom">Updated On</th>
-                            <th className="border-bottom">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {officeAccDetailData && officeAccDetailData.map(t => <TableRow key={`transaction-${t.officeAccDetailId}`}{...t} officeAccDetailId={t.officeAccDetailId} />)}
-                    </tbody>
-                </Table>
-                <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-                    <Nav>
-                        <Pagination className="mb-2 mb-lg-0">
-                            <Pagination.Prev>
-                                Previous
-                            </Pagination.Prev>
-                            <Pagination.Item active>1</Pagination.Item>
-                            <Pagination.Item>2</Pagination.Item>
-                            <Pagination.Item>3</Pagination.Item>
-                            <Pagination.Item>4</Pagination.Item>
-                            <Pagination.Item>5</Pagination.Item>
-                            <Pagination.Next>
-                                Next
-                            </Pagination.Next>
-                        </Pagination>
-                    </Nav>
-                    <small className="fw-bold">
-                        Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-                    </small>
-                </Card.Footer>
-            </Card.Body>
-        </Card>
+        <>
+            <Card border="light" className="table-wrapper table-responsive shadow-sm">
+                <Card.Body className="pt-0">
+                    <Table hover className="user-table align-items-center">
+                        <thead>
+                            <tr>
+                                <th className="border-bottom">Sr No</th>
+                                <th className="border-bottom">Office Id</th>
+                                <th className="border-bottom">Ddo Type Id</th>
+                                <th className="border-bottom">Ddo Code</th>
+                                <th className="border-bottom">Ddo Code Name</th>
+                                <th className="border-bottom">PAN Number</th>
+                                <th className="border-bottom">GST</th>
+                                <th className="border-bottom">Bank Account Number</th>
+                                <th className="border-bottom">Bank Name</th>
+                                <th className="border-bottom">Bank Address</th>
+                                <th className="border-bottom">Bank IFSC</th>
+                                <th className="border-bottom">Status</th>
+                                <th className="border-bottom">Updated by</th>
+                                <th className="border-bottom">Updated Office Type Id</th>
+                                <th className="border-bottom">updated Office Id</th>
+                                <th className="border-bottom">Updated On</th>
+                                <th className="border-bottom">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems && currentItems.map(t => <TableRow key={`transaction-${t.officeAccDetailId}`}{...t} officeAccDetailId={t.officeAccDetailId} />)}
+                        </tbody>
+                    </Table>
+                </Card.Body>
+            </Card>
+            <div className="d-flex justify-content-center">
+                <Pagination>
+                    {showPreviousButton && (
+                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                            Prev. Page
+                        </Pagination.Prev>
+                    )}
+                    {showNextButton && (
+                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                            Next Page
+                        </Pagination.Next>
+                    )}
+                </Pagination>
+            </div>
+        </>
     );
 };
