@@ -4,16 +4,26 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/src/sweetalert2.scss";
+import { useHistory } from "react-router-dom";
 const API = `${process.env.REACT_APP_API}Office/GetOffice`;
 export const OfficeTable = ({ searchText }) => {
     const [officeData, setOfficeData] = useState([]);
     const [tempOfficeData, setTempOfficeData] = useState([]);
-    const totalCount = officeData.length;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const history = useHistory();
+    const [showPreviousButton, setShowPreviousButton] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(true);
     async function getOffice() {
         await axios.get(API).then((response) => {
             setOfficeData(response.data);
             setTempOfficeData(response.data);
         });
+    }
+    const handleEdit = (id) => {
+        history.push(`editOffice?id=${id}`);
     }
     async function searchOffice(searchText) {
         setOfficeData(
@@ -21,6 +31,57 @@ export const OfficeTable = ({ searchText }) => {
                 i.officeName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
+
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
+        setShowPreviousButton(true);
+        setShowNextButton(true);
+
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+        setShowPreviousButton(true);
+        if (currentPage + 1 === Math.ceil(officeData.length / itemsPerPage)) {
+            setShowNextButton(false);
+        }
+    };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = officeData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(officeData.length / itemsPerPage);
+
+
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Do You Want To Delete?",
+            showCancelButton: true,
+            icon: "warning",
+            confirmButtonText: "Yes, delete it!",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios
+                    .post(
+                        `${process.env.REACT_APP_API}Office/deleteOffice/${id}`
+                    )
+                    .then((res) => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Your work has been Deleted",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        getOffice();
+                    })
+                    .catch(() => {
+                        Swal.fire("office not deleted.");
+                    });
+            }
+        });
+    };
     useEffect(() => {
         getOffice();
     }, []);
@@ -217,10 +278,10 @@ export const OfficeTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleEdit(officeId) }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
-                            <Dropdown.Item className="text-danger">
+                            <Dropdown.Item className="text-danger" onClick={() => { handleDelete(officeId) }}>
                                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
                             </Dropdown.Item>
                         </Dropdown.Menu>
@@ -230,6 +291,7 @@ export const OfficeTable = ({ searchText }) => {
         );
     };
     return (
+        <>
         <Card border="light" className="table-wrapper table-responsive shadow-sm">
             <Card.Body className="pt-0">
                 <Table hover className="user-table align-items-center">
@@ -276,27 +338,23 @@ export const OfficeTable = ({ searchText }) => {
                         {officeData && officeData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
                     </tbody>
                 </Table>
-                <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-                    <Nav>
-                        <Pagination className="mb-2 mb-lg-0">
-                            <Pagination.Prev>
-                                Previous
-                            </Pagination.Prev>
-                            <Pagination.Item active>1</Pagination.Item>
-                            <Pagination.Item>2</Pagination.Item>
-                            <Pagination.Item>3</Pagination.Item>
-                            <Pagination.Item>4</Pagination.Item>
-                            <Pagination.Item>5</Pagination.Item>
-                            <Pagination.Next>
-                                Next
-                            </Pagination.Next>
-                        </Pagination>
-                    </Nav>
-                    <small className="fw-bold">
-                        Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-                    </small>
-                </Card.Footer>
+               
             </Card.Body>
         </Card>
+          <div className="d-flex justify-content-center">
+          <Pagination>
+            {showPreviousButton && (
+              <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                Prev. Page
+              </Pagination.Prev>
+            )}
+            {showNextButton && (
+              <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                Next Page
+              </Pagination.Next>
+            )}
+          </Pagination>
+        </div>
+      </>
     );
 };

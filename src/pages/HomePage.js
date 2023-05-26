@@ -76,6 +76,8 @@ import editDdoType from './ddoType/editDdoType';
 import editModule from './module/editModule';
 import editOfficeType from './officeType/editOfficeType';
 import editRole from './role/editRole';
+import editOffice from './office/editOffice';
+import editOfficeLevel from './officeLevel/editOfficeLevel';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -150,6 +152,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.EditState.path} component={editState} />
     <RouteWithSidebar exact path={Routes.Profile.path} component={ProfilePage} />
     <RouteWithSidebar exact path={Routes.OfficeDetail.path} component={officeDetails} />
+    <RouteWithSidebar exact path={Routes.EditOffice.path} component={editOffice} />
     <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />
     <RouteWithSidebar exact path={Routes.EditRole.path} component={editRole} />
     <RouteWithSidebar exact path={Routes.EditTitle.path} component={editTitle} />
@@ -158,6 +161,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.District.path} component={districtPage} />
     <RouteWithSidebar exact path={Routes.OfficeLevelDetail.path} component={officeLevelDetail} />
     <RouteWithSidebar exact path={Routes.OfficeTypeDetail.path} component={officeTypeDetail} />
+    <RouteWithSidebar exact path={Routes.EditOfficeLevel.path} component={editOfficeLevel} />
     <RouteWithSidebar exact path={Routes.EditOfficeType.path} component={editOfficeType} />
     <RouteWithSidebar exact path={Routes.State.path} component={statePage} />
     <RouteWithSidebar exact path={Routes.Office.path} component={officePage} />

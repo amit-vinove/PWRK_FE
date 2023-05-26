@@ -24,6 +24,24 @@ export default () => {
     const jsonData = {
         updateby: "123",
     };
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setIpAddress(res.data.IPv4)
+    }
+    const handleOfficeTypeChange = (event) => {
+        setOfficeTypeId(event.target.value);
+    }
+    const getAllOfficeType = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+        setOfficeTypeDropdownData(result.data);
+    };
+
+    useEffect(() => {
+        getAllOfficeType();
+        fetchIp();
+    }, [])
+
     useEffect(() => {
         handleChangeOfficeLevel();
     }, [officeLevel])
@@ -91,11 +109,22 @@ export default () => {
                                     {/* {stateNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={officeTypeid}
-                                        onChange={(e) => {
-                                            setOfficeTypeId(e.target.value);
-                                            //setStateNameError("");
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleOfficeTypeChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose office type....
+                                        </option>
+                                        {officeTypeDropdownData.map((s) => (
+                                            <option key={s.officeTypeId} value={s.officeTypeId}>
+                                                {s.officeTypeName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">

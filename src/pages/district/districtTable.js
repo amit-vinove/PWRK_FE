@@ -25,7 +25,7 @@ import {
   ButtonGroup,
 } from "@themesberg/react-bootstrap";
 import axios from "axios";
-import { Link, useHistory } from "react-router-dom";
+import {useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 

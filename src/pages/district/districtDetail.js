@@ -37,14 +37,12 @@ export default () => {
     }
     const handleStateChange = (event) => {
         setStateId(event.target.value);
-
-        //setUserNameError("");
     };
     const getAllState = async () => {
         let result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
         setStateDropdownData(result.data);
     };
-    console.log(stateDropdownData, "statedropdown");
+
     useEffect(() => {
         getAllState();
         fetchIp();

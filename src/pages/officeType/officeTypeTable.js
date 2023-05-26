@@ -11,10 +11,13 @@ const API = `${process.env.REACT_APP_API}OfficeType/GetOfficeType`;
 export const OfficeTypeTable = ({ searchText }) => {
     const [officeTypeData, setOfficeTypeData] = useState([]);
     const [officeTypeId, setOfficeTypeId] = useState(0);
-    console.log(officeTypeData, "state Data")
-    const history = useHistory();
     const [tempOfficeTypeData, setTempOfficeTypeData] = useState([]);
-    const totalCount = officeTypeData.length;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const history = useHistory();
+    const [showPreviousButton, setShowPreviousButton] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(true);
+
     async function getOfficeType() {
         await axios.get(API).then((response) => {
             setOfficeTypeData(response.data);
@@ -27,6 +30,26 @@ export const OfficeTypeTable = ({ searchText }) => {
                 i.officeTypeName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
+        setShowPreviousButton(true);
+        setShowNextButton(true);
+
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+        setShowPreviousButton(true);
+        if (currentPage + 1 === Math.ceil(officeTypeData.length / itemsPerPage)) {
+            setShowNextButton(false);
+        }
+    };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = officeTypeData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(officeTypeData.length / itemsPerPage);
+
     const handleDelete = (id) => {
 
         Swal.fire({
@@ -69,7 +92,6 @@ export const OfficeTypeTable = ({ searchText }) => {
     const TableRow = (props) => {
         const { srNo, officeTypeName, officeTypeId, officeTypeNameShort, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
-        console.log(officeTypeId, "office Type id");
         return (
             <tr>
                 <td>
@@ -116,43 +138,39 @@ export const OfficeTypeTable = ({ searchText }) => {
         );
     };
     return (
-        <Card border="light" className="table-wrapper table-responsive shadow-sm">
-            <Card.Body className="pt-0">
-                <Table hover className="user-table align-items-center">
-                    <thead>
-                        <tr>
-                            <th className="border-bottom">Sr No</th>
-                            <th className="border-bottom">Office Type Name</th>
-                            <th className="border-bottom">Office Type Name Short</th>
-                            <th className="border-bottom">Status</th>
-                            <th className="border-bottom">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {officeTypeData && officeTypeData.map(t => <TableRow key={`transaction-${t.officeTypeId}`}{...t} officeTypeId={t.officeTypeId} />)}
-                    </tbody>
-                </Table>
-                <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-                    <Nav>
-                        <Pagination className="mb-2 mb-lg-0">
-                            <Pagination.Prev>
-                                Previous
-                            </Pagination.Prev>
-                            <Pagination.Item active>1</Pagination.Item>
-                            <Pagination.Item>2</Pagination.Item>
-                            <Pagination.Item>3</Pagination.Item>
-                            <Pagination.Item>4</Pagination.Item>
-                            <Pagination.Item>5</Pagination.Item>
-                            <Pagination.Next>
-                                Next
-                            </Pagination.Next>
-                        </Pagination>
-                    </Nav>
-                    <small className="fw-bold">
-                        Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-                    </small>
-                </Card.Footer>
-            </Card.Body>
-        </Card>
+        <>
+            <Card border="light" className="table-wrapper table-responsive shadow-sm">
+                <Card.Body className="pt-0">
+                    <Table hover className="user-table align-items-center">
+                        <thead>
+                            <tr>
+                                <th className="border-bottom">Sr No</th>
+                                <th className="border-bottom">Office Type Name</th>
+                                <th className="border-bottom">Office Type Name Short</th>
+                                <th className="border-bottom">Status</th>
+                                <th className="border-bottom">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems && currentItems.map(t => <TableRow key={`transaction-${t.officeTypeId}`}{...t} officeTypeId={t.officeTypeId} />)}
+                        </tbody>
+                    </Table>
+                </Card.Body>
+            </Card>
+            <div className="d-flex justify-content-center">
+                <Pagination>
+                    {showPreviousButton && (
+                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                            Prev. Page
+                        </Pagination.Prev>
+                    )}
+                    {showNextButton && (
+                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                            Next Page
+                        </Pagination.Next>
+                    )}
+                </Pagination>
+            </div>
+        </>
     );
 };

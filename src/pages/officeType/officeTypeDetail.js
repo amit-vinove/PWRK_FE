@@ -31,6 +31,7 @@ export default () => {
     const handleCancel = () => {
         history.push("/officeType")
     }
+    
     const fetchIp = async () => {
         const res = await axios.get('https://geolocation-db.com/json/')
         console.log(res.data.IPv4);

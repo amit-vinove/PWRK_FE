@@ -32,13 +32,15 @@ export default () => {
         history.push("/module")
     }
 
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
+
     const fetchIp = async () => {
         const res = await axios.get('https://geolocation-db.com/json/')
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
-    const query = new URLSearchParams(window.location.search);
-    const id = query.get("id");
+   
     useEffect(() => {
         axios
             .get(
