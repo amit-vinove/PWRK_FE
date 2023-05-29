@@ -38,10 +38,33 @@ export default () => {
     const handleCancel = () => {
         history.push("/officeAccDetail")
     }
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setIpAddress(res.data.IPv4)
+    }
     const [formValid, setFormValid] = useState(false);
     useEffect(() => {
         handleChangeOfficeAcc();
     }, [ddoCodeName])
+
+    const handleDdoTypeChange = (event) => {
+        setDdoTypeId(event.target.value);
+
+        //setUserNameError("");
+    };
+
+    const getAllDdoType = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}DDOType/GetDDOType`);
+        setDdoTypeDData(result.data);
+    };
+
+    useEffect(() => {
+        getAllDdoType();
+        fetchIp();
+    }, []);
+
+
     const handleChangeOfficeAcc = () => {
         if (!ddoCodeName) return;
         if (ddoCodeName.length > 50 && ddoCodeName.length < 2) {
@@ -108,15 +131,26 @@ export default () => {
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Ddo Type Id</Form.Label>
-                                    {/* {officetype && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
+                                    <Form.Label>DDO Type</Form.Label>
+                                    {/* {ddot && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={ddoTypeId}
-                                        onChange={(e) => {
-                                            setDdoTypeId(e.target.value);
-                                            //setStateNameError("");
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleDdoTypeChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose Ddo type....
+                                        </option>
+                                        {ddoTypeDData.map((s) => (
+                                            <option key={s.ddoTypeId} value={s.ddoTypeId}>
+                                                {s.ddoType}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">

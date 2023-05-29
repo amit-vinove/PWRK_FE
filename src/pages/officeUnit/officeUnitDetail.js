@@ -18,7 +18,7 @@ export default () => {
     const [officeTypeError, setOfficeTypeError] = useState("");
     const [officeTypeIdError, setOfficeTypeIdError] = useState("");
     const [officeUnitError, setOfficeUnitError] = useState("");
-    const [officeId, setOfficeId] = useState();
+    const [officeId, setOfficeId] = useState(0);
     const [designationId, setDesignationId] = useState(0);
     const [designationDData, SetDesignationDData] = useState([]);
     const [unitName, setUnitName] = useState("");
@@ -51,9 +51,46 @@ export default () => {
     const handleCancel = () => {
         history.push("/officeUnit")
     }
+    const handleOfficeTypeChange = (event) => {
+        setOfficeTypeId(event.target.value);
+
+        //setUserNameError("");
+    };
+
+    const getAllOfficeType = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+        setOfficeTypeDData(result.data);
+    };
+    const handleOfficeChange = (event) => {
+        setOfficeId(event.target.value);
+
+        //setUserNameError("");
+    };
+
+    const getAllOffice = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}Office/GetOffice`);
+        setOfficeDData(result.data);
+    };
+
+    const handleDesignationChange = (event) => {
+        setDesignationId(event.target.value);
+
+        //setUserNameError("");
+    };
+
+    const getAllDesignation = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
+        SetDesignationDData(result.data);
+    };
+
+
     useEffect(() => {
+        getAllOfficeType();
+        getAllOffice();
+        getAllDesignation();
         fetchIp();
-    }, [])
+    }, []);
+
     useEffect(() => {
         handleChangeOfficeUnit();
     }, [officeTypeError])
@@ -129,41 +166,72 @@ export default () => {
                                     {officeTypeError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter value here" value={officeTypeId}
-                                        onChange={(e) => {
-                                            setOfficeTypeId(e.target.value);
-                                            setOfficeTypeError("");
-                                            handleChangeOfficeUnit()
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleOfficeTypeChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose office type....
+                                        </option>
+                                        {officeTypeDData.map((s) => (
+                                            <option key={s.officeTypeId} value={s.officeTypeId}>
+                                                {s.officeTypeName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Office</Form.Label>
-                                    {/* {stateNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
+                                    {/* {officeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter value here" value={officeId}
-                                        onChange={(e) => {
-                                            setOfficeId(e.target.value);
-                                            //setStateNameError("");
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleOfficeChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose office....
+                                        </option>
+                                        {officeDData.map((s) => (
+                                            <option key={s.officeId} value={s.officeId}>
+                                                {s.officeName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Designation Name</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
+                                    <Form.Label>Designation</Form.Label>
+                                    {/* {designationId && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )} */}
-                                    <Form.Control required type="text" placeholder="Enter value here" value={designationId}
-                                        onChange={(e) => {
-                                            setDesignationId(e.target.value);
-                                            // setDistNameError("");
-                                            // handleChangeDisstName()
-                                        }} />
+                                    <Form.Select
+                                        onChange={handleDesignationChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        defaultValue="" // Set the default value to an empty string
+                                    >
+                                        <option value="" disabled>
+                                            Choose designation....
+                                        </option>
+                                        {designationDData.map((s) => (
+                                            <option key={s.designationId} value={s.designationId}>
+                                                {s.designationName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">

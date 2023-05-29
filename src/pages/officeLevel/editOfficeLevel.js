@@ -14,7 +14,7 @@ export default () => {
     const [officeTypeid, setOfficeTypeId] = useState(0);
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [officeLevelError, setOfficeLevelError] = useState("");
-    const [officeLevelId, setOfficeLevelId] = useState(0);
+    const [officeLevelId, setOfficeLevelId] = useState();
     const [officeLevel, setOfficeLevel] = useState("");
     const [formValid, setFormValid] = useState("");
     const [ipAddress, setIpAddress] = useState(0);
@@ -23,41 +23,52 @@ export default () => {
     const jsonData = {
         updateby: "123",
     };
+    const fetchIp = async () => {
+        const res = await axios.get('https://geolocation-db.com/json/')
+        console.log(res.data.IPv4);
+        setIpAddress(res.data.IPv4)
+    }
     const query = new URLSearchParams(window.location.search);
     const id = query.get("id");
 
     const handleOfficeTypeChange = (event) => {
         setOfficeTypeId(event.target.value);
     }
+
+
     const getAllOfficeType = async () => {
         let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
         setOfficeTypeDropdownData(result.data);
+
     };
 
 
-    useEffect(() => {
-        getAllOfficeType();
-
-    }, [])
-
-
     const handleCancel = () => {
+
         history.push("/officeLevel")
     }
     useEffect(() => {
+
         axios
             .get(
                 `${process.env.REACT_APP_API}OfficeLevel/Get/${id}`
-            ).then = ((res) => {
+            )
+            .then((res) => {
+
                 setOfficeTypeId(res.data.officeTypeid);
                 setOfficeLevelId(res.data.officeLevelId);
                 setOfficeLevel(res.data.officeLevel);
-
-            }).catch = ((err) => {
+            }).catch((err) => {
                 console.log(err);
             })
 
     }, [])
+    console.log(officeTypeid, "res.data.officeTypeid");
+    useEffect(() => {
+        getAllOfficeType();
+        fetchIp();
+    }, []);
+
     useEffect(() => {
         handleChangeOfficeLevel();
     }, [officeLevel])

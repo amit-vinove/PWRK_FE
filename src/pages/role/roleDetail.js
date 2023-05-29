@@ -138,7 +138,7 @@ export default () => {
                                         </option>
                                         {officeTypeDropdownData.map((s) => (
                                             <option key={s.officeTypeId} value={s.officeTypeId}>
-                                                {s.officeTypeId}
+                                                {s.officeTypeName}
                                             </option>
                                         ))}
                                     </Form.Select>
