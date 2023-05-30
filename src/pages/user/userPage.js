@@ -9,7 +9,7 @@ export default () => {
     const history = useHistory();
     const [Search, setSearch] = useState("");
     const createUser = () => {
-        history.push("/userDetail")
+        history.push("/userSignUp")
     }
     return (
         <>
