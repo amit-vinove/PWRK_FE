@@ -5,7 +5,7 @@ import { Routes } from "../routes";
 import DashboardOverview from "./dashboard/DashboardOverview";
 import Designations from "./designations/designationPage";
 import Module from "./module/modulePage";
-import ProfilePage from './profile/profilePage';
+
 import RTIDesignationPage from './rtiDesignation/rtiDesignationPage';
 import OfficePage from './officeDetails/officeDetails';
 import Settings from "./Settings";
@@ -78,6 +78,7 @@ import editOfficeType from './officeType/editOfficeType';
 import editRole from './role/editRole';
 import editOffice from './office/editOffice';
 import editOfficeLevel from './officeLevel/editOfficeLevel';
+import userSignUp from './user/userSignUp';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -145,12 +146,12 @@ export default () => (
     <RouteWithSidebar exact path={Routes.TitleDetail.path} component={titleDetail} />
     <RouteWithSidebar exact path={Routes.RoleDetail.path} component={roleDetail} />
     <RouteWithSidebar exact path={Routes.UserDetail.path} component={userDetail} />
+    <RouteWithSidebar exact path={Routes.UserSignUp.path} component={userSignUp} />
     <RouteWithSidebar exact path={Routes.RtiDesignationDetail.path} component={rtidesignationdetail} />
     <RouteWithSidebar exact path={Routes.DistrictDetail.path} component={districtDetail} />
     <RouteWithSidebar exact path={Routes.EditDistrict.path} component={editDistrict} />
     <RouteWithSidebar exact path={Routes.StateDetail.path} component={stateDetail} />
     <RouteWithSidebar exact path={Routes.EditState.path} component={editState} />
-    <RouteWithSidebar exact path={Routes.Profile.path} component={ProfilePage} />
     <RouteWithSidebar exact path={Routes.OfficeDetail.path} component={officeDetails} />
     <RouteWithSidebar exact path={Routes.EditOffice.path} component={editOffice} />
     <RouteWithSidebar exact path={Routes.Title.path} component={titlePage} />

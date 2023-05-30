@@ -32,6 +32,7 @@ export default () => {
         axios.get(`${process.env.REACT_APP_API}RtiDesignation/GetRtiDesignation/${id}`)
 
             .then((res) => {
+                setrtiDesigId(res.data.rtiDesigId);
                 setrtiDesignation(res.data.rtiDesignation);
                 setIsActive(res.data.isActive);
 
@@ -45,6 +46,9 @@ export default () => {
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
+    useEffect(() => {
+        fetchIp();
+    }, [])
     useEffect(() => {
         handleChangeRtiDesignation();
     }, [rtiDesignation])
@@ -75,7 +79,7 @@ export default () => {
         if (formValid) {
             let UserID = localStorage.getItem("UserId");
             const payload = {
-                
+
                 rtiDesigId: rtiDesigId,
                 rtiDesignation: rtiDesignation,
                 isActive: isActive,
@@ -83,19 +87,36 @@ export default () => {
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}RTIDesignation/UpdateRTIDesignation`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "RTI designation Saved Sucessfully", "success");
-                    history.push("/rti-designations")
-                })
-                .catch((error) => {
-                    console.log(error);
+            Swal.fire({
+                title: "Do You Want To Save Changes?",
+                showCancelButton: true,
+                icon: "warning",
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Axios.post(
+                            `${process.env.REACT_APP_API}RTIDesignation/UpdateRTIDesignation`,
+                            payload
+                        )
+                            .then((res) => {
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your work has been successfully update",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                history.push("/state")
+                            })
+                            .catch(() => {
+                                Swal.fire("RTI designation not Update.");
+                            });
+                    }
                 });
-        };
+        }
     }
     return (
         <>

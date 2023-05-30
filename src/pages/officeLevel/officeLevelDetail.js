@@ -11,8 +11,8 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [pageMode, setPageMode] = useState("create");
-    const [officeTypeid, setOfficeTypeId] = useState(0);
+    const [id, setId] = useState(0);
+    const [officeTypeId, setOfficeTypeId] = useState(0);
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [officeLevelError, setOfficeLevelError] = useState("");
     const [officeLevelId, setOfficeLevelId] = useState(0);
@@ -42,12 +42,12 @@ export default () => {
         fetchIp();
     }, [])
 
-    useEffect(() => {
-        handleChangeOfficeLevel();
-    }, [officeLevel])
     const handleCancel = () => {
         history.push("/officeLevel")
     }
+    useEffect(() => {
+        handleChangeOfficeLevel();
+    }, [officeLevel])
     const handleChangeOfficeLevel = () => {
         if (!officeLevel) return;
         if (officeLevel.length > 50 && officeLevel.length < 2) {
@@ -69,7 +69,8 @@ export default () => {
         if (formValid) {
             let UserID = localStorage.getItem("UserId");
             const payload = {
-                officeTypeid: officeTypeid,
+                id: id,
+                officeTypeId: officeTypeId,
                 officeLevelId: officeLevelId,
                 officeLevel: officeLevel,
                 updateBy: UserID,

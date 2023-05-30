@@ -4,13 +4,18 @@ import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, fa
 import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}UserProfile/GetUserProfile`;
 export const UserTable = ({ searchText }) => {
     const [userData, setUserData] = useState([]);
     const [tempUserData, setTempUserData] = useState([]);
-    const totalCount = userData.length;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const history = useHistory();
+    const [showPreviousButton, setShowPreviousButton] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(true);
     async function getUser() {
         await axios.get(API).then((response) => {
             setUserData(response.data);
@@ -23,6 +28,29 @@ export const UserTable = ({ searchText }) => {
                 i.userName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
+    const handleEdit = (userId) => {
+        history.push(`/userDetail?id=${userId}`);
+    };
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
+        setShowPreviousButton(true);
+        setShowNextButton(true);
+
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+        setShowPreviousButton(true);
+        if (currentPage + 1 === Math.ceil(userData.length / itemsPerPage)) {
+            setShowNextButton(false);
+        }
+    };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = userData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(userData.length / itemsPerPage);
+
     const handleDelete = (id) => {
         Swal.fire({
             title: "Do You Want To Delete?",
@@ -60,7 +88,7 @@ export const UserTable = ({ searchText }) => {
         searchUser(searchText);
     }, [searchText])
     const TableRow = (props) => {
-        const { srNo, userId, employeeId, officeTypeId, titleName, userName, designationName, mobileNo1, mobileNo2, emailId,
+        const { srNo, userId, empId, officeTypeId, titleId, userName, designationId, mobileNo1, mobileNo2, emailId,
             resiAdd, stateId, roleId, disttId, pinCode, loginId, password, invalidLoginCount, loginLockedDate,
             lastLoginDateTime, isActive, updateby, updateOfficeTypeId, updateOfficeId, updateon } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
@@ -73,7 +101,7 @@ export const UserTable = ({ searchText }) => {
                 </td>
                 <td>
                     <Card.Link className="fw-normal">
-                        {employeeId}
+                        {empId}
                     </Card.Link>
                 </td>
                 <td>
@@ -83,7 +111,7 @@ export const UserTable = ({ searchText }) => {
                 </td>
                 <td>
                     <Card.Link className="fw-normal">
-                        {titleName}
+                        {titleId}
                     </Card.Link>
                 </td>
                 <td>
@@ -93,7 +121,7 @@ export const UserTable = ({ searchText }) => {
                 </td>
                 <td>
                     <Card.Link className="fw-normal">
-                        {designationName}
+                        {designationId}
                     </Card.Link>
                 </td>
                 <td>
@@ -183,7 +211,7 @@ export const UserTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleEdit(userId) }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item className="text-danger" onClick={() => { handleDelete(userId) }}>
@@ -196,60 +224,56 @@ export const UserTable = ({ searchText }) => {
         );
     };
     return (
-        <Card border="light" className="table-wrapper table-responsive shadow-sm">
-            <Card.Body className="pt-0">
-                <Table hover className="user-table align-items-center">
-                    <thead>
-                        <tr>
-                            <th className="border-bottom">sr No</th>
-                            <th className="border-bottom">employee Id</th>
-                            <th className="border-bottom">office Type Id</th>
-                            <th className="border-bottom">title Name</th>
-                            <th className="border-bottom">user Name</th>
-                            <th className="border-bottom">designation Name</th>
-                            <th className="border-bottom">mobile No 1</th>
-                            <th className="border-bottom">mobile No 2</th>
-                            <th className="border-bottom">email Id</th>
-                            <th className="border-bottom">resi Add</th>
-                            <th className="border-bottom">state Id</th>
-                            <th className="border-bottom">role Id</th>
-                            <th className="border-bottom">distt Id</th>
-                            <th className="border-bottom">pin Code</th>
-                            <th className="border-bottom">login Id</th>
-                            <th className="border-bottom">invalidLogin Count</th>
-                            <th className="border-bottom">login Locked Date</th>
-                            <th className="border-bottom">last Login Date Time</th>
-                            <th className="border-bottom">Status</th>
-                            <th className="border-bottom">update Office Type Id</th>
-                            <th className="border-bottom">update Office Id</th>
-                            <th className="border-bottom">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {userData && userData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
-                    </tbody>
-                </Table>
-                <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-                    <Nav>
-                        <Pagination className="mb-2 mb-lg-0">
-                            <Pagination.Prev>
-                                Previous
-                            </Pagination.Prev>
-                            <Pagination.Item active>1</Pagination.Item>
-                            <Pagination.Item>2</Pagination.Item>
-                            <Pagination.Item>3</Pagination.Item>
-                            <Pagination.Item>4</Pagination.Item>
-                            <Pagination.Item>5</Pagination.Item>
-                            <Pagination.Next>
-                                Next
-                            </Pagination.Next>
-                        </Pagination>
-                    </Nav>
-                    <small className="fw-bold">
-                        Showing <b>{totalCount}</b> out of <b>{totalCount}</b> entries
-                    </small>
-                </Card.Footer>
-            </Card.Body>
-        </Card>
+        <>
+            <Card border="light" className="table-wrapper table-responsive shadow-sm">
+                <Card.Body className="pt-0">
+                    <Table hover className="user-table align-items-center">
+                        <thead>
+                            <tr>
+                                <th className="border-bottom">sr No</th>
+                                <th className="border-bottom">employee Id</th>
+                                <th className="border-bottom">office Type Id</th>
+                                <th className="border-bottom">title Name</th>
+                                <th className="border-bottom">user Name</th>
+                                <th className="border-bottom">designation Name</th>
+                                <th className="border-bottom">mobile No 1</th>
+                                <th className="border-bottom">mobile No 2</th>
+                                <th className="border-bottom">email Id</th>
+                                <th className="border-bottom">resi Add</th>
+                                <th className="border-bottom">state Id</th>
+                                <th className="border-bottom">role Id</th>
+                                <th className="border-bottom">distt Id</th>
+                                <th className="border-bottom">pin Code</th>
+                                <th className="border-bottom">login Id</th>
+                                <th className="border-bottom">invalidLogin Count</th>
+                                <th className="border-bottom">login Locked Date</th>
+                                <th className="border-bottom">last Login Date Time</th>
+                                <th className="border-bottom">Status</th>
+                                <th className="border-bottom">update Office Type Id</th>
+                                <th className="border-bottom">update Office Id</th>
+                                <th className="border-bottom">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userData && userData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
+                        </tbody>
+                    </Table>
+                </Card.Body>
+            </Card>
+            <div className="d-flex justify-content-center">
+                <Pagination>
+                    {showPreviousButton && (
+                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                            Prev. Page
+                        </Pagination.Prev>
+                    )}
+                    {showNextButton && (
+                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                            Next Page
+                        </Pagination.Next>
+                    )}
+                </Pagination>
+            </div>
+        </>
     );
 };

@@ -4,7 +4,7 @@ import Datetime from "react-datetime";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-import { Link, useHistory } from "react-router-dom";
+import {useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -129,9 +129,22 @@ export default () => {
 
                     history.push("/designations")
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                .catch((response) => {
+                    if (response.response.status === 409) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.response.data,
+                      });
+                    }
+                    else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "Somthing went wrong ! please login again",
+                      });
+                    }
+                  })
         };
     }
     return (

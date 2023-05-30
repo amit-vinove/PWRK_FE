@@ -15,6 +15,7 @@ export default (props) => {
   const history = useHistory();
 
 
+
   const handleLogout = () => {
     Swal.fire({
       title: 'Do you want to end this seassion ? Please click on Yes !',
@@ -33,6 +34,12 @@ export default (props) => {
       }
       history.push(Routes.Signin.path);
     })
+  }
+  const query = new URLSearchParams(window.location.search);
+  const id = query.get("id");
+
+  const handleProfile = () => {
+    history.push(Routes.UserDetail.path);
   }
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
@@ -60,19 +67,19 @@ export default (props) => {
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                <Dropdown.Item className="fw-bold">
+                <Dropdown.Item className="fw-bold" onClick={handleProfile}>
                   <FontAwesomeIcon icon={faUserCircle} className="me-2" /> My Profile
                 </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">
+                {/* <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faCog} className="me-2" /> Settings
-                </Dropdown.Item>
+                </Dropdown.Item> */}
                 <Dropdown.Item className="fw-bold" as={Link} onClick={() => {
                 }} to={Routes.ChangePassword.path}>
                   <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Change Password
                 </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">
+                {/* <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faUserShield} className="me-2" /> Support
-                </Dropdown.Item>
+                </Dropdown.Item> */}
 
                 <Dropdown.Divider />
 

@@ -63,7 +63,6 @@ export default () => {
         updateon: updateon,
         ipAddress: ipAddress,
       };
-      console.log(titleId, "titleId");
       Axios.post(
         `${process.env.REACT_APP_API}Title/SetTitle`,
         payload
@@ -73,9 +72,22 @@ export default () => {
           Swal.fire("Save", "Title Saved Sucessfully", "success");
           history.push("/title")
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((response) => {
+          if (response.response.status === 409) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: response.response.data,
+            });
+          }
+          else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "Somthing went wrong ! please login again",
+            });
+          }
+        })
     };
   }
   return (

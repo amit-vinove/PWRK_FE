@@ -53,7 +53,7 @@ export const TitleTable = ({ searchText }) => {
             });
 
             if (result.isConfirmed) {
-                await axios.delete(`${process.env.REACT_APP_API}Title/DeleteTitle/${id}`);
+                await axios.post(`${process.env.REACT_APP_API}Title/deleteTitle/${id}`);
                 Swal.fire({
                     icon: "success",
                     title: "Your work has been Deleted",

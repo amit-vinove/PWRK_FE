@@ -11,6 +11,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
+    const [designationId, setDesignationId] = useState(0);
     const [officeTypeId, setofficeTypeId] = useState(0);
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [officeTypeError, setOfficeTypeError] = useState("");
@@ -50,10 +51,11 @@ export default () => {
                 `${process.env.REACT_APP_API}Designation/GetDesignation/${id}`
             )
             .then((res) => {
+                setDesignationId(res.data.designationId)
                 setofficeTypeId(res.data.officeTypeId);
                 setdesignationName(res.data.designationName);
                 setdesignationShort(res.data.designationShort);
-                setdesignationOrderId(res.data.designationShort);
+                setdesignationOrderId(res.data.designationOrderId);
             }).catch((err) => {
                 console.log(err);
             })
@@ -127,6 +129,7 @@ export default () => {
         if (formValid) {
             let UserID = localStorage.getItem("UserId");
             const payload = {
+                designationId: designationId,
                 officeTypeId: officeTypeId,
                 designationName: designationName,
                 designationShort: designationShort,
@@ -157,11 +160,24 @@ export default () => {
                                     showConfirmButton: false,
                                     timer: 1500,
                                 });
-                                history.push("/designation")
+                                history.push("/designations")
                             })
-                            .catch(() => {
-                                Swal.fire("Designation not Update.");
-                            });
+                            .catch((response) => {
+                                if (response.response.status === 409) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: response.response.data,
+                                    });
+                                }
+                                else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: "Somthing went wrong ! please login again",
+                                    });
+                                }
+                            })
                     }
                 });
         }

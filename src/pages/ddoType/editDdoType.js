@@ -44,6 +44,7 @@ export default () => {
             .get(
                 `${process.env.REACT_APP_API}DDOType/GetDDOType/${id}`
             ).then((res) => {
+                setDdoTypeId(res.data.ddoTypeId);
                 setDdoType(res.data.ddoType);
                 setIsActive(res.data.isActive);
             })
@@ -106,9 +107,22 @@ export default () => {
                                 });
                                 history.push("/ddoType")
                             })
-                            .catch(() => {
-                                Swal.fire("DDO Type not Update.");
-                            });
+                            .catch((response) => {
+                                if (response.response.status === 409) {
+                                  Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: response.response.data,
+                                  });
+                                }
+                                else {
+                                  Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: "Somthing went wrong ! please login again",
+                                  });
+                                }
+                              })
                     }
                 });
         }

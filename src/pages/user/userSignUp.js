@@ -44,7 +44,7 @@ export default () => {
   const [updateOfficeTypeId, setupdateOfficeTypeId] = useState("");
   const [updateOfficeId, setupdateOfficeId] = useState("");
   const [isActive, setisActive] = useState(true);
-  const [ipAddress, setIpAddress] = useState(0);
+  const [ipAddress, setIpAddress] = useState("");
   const [updateby, setupdateby] = useState("");
   const [loginLockedDate, setloginLockedDate] = useState(null);
   const [lastLoginDateTime, setlastLoginDateTime] = useState(null);
@@ -61,9 +61,6 @@ export default () => {
     console.log(res.data.IPv4);
     setIpAddress(res.data.IPv4)
   }
-  const query = new URLSearchParams(window.location.search);
-  const id = query.get("id");
-
   const handleOfficeTypeChange = (event) => {
     setofficeTypeId(event.target.value);
 
@@ -121,44 +118,6 @@ export default () => {
     getAllDesignation();
     fetchIp();
   }, []);
-
-
-
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API}UserProfile/Get/${id}`
-      ).then((res) => {
-        setUserId(res.data.userId);
-        setempId(res.data.empId);
-        setofficeTypeId(res.data.officeTypeId);
-        settitleId(res.data.titleId);
-        setuserName(res.data.userName);
-        setdesignationId(res.data.designationId);
-        setmobileNo1(res.data.mobileNo1);
-        setmobileNo2(res.data.mobileNo2);
-        setemailId(res.data.emailId);
-        setresiAdd(res.data.resiAdd);
-        setstateId(res.data.stateId);
-        setdisttId(res.data.disttId);
-        setpinCode(res.data.pinCode);
-        setloginId(res.data.loginId);
-        setisActive(res.data.isActive);
-        setpassword(res.data.password);
-        setinvalidLoginCount(res.data.invalidLoginCount);
-        setupdateOfficeTypeId(res.data.updateOfficeTypeId);
-        setupdateOfficeId(res.data.updateOfficeId);
-        setloginLockedDate(res.data.loginLockedDate);
-        setlastLoginDateTime(res.data.lastLoginDateTime);
-        setupdateon(res.data.updateon);
-        console.log(res, "res")
-      }).catch(() => {
-
-      })
-
-  }, []);
-
-
 
   useEffect(() => {
     handleChange();
@@ -231,7 +190,7 @@ export default () => {
         updateby: UserID,
       };
       Axios.post(
-        `${process.env.REACT_APP_API}UserProfile/UpdateUserProfile`,
+        `${process.env.REACT_APP_API}User/SetUser`,
         payload
       )
         .then((response) => {
@@ -262,7 +221,7 @@ export default () => {
                   {empIDError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{empIDError}</p>
                   )}
-                  <Form.Control required type="text" placeholder="Enter value here" value={empId}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={empId}
                     onChange={(e) => {
                       setempId(e.target.value);
                       setEmpIDError("");
@@ -281,7 +240,7 @@ export default () => {
                     disablePortal
                     id="combo-box-demo"
                     sx={{ width: 600 }}
-                    value={officeTypeId}
+                    defaultValue="" // Set the default value to an empty string
                   >
                     <option value="" disabled>
                       Choose office type....
@@ -307,7 +266,7 @@ export default () => {
                     disablePortal
                     id="combo-box-demo"
                     sx={{ width: 600 }}
-                    value={titleId}
+                    defaultValue="" // Set the default value to an empty string
                   >
                     <option value="" disabled>
                       Choose office type....
@@ -327,7 +286,7 @@ export default () => {
                   {userNameError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{userNameError}</p>
                   )}
-                  <Form.Control required type="text" placeholder="Enter value here" value={userName}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={userName}
                     onChange={(e) => {
                       setuserName(e.target.value);
                       setUserNameError("");
@@ -347,7 +306,7 @@ export default () => {
                     disablePortal
                     id="combo-box-demo"
                     sx={{ width: 600 }}
-                    value={designationId}
+                    defaultValue="" // Set the default value to an empty string
                   >
                     <option value="" disabled>
                       Choose designation....
@@ -367,8 +326,7 @@ export default () => {
                   {/* {mobi && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                   )} */}
-                  <Form.Control required type="text" placeholder="Enter value here" value={mobileNo1}
-                    disabled
+                  <Form.Control required type="text" placeholder="Enter Title here" value={mobileNo1}
                     onChange={(e) => {
                       setmobileNo1(e.target.value);
                       // setOfficeTypeError("");
@@ -383,7 +341,7 @@ export default () => {
                   {mobileNo2Error && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{mobileNo2Error}</p>
                   )}
-                  <Form.Control required type="text" placeholder="Enter value here" value={mobileNo2}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={mobileNo2}
                     onChange={(e) => {
                       setmobileNo2(e.target.value);
                       setMobileNo2Error("");
@@ -398,8 +356,7 @@ export default () => {
                   {/* {officeTypeError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                   )} */}
-                  <Form.Control required type="text" placeholder="Enter value here" value={emailId}
-                    disabled
+                  <Form.Control required type="text" placeholder="Enter Title here" value={emailId}
                     onChange={(e) => {
                       setemailId(e.target.value);
                       //setOfficeTypeError("");
@@ -414,7 +371,7 @@ export default () => {
                   {resiAddError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{resiAddError}</p>
                   )}
-                  <Form.Control required type="text" placeholder="Enter value here" value={resiAdd}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={resiAdd}
                     onChange={(e) => {
                       setresiAdd(e.target.value);
                       setresiAddError("");
@@ -433,7 +390,7 @@ export default () => {
                     disablePortal
                     id="combo-box-demo"
                     sx={{ width: 600 }}
-                    value={stateId}
+                    defaultValue="" // Set the default value to an empty string
                   >
                     <option value="" disabled>
                       Choose State....
@@ -459,7 +416,7 @@ export default () => {
                     disablePortal
                     id="combo-box-demo"
                     sx={{ width: 600 }}
-                    value={disttId}
+                    defaultValue="" // Set the default value to an empty string
                   >
                     <option value="" disabled>
                       Choose District....
@@ -479,7 +436,7 @@ export default () => {
                   {pinCodeError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{pinCodeError}</p>
                   )}
-                  <Form.Control required type="text" placeholder="Enter value here" value={pinCode}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={pinCode}
                     onChange={(e) => {
                       setpinCode(e.target.value);
                       setPinCodeError("");
@@ -494,8 +451,7 @@ export default () => {
                   {/* {empIDError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{login}</p>
                   )} */}
-                  <Form.Control required type="text" placeholder="Enter value here" value={loginId}
-                    disabled
+                  <Form.Control required type="text" placeholder="Enter Title here" value={loginId}
                     onChange={(e) => {
                       setloginId(e.target.value);
                       //setEmpIDError("");
@@ -509,7 +465,7 @@ export default () => {
                   {/* {officeTypeError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                   )} */}
-                  <Form.Control required type="text" placeholder="Enter value here" value={invalidLoginCount}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={invalidLoginCount}
                     onChange={(e) => {
                       setinvalidLoginCount(e.target.value);
                       //setOfficeTypeError("");
@@ -542,7 +498,7 @@ export default () => {
                   {/* {officeTypeError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                   )} */}
-                  <Form.Control required type="text" placeholder="Enter value here" value={updateOfficeTypeId}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={updateOfficeTypeId}
                     onChange={(e) => {
                       setupdateOfficeTypeId(e.target.value);
                       //setOfficeTypeError("");
@@ -557,7 +513,7 @@ export default () => {
                   {/* {empIDError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{empIDError}</p>
                   )} */}
-                  <Form.Control required type="text" placeholder="Enter value here" value={updateOfficeId}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={updateOfficeId}
                     onChange={(e) => {
                       setupdateOfficeId(e.target.value);
                       // setEmpIDError("");

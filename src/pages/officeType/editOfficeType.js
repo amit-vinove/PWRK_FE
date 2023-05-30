@@ -40,12 +40,13 @@ export default () => {
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
-   
+
     useEffect(() => {
         axios
             .get(
                 `${process.env.REACT_APP_API}OfficeType/GetOfficeType/${id}`
             ).then((res) => {
+                setofficeTypeId(res.data.officeTypeId);
                 setofficeTypeName(res.data.officeTypeName);
                 setofficeTypeNameShort(res.data.officeTypeNameShort);
                 setIsActive(res.data.isActive);

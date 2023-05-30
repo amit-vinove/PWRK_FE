@@ -70,6 +70,7 @@ export default () => {
             .get(
                 `${process.env.REACT_APP_API}Module/GetModule/${id}`
             ).then((res) => {
+                setModuleId(res.data.moduleId);
                 setMaduleName(res.data.maduleName);
                 setModuleNameShort(res.data.moduleNameShort);
                 setModuleUrl(res.data.moduleUrl);

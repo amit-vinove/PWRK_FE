@@ -97,9 +97,22 @@ export default () => {
 
                     history.push("/state")
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                .catch((response) => {
+                    if (response.response.status === 409) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.response.data,
+                      });
+                    }
+                    else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "Somthing went wrong ! please login again",
+                      });
+                    }
+                  })
         };
     }
     return (

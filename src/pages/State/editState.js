@@ -11,8 +11,10 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
+
     const [country, setCountry] = useState("");
     const [countryError, setCountryError] = useState("");
+    const [stateId, setStateId] = useState("");
     const [stateName, setStateName] = useState("");
     const [stateError, setStateError] = useState("");
     const [isActive, setIsActive] = useState(true);
@@ -42,7 +44,7 @@ export default () => {
         axios.get(`${process.env.REACT_APP_API}State/GetState/${id}`
         )
             .then((res) => {
-
+                setStateId(res.data.stateId);
                 setCountry(res.data.country);
                 setStateName(res.data.stateName);
                 setIsActive(res.data.isActive)
@@ -98,6 +100,7 @@ export default () => {
         if (formValid) {
             let UserID = localStorage.getItem("UserId")
             const payload = {
+                stateId: stateId,
                 country: country,
                 stateName: stateName,
                 isActive: isActive,
@@ -129,9 +132,22 @@ export default () => {
                                 });
                                 history.push("/state")
                             })
-                            .catch(() => {
-                                Swal.fire("State not Update.");
-                            });
+                            .catch((response) => {
+                                if (response.response.status === 409) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: response.response.data,
+                                    });
+                                }
+                                else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: "Somthing went wrong ! please login again",
+                                    });
+                                }
+                            })
                     }
                 });
         }

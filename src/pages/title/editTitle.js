@@ -30,13 +30,14 @@ export default () => {
     const res = await axios.get('https://geolocation-db.com/json/')
     setipAddress(res.data.IPv4)
   }
-  
+
   useEffect(() => {
     axios
       .get(
         `${process.env.REACT_APP_API}Title/GetTitle/${id}`
       )
       .then((res) => {
+        setTitleId(res.data.titleId);
         setTitleName(res.data.titleName);
         setIsActive(res.data.isActive);
 
@@ -72,6 +73,7 @@ export default () => {
     }
     if (formValid) {
       let UserID = localStorage.getItem("UserId")
+      console.log(titleId, "title id");
       const payload = {
         titleId: titleId,
         titleName: titleName,
@@ -80,6 +82,7 @@ export default () => {
         updateon: updateon,
         ipAddress: ipAddress,
       };
+
       Swal.fire({
         title: "Do You Want To Save Changes?",
         showCancelButton: true,
@@ -87,29 +90,42 @@ export default () => {
         confirmButtonText: "Yes",
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-    })
+      })
         .then((result) => {
-            if (result.isConfirmed) {
-                Axios.post(
-                    `${process.env.REACT_APP_API}Title/UpdateTitle`,
-                    payload
-                )
-                    .then((res) => {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Your work has been successfully update",
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                        history.push("/title")
-                    })
-                    .catch(() => {
-                        Swal.fire("Title not Update.");
-                    });
-            }
+          if (result.isConfirmed) {
+            Axios.post(
+              `${process.env.REACT_APP_API}Title/UpdateTitle`,
+              payload
+            )
+              .then((response) => {
+                Swal.fire({
+                  icon: "success",
+                  title: "Your work has been successfully update",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+                history.push("/title")
+              })
+              .catch((response) => {
+                if (response.response.status === 409) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.response.data,
+                  });
+                }
+                else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Somthing went wrong ! please login again",
+                  });
+                }
+              })
+          }
         });
-}
-}
+    }
+  }
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">

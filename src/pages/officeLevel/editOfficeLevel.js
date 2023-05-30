@@ -11,7 +11,8 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [officeTypeid, setOfficeTypeId] = useState(0);
+    const [id, setId] = useState(0);
+    const [officeTypeId, setOfficeTypeId] = useState();
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [officeLevelError, setOfficeLevelError] = useState("");
     const [officeLevelId, setOfficeLevelId] = useState();
@@ -29,13 +30,33 @@ export default () => {
         setIpAddress(res.data.IPv4)
     }
     const query = new URLSearchParams(window.location.search);
-    const id = query.get("id");
+    const Levelid = query.get("id");
+
+
+    const handleCancel = () => {
+        history.push("/officeLevel")
+    }
+    useEffect(() => {
+
+        axios
+            .get(
+                `${process.env.REACT_APP_API}OfficeLevel/Get/${Levelid}`
+            )
+            .then((res) => {
+                setId(res.data.id);
+                setOfficeTypeId(res.data.officeTypeid);
+                setOfficeLevelId(res.data.officeLevelId);
+                setOfficeLevel(res.data.officeLevel);
+                console.log(res, "res")
+            }).catch((err) => {
+                console.log(err);
+            })
+
+    }, [])
 
     const handleOfficeTypeChange = (event) => {
         setOfficeTypeId(event.target.value);
     }
-
-
     const getAllOfficeType = async () => {
         let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
         setOfficeTypeDropdownData(result.data);
@@ -43,27 +64,6 @@ export default () => {
     };
 
 
-    const handleCancel = () => {
-
-        history.push("/officeLevel")
-    }
-    useEffect(() => {
-
-        axios
-            .get(
-                `${process.env.REACT_APP_API}OfficeLevel/Get/${id}`
-            )
-            .then((res) => {
-
-                setOfficeTypeId(res.data.officeTypeid);
-                setOfficeLevelId(res.data.officeLevelId);
-                setOfficeLevel(res.data.officeLevel);
-            }).catch((err) => {
-                console.log(err);
-            })
-
-    }, [])
-    console.log(officeTypeid, "res.data.officeTypeid");
     useEffect(() => {
         getAllOfficeType();
         fetchIp();
@@ -93,27 +93,44 @@ export default () => {
         if (formValid) {
             let UserID = localStorage.getItem("UserId");
             const payload = {
-                officeTypeid: officeTypeid,
+                id: id,
+                officeTypeId: officeTypeId,
                 officeLevelId: officeLevelId,
                 officeLevel: officeLevel,
                 updateBy: UserID,
                 updateOn: updateOn,
                 ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}OfficeLevel/UpdateOfficeLevel`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "Office Level Saved Sucessfully", "success");
+            Swal.fire({
+                title: "Do You Want To Save Changes?",
+                showCancelButton: true,
+                icon: "warning",
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Axios.post(
+                            `${process.env.REACT_APP_API}OfficeLevel/UpdateOfficeLevel`,
+                            payload
+                        )
+                            .then((res) => {
 
-                    history.push("/officeLevel")
-                })
-                .catch((error) => {
-                    console.log(error);
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your work has been successfully update",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                history.push("/officeLevel")
+                            })
+                            .catch(() => {
+                                Swal.fire("Office Level not Update.");
+                            });
+                    }
                 });
-        };
+        }
     }
     return (
         <>
@@ -136,7 +153,7 @@ export default () => {
                                     <Form.Select
                                         onChange={handleOfficeTypeChange}
                                         disablePortal
-                                        value={officeTypeid}
+                                        value={officeTypeId}
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
                                     >
@@ -144,7 +161,7 @@ export default () => {
                                             Choose office type....
                                         </option>
                                         {officeTypeDropdownData.map((s) => (
-                                            <option key={s.officeTypeid} value={s.officeTypeid}>
+                                            <option key={s.officeTypeId} value={s.officeTypeId}>
                                                 {s.officeTypeName}
                                             </option>
                                         ))}

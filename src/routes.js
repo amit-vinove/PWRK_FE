@@ -5,6 +5,7 @@ export const Routes = {
     Designations: { path: "/designations" },
     EditDesignations: { path: "/editDesignations" },
     User: { path: "/user" },
+    UserSignUp: { path: "/userSignUp" },
     UserDetail: { path: "/userDetail" },
     Title: { path: "/title" },
     EditTitle: { path: "/editTitle" },
