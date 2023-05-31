@@ -11,7 +11,6 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [pageMode, setPageMode] = useState("create");
     const [officeId, setOfficeId] = useState(0);
     const [officeDData, setOfficeDData] = useState([]);
     const [ddoTypeId, setDdoTypeId] = useState(0);
@@ -39,10 +38,12 @@ export default () => {
         history.push("/officeAccDetail")
     }
     const fetchIp = async () => {
-        const res = await axios.get('https://geolocation-db.com/json/')
-        console.log(res.data.IPv4);
-        setIpAddress(res.data.IPv4)
+        const response = await axios.get('https://geolocation-db.com/json/')
+        console.log(response.data.IPv4);
+        setIpAddress(response.data.IPv4)
     }
+
+
     const [formValid, setFormValid] = useState(false);
     useEffect(() => {
         handleChangeOfficeAcc();
@@ -53,6 +54,50 @@ export default () => {
 
         //setUserNameError("");
     };
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
+
+    useEffect(() => {
+        axios
+            .get(
+                `${process.env.REACT_APP_API}OfficeAccountDetails/GetOfficeAccountDetails/${id}`
+            ).then((response) => {
+                setOfficeId(response.dada.officeId);
+                setDdoTypeId(response.dada.ddoTypeId);
+                setDdoCode(response.dada.ddoCode);
+                setDdoCodeName(response.dada.ddoCodeName);
+                setPan(response.dada.pan);
+                setGst(response.dada.gst);
+                setBankAccNo(response.dada.bankAccNo);
+                setBankName(response.dada.bankName);
+                setBankAddress(response.dada.bankAddress);
+                setBankIFSC(response.dada.bankIFSC);
+                setIsActive(response.dada.isActive);
+                setUpdateBy(response.dada.updateBy);
+                setUpdateOfficeTypeId(response.dada.updateOfficeTypeId);
+                setUpdateOfficeId(response.dada.updateOfficeId);
+                setUpdateOn(response.dada.updateon);
+                setIpAddress(response.dada.ipAddress);
+                console.log(response, "response response")
+            }).catch((response) => {
+                if (response.response.status === 409) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.response.data,
+                    });
+                }
+                else {
+                    console.log(response);
+                    // Swal.fire({
+                    //     icon: 'error',
+                    //     title: 'Oops...',
+                    //     text: "Somthing went wrong ! please login again",
+                    // });
+                }
+            })
+
+    }, []);
 
     const getAllDdoType = async () => {
         let result = await Axios.get(`${process.env.REACT_APP_API}DDOType/GetDDOType`);
@@ -103,21 +148,48 @@ export default () => {
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
-            console.log(UserID, "UserId");
-            Axios.post(
-                `${process.env.REACT_APP_API}OfficeAccountDetails/SetOfficeAccountDetails`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "Office Account Saved Sucessfully", "success");
-
-                    history.push("/officeAccDetail")
-                })
-                .catch((error) => {
-                    console.log(error);
+            Swal.fire({
+                title: "Do You Want To Save Changes?",
+                showCancelButton: true,
+                icon: "warning",
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Axios.post(
+                            `${process.env.REACT_APP_API}OfficeAccountDetails/UpdateOfficeAccountDetails`,
+                            payload
+                        )
+                            .then((response) => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your work has been successfully update",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                history.push("/officeAccDetail")
+                            })
+                            .catch((response) => {
+                                if (response.response.status === 409) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: response.response.data,
+                                    });
+                                }
+                                else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: "Somthing went wrong ! please login again",
+                                    });
+                                }
+                            })
+                    }
                 });
-        };
+        }
     }
     return (
         <>

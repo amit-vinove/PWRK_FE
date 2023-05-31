@@ -10,7 +10,7 @@ import "sweetalert2/src/sweetalert2.scss";
 const API = `${process.env.REACT_APP_API}OfficeAccountDetails/GetOfficeAccountDetails`;
 export const OfficeAccDetailTable = ({ searchText }) => {
     const [officeAccDetailData, setOfficeAccDetailData] = useState([]);
-    const [officeAccDetailId, setOfficeAccDetailId] = useState(0);
+    const [officeId, setOfficeId] = useState(0);
     const [tempOfficeAccDetailData, setTempOfficeAccDetailData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
@@ -29,6 +29,13 @@ export const OfficeAccDetailTable = ({ searchText }) => {
                 i.stateName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
+
+    const handleEdit = () => {
+        history.push(`/editOfficeAcc?id=${id}`)
+
+    };
     const handlePrev = () => {
         setCurrentPage((prevPage) => prevPage - 1);
         setShowPreviousButton(true);
@@ -61,7 +68,7 @@ export const OfficeAccDetailTable = ({ searchText }) => {
             if (result.isConfirmed) {
                 axios
                     .post(
-                        `${process.env.REACT_APP_API}OfficeAccountDetail/deleteOfficeAccountDetail/${id}`
+                        `${process.env.REACT_APP_API}OfficeAccountDetails/DeleteOfficeAccountDetails/${id}`
                     )
                     .then((res) => {
                         Swal.fire({
@@ -180,14 +187,10 @@ export const OfficeAccDetailTable = ({ searchText }) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleEdit(officeId) }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
-                            </Dropdown.Item>
-                            <Dropdown.Item className="text-danger" onClick={() => {
-                                setOfficeAccDetailId(props.officeAccDetailId)
-                                handleDelete(officeAccDetailId)
-                            }
-                            }>
+                            </Dropdown.Item >
+                            <Dropdown.Item className="text-danger" onClick={() => { handleDelete(officeId) }}>
                                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
                             </Dropdown.Item>
                         </Dropdown.Menu>
@@ -223,7 +226,7 @@ export const OfficeAccDetailTable = ({ searchText }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {currentItems && currentItems.map(t => <TableRow key={`transaction-${t.officeAccDetailId}`}{...t} officeAccDetailId={t.officeAccDetailId} />)}
+                            {currentItems && currentItems.map(t => <TableRow key={`transaction-${t.officeId}`}{...t} officeId={t.officeId} />)}
                         </tbody>
                     </Table>
                 </Card.Body>

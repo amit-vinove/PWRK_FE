@@ -79,6 +79,7 @@ import editRole from './role/editRole';
 import editOffice from './office/editOffice';
 import editOfficeLevel from './officeLevel/editOfficeLevel';
 import userSignUp from './user/userSignUp';
+import editOfficeAcc from './officeAccDetail/editOfficeAcc';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -170,6 +171,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.OfficeType.path} component={officeTypePage} />
     <RouteWithSidebar exact path={Routes.OfficeUnit.path} component={officeUnitPage} />
     <RouteWithSidebar exact path={Routes.OfficeAccDetail.path} component={officeAccDeataiPage} />
+    <RouteWithSidebar exact path={Routes.editOfficeAcc.path} component={editOfficeAcc} />
     <RouteWithSidebar exact path={Routes.OtherOffice.path} component={otherOfficePage} />
     <RouteWithSidebar exact path={Routes.Role.path} component={rolePage} />
     <RouteWithSidebar exact path={Routes.User.path} component={userPage} />

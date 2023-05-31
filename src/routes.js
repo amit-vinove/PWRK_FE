@@ -37,6 +37,7 @@ export const Routes = {
     OfficeLevel: { path: "/officeLevel" },
     OfficeUnit: { path: "/officeUnit" },
     OfficeAccDetail: { path: "/officeAccDetail" },
+    editOfficeAcc: { path: "/editOfficeAcc" },
     OtherOfficeDetail: { path: "/otherOfficeDetail" },
     MainOfficeAccDetail: { path: "/mainOfficeAccDetail" },
     OtherOffice: { path: "/otherOffice" },
