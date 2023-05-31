@@ -61,25 +61,26 @@ export default () => {
         axios
             .get(
                 `${process.env.REACT_APP_API}OfficeAccountDetails/GetOfficeAccountDetails/${id}`
-            ).then((response) => {
-                setOfficeId(response.dada.officeId);
-                setDdoTypeId(response.dada.ddoTypeId);
-                setDdoCode(response.dada.ddoCode);
-                setDdoCodeName(response.dada.ddoCodeName);
-                setPan(response.dada.pan);
-                setGst(response.dada.gst);
-                setBankAccNo(response.dada.bankAccNo);
-                setBankName(response.dada.bankName);
-                setBankAddress(response.dada.bankAddress);
-                setBankIFSC(response.dada.bankIFSC);
-                setIsActive(response.dada.isActive);
-                setUpdateBy(response.dada.updateBy);
-                setUpdateOfficeTypeId(response.dada.updateOfficeTypeId);
-                setUpdateOfficeId(response.dada.updateOfficeId);
-                setUpdateOn(response.dada.updateon);
-                setIpAddress(response.dada.ipAddress);
-                console.log(response, "response response")
+            ).then((res) => {
+                setOfficeId(res.data.officeId);
+                setDdoTypeId(res.data.ddoTypeId);
+                setDdoCode(res.data.ddoCode);
+                setDdoCodeName(res.data.ddoCodeName);
+                setPan(res.data.pan);
+                setGst(res.data.gst);
+                setBankAccNo(res.data.bankAccNo);
+                setBankName(res.data.bankName);
+                setBankAddress(res.data.bankAddress);
+                setBankIFSC(res.data.bankIFSC);
+                setIsActive(res.data.isActive);
+                setUpdateBy(res.data.updateBy);
+                setUpdateOfficeTypeId(res.data.updateOfficeTypeId);
+                setUpdateOfficeId(res.data.updateOfficeId);
+                setUpdateOn(res.data.updateon);
+                setIpAddress(res.data.ipAddress);
+                console.log(officeId, "officeId");
             }).catch((response) => {
+                console.log(response);
                 if (response.response.status === 409) {
                     Swal.fire({
                         icon: 'error',
@@ -192,6 +193,7 @@ export default () => {
         }
     }
     return (
+
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
                 <div className="d-block mb-4 mb-md-0">
@@ -214,7 +216,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={ddoTypeId}
                                     >
                                         <option value="" disabled>
                                             Choose Ddo type....
@@ -346,15 +348,16 @@ export default () => {
                             <Col md={6} className="mb-3" >
                                 <Row >
                                     <Form.Label> <br /> </Form.Label>
-                                    <Col md={1} className="mb-1" >   <input
-                                        class="form-check-input" type="checkbox"
-                                        checked={isActive}
-                                        onChange={(e) => {
-                                            setIsActive(e.target.checked);
-                                        }}
-                                        value={isActive}
-                                        id="defaultCheck1"
-                                    /></Col>
+                                    <Col md={1} className="mb-1" >
+                                        <input
+                                            class="form-check-input" type="checkbox"
+                                            checked={isActive}
+                                            onChange={(e) => {
+                                                setIsActive(e.target.checked);
+                                            }}
+                                            value={isActive}
+                                            id="defaultCheck1"
+                                        /></Col>
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>

@@ -11,7 +11,6 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
-    const [pageMode, setPageMode] = useState("create");
     const [officeId, setOfficeId] = useState(0);
     const [officeDData, setOfficeDData] = useState([]);
     const [ddoTypeId, setDdoTypeId] = useState(0);
@@ -39,10 +38,12 @@ export default () => {
         history.push("/otherOffice")
     }
     const fetchIp = async () => {
-        const res = await axios.get('https://geolocation-db.com/json/')
-        console.log(res.data.IPv4);
-        setIpAddress(res.data.IPv4)
+        const response = await axios.get('https://geolocation-db.com/json/')
+        console.log(response.data.IPv4);
+        setIpAddress(response.data.IPv4)
     }
+
+
     const [formValid, setFormValid] = useState(false);
     useEffect(() => {
         handleChangeOfficeAcc();
@@ -53,6 +54,51 @@ export default () => {
 
         //setUserNameError("");
     };
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
+
+    useEffect(() => {
+        axios
+            .get(
+                `${process.env.REACT_APP_API}OfficeAccountDetails/GetOfficeAccountDetails/${id}`
+            ).then((res) => {
+                setOfficeId(res.data.officeId);
+                setDdoTypeId(res.data.ddoTypeId);
+                setDdoCode(res.data.ddoCode);
+                setDdoCodeName(res.data.ddoCodeName);
+                setPan(res.data.pan);
+                setGst(res.data.gst);
+                setBankAccNo(res.data.bankAccNo);
+                setBankName(res.data.bankName);
+                setBankAddress(res.data.bankAddress);
+                setBankIFSC(res.data.bankIFSC);
+                setIsActive(res.data.isActive);
+                setUpdateBy(res.data.updateBy);
+                setUpdateOfficeTypeId(res.data.updateOfficeTypeId);
+                setUpdateOfficeId(res.data.updateOfficeId);
+                setUpdateOn(res.data.updateon);
+                setIpAddress(res.data.ipAddress);
+                console.log(officeId, "officeId");
+            }).catch((response) => {
+                console.log(response);
+                if (response.response.status === 409) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.response.data,
+                    });
+                }
+                else {
+                    console.log(response);
+                    // Swal.fire({
+                    //     icon: 'error',
+                    //     title: 'Oops...',
+                    //     text: "Somthing went wrong ! please login again",
+                    // });
+                }
+            })
+
+    }, []);
 
     const getAllDdoType = async () => {
         let result = await Axios.get(`${process.env.REACT_APP_API}DDOType/GetDDOType`);
@@ -103,23 +149,51 @@ export default () => {
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
-            console.log(UserID, "UserId");
-            Axios.post(
-                `${process.env.REACT_APP_API}OfficeAccountDetails/SetOfficeAccountDetails`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "Office Account Saved Sucessfully", "success");
-
-                    history.push("/otherOffice")
-                })
-                .catch((error) => {
-                    console.log(error);
+            Swal.fire({
+                title: "Do You Want To Save Changes?",
+                showCancelButton: true,
+                icon: "warning",
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Axios.post(
+                            `${process.env.REACT_APP_API}OfficeAccountDetails/UpdateOfficeAccountDetails`,
+                            payload
+                        )
+                            .then((response) => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your work has been successfully update",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                history.push("/otherOffice")
+                            })
+                            .catch((response) => {
+                                if (response.response.status === 409) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: response.response.data,
+                                    });
+                                }
+                                else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: "Somthing went wrong ! please login again",
+                                    });
+                                }
+                            })
+                    }
                 });
-        };
+        }
     }
     return (
+
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
                 <div className="d-block mb-4 mb-md-0">
@@ -142,7 +216,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={ddoTypeId}
                                     >
                                         <option value="" disabled>
                                             Choose Ddo type....
@@ -274,15 +348,16 @@ export default () => {
                             <Col md={6} className="mb-3" >
                                 <Row >
                                     <Form.Label> <br /> </Form.Label>
-                                    <Col md={1} className="mb-1" >   <input
-                                        class="form-check-input" type="checkbox"
-                                        checked={isActive}
-                                        onChange={(e) => {
-                                            setIsActive(e.target.checked);
-                                        }}
-                                        value={isActive}
-                                        id="defaultCheck1"
-                                    /></Col>
+                                    <Col md={1} className="mb-1" >
+                                        <input
+                                            class="form-check-input" type="checkbox"
+                                            checked={isActive}
+                                            onChange={(e) => {
+                                                setIsActive(e.target.checked);
+                                            }}
+                                            value={isActive}
+                                            id="defaultCheck1"
+                                        /></Col>
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
@@ -350,6 +425,13 @@ export default () => {
 
 
 
+
+
+
+
+
+
+
 // import React, { useState, useEffect } from "react";
 // import moment from "moment-timezone";
 // import Datetime from "react-datetime";
@@ -363,8 +445,7 @@ export default () => {
 // import "sweetalert2/src/sweetalert2.scss";
 // export default () => {
 //     const history = useHistory();
-//     const [pageMode, setPageMode] = useState("create");
-//     const [othOffId, setOthOffId] = useState(0);
+//     const [othOffId, setothOffId] = useState(0);
 //     const [officeDData, setOfficeDData] = useState([]);
 //     const [ddoTypeId, setDdoTypeId] = useState(0);
 //     const [ddoTypeDData, setDdoTypeDData] = useState([]);
@@ -391,17 +472,80 @@ export default () => {
 //         history.push("/otherOffice")
 //     }
 //     const fetchIp = async () => {
-//         const res = await axios.get('https://geolocation-db.com/json/')
-//         console.log(res.data.IPv4);
-//         setIpAddress(res.data.IPv4)
+//         const response = await axios.get('https://geolocation-db.com/json/')
+//         console.log(response.data.IPv4);
+//         setIpAddress(response.data.IPv4)
 //     }
+
+
 //     const [formValid, setFormValid] = useState(false);
-//     useEffect(() => {
-//         fetchIp();
-//     }, [])
 //     useEffect(() => {
 //         handleChangeOfficeAcc();
 //     }, [ddoCodeName])
+
+//     const handleDdoTypeChange = (event) => {
+//         setDdoTypeId(event.target.value);
+
+//         //setUserNameError("");
+//     };
+//     const query = new URLSearchParams(window.location.search);
+//     const id = query.get("id");
+
+//     useEffect(() => {
+//         axios
+//             .get(
+//                 `${process.env.REACT_APP_API}OfficeAccountDetails/GetOfficeAccountDetails/${id}`
+//             //     `${process.env.REACT_APP_API}OtherOffice/Get/${id}`
+//              ).then((res) => {
+//                 setothOffId(res.data.othOffId);
+//                 setDdoTypeId(res.data.ddoTypeId);
+//                 setDdoCode(res.data.ddoCode);
+//                 setDdoCodeName(res.data.ddoCodeName);
+//                 setPan(res.data.pan);
+//                 setGst(res.data.gst);
+//                 setBankAccNo(res.data.bankAccNo);
+//                 setBankName(res.data.bankName);
+//                 setBankAddress(res.data.bankAddress);
+//                 setBankIFSC(res.data.bankIFSC);
+//                 setIsActive(res.data.isActive);
+//                 setUpdateBy(res.data.updateBy);
+//                 setUpdateOfficeTypeId(res.data.updateOfficeTypeId);
+//                 setUpdateOfficeId(res.data.updateOfficeId);
+//                 setUpdateOn(res.data.updateon);
+//                 setIpAddress(res.data.ipAddress);
+//                 console.log(othOffId, "othOffId");
+//             }).catch((response) => {
+//                 console.log(response);
+//                 if (response.response.status === 409) {
+//                     Swal.fire({
+//                         icon: 'error',
+//                         title: 'Oops...',
+//                         text: response.response.data,
+//                     });
+//                 }
+//                 else {
+//                     console.log(response);
+//                     // Swal.fire({
+//                     //     icon: 'error',
+//                     //     title: 'Oops...',
+//                     //     text: "Somthing went wrong ! please login again",
+//                     // });
+//                 }
+//             })
+
+//     }, []);
+
+//     const getAllDdoType = async () => {
+//         let result = await Axios.get(`${process.env.REACT_APP_API}DDOType/GetDDOType`);
+//         setDdoTypeDData(result.data);
+//     };
+
+//     useEffect(() => {
+//         getAllDdoType();
+//         fetchIp();
+//     }, []);
+
+
 //     const handleChangeOfficeAcc = () => {
 //         if (!ddoCodeName) return;
 //         if (ddoCodeName.length > 50 && ddoCodeName.length < 2) {
@@ -421,7 +565,7 @@ export default () => {
 //             setPanError("Pan must be less 50 words");
 //         }
 //         if (formValid) {
-//             let UserID = localStorage.getItem("UserId")
+//             let UserID = localStorage.getItem("UserId");
 //             const payload = {
 //                 othOffId: othOffId,
 //                 ddoTypeId: ddoTypeId,
@@ -440,27 +584,56 @@ export default () => {
 //                 updateon: updateon,
 //                 ipAddress: ipAddress,
 //             };
-//             Axios.post(
-//                 `${process.env.REACT_APP_API}OfficeAccountDetails/SetOfficeAccountDetails`,
-//                 //`${process.env.REACT_APP_API}OtherOffice/SetOtherOffice`,
-//                 payload
-//             )
-//                 .then((response) => {
-//                     console.log(response.data);
-//                     Swal.fire("Save", "Other Office  Saved Sucessfully", "success");
-
-//                     history.push("/otherOffice")
-//                 })
-//                 .catch((error) => {
-//                     console.log(error);
+//             Swal.fire({
+//                 title: "Do You Want To Save Changes?",
+//                 showCancelButton: true,
+//                 icon: "warning",
+//                 confirmButtonText: "Yes",
+//                 confirmButtonColor: "#3085d6",
+//                 cancelButtonColor: "#d33",
+//             })
+//                 .then((result) => {
+//                     if (result.isConfirmed) {
+//                         Axios.post(
+//                             `${process.env.REACT_APP_API}OfficeAccountDetails/UpdateOfficeAccountDetails`,
+//                            // `${process.env.REACT_APP_API}OtherOffice/UpdateOtherOffice`,
+//                             payload
+//                         )
+//                             .then((response) => {
+//                                 Swal.fire({
+//                                     icon: "success",
+//                                     title: "Your work has been successfully update",
+//                                     showConfirmButton: false,
+//                                     timer: 1500,
+//                                 });
+//                                 history.push("/otherOffice")
+//                             })
+//                             .catch((response) => {
+//                                 if (response.response.status === 409) {
+//                                     Swal.fire({
+//                                         icon: 'error',
+//                                         title: 'Oops...',
+//                                         text: response.response.data,
+//                                     });
+//                                 }
+//                                 else {
+//                                     Swal.fire({
+//                                         icon: 'error',
+//                                         title: 'Oops...',
+//                                         text: "Somthing went wrong ! please login again",
+//                                     });
+//                                 }
+//                             })
+//                     }
 //                 });
-//         };
+//         }
 //     }
 //     return (
+
 //         <>
 //             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
 //                 <div className="d-block mb-4 mb-md-0">
-//                     <h4>Other Office Details</h4>
+//                     <h4>Office Account Details</h4>
 //                 </div>
 //             </div>
 //             <Card border="light" className="bg-white shadow-sm mb-4">
@@ -470,15 +643,26 @@ export default () => {
 //                         <Row>
 //                             <Col md={6} className="mb-3">
 //                                 <Form.Group id="firstName">
-//                                     <Form.Label>Ddo Type Id</Form.Label>
-//                                     {/* {officetype && (
-//                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
+//                                     <Form.Label>DDO Type</Form.Label>
+//                                     {/* {ddot && (
+//                                         <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
 //                                     )} */}
-//                                     <Form.Control required type="text" placeholder="Enter Title here" value={ddoTypeId}
-//                                         onChange={(e) => {
-//                                             setDdoTypeId(e.target.value);
-//                                             //setStateNameError("");
-//                                         }} />
+//                                     <Form.Select
+//                                         onChange={handleDdoTypeChange}
+//                                         disablePortal
+//                                         id="combo-box-demo"
+//                                         sx={{ width: 600 }}
+//                                         value={ddoTypeId}
+//                                     >
+//                                         <option value="" disabled>
+//                                             Choose Ddo type....
+//                                         </option>
+//                                         {ddoTypeDData.map((s) => (
+//                                             <option key={s.ddoTypeId} value={s.ddoTypeId}>
+//                                                 {s.ddoType}
+//                                             </option>
+//                                         ))}
+//                                     </Form.Select>
 //                                 </Form.Group>
 //                             </Col>
 //                             <Col md={6} className="mb-3">
@@ -600,15 +784,16 @@ export default () => {
 //                             <Col md={6} className="mb-3" >
 //                                 <Row >
 //                                     <Form.Label> <br /> </Form.Label>
-//                                     <Col md={1} className="mb-1" >   <input
-//                                         class="form-check-input" type="checkbox"
-//                                         checked={isActive}
-//                                         onChange={(e) => {
-//                                             setIsActive(e.target.checked);
-//                                         }}
-//                                         value={isActive}
-//                                         id="defaultCheck1"
-//                                     /></Col>
+//                                     <Col md={1} className="mb-1" >
+//                                         <input
+//                                             class="form-check-input" type="checkbox"
+//                                             checked={isActive}
+//                                             onChange={(e) => {
+//                                                 setIsActive(e.target.checked);
+//                                             }}
+//                                             value={isActive}
+//                                             id="defaultCheck1"
+//                                         /></Col>
 //                                     <Col md={5} className="mb-2" >
 //                                         <Form.Label>Status</Form.Label>
 //                                     </Col>

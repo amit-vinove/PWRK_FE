@@ -68,6 +68,10 @@ export const TitleTable = ({ searchText }) => {
         }
     };
 
+    const handleView = (id) => {
+        history.push(`/titleView?id=${id}`);
+    };
+
     const handleEdit = (id) => {
         history.push(`/editTitle?id=${id}`);
     };
@@ -131,7 +135,7 @@ export const TitleTable = ({ searchText }) => {
                             </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleView(titleId)}>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => handleEdit(titleId)}>

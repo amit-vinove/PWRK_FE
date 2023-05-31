@@ -32,7 +32,7 @@ export const OfficeAccDetailTable = ({ searchText }) => {
     const query = new URLSearchParams(window.location.search);
     const id = query.get("id");
 
-    const handleEdit = () => {
+    const handleEdit = (id) => {
         history.push(`/editOfficeAcc?id=${id}`)
 
     };

@@ -51,7 +51,7 @@ export default () => {
                 `${process.env.REACT_APP_API}Designation/GetDesignation/${id}`
             )
             .then((res) => {
-                setDesignationId(res.data.designationId)
+                setDesignationId(res.data.designationId);
                 setofficeTypeId(res.data.officeTypeId);
                 setdesignationName(res.data.designationName);
                 setdesignationShort(res.data.designationShort);
