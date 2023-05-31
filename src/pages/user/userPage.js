@@ -38,7 +38,7 @@ export default () => {
                             <InputGroup.Text>
                                 <FontAwesomeIcon icon={faSearch} />
                             </InputGroup.Text>
-                            <Form.Control type="text" placeholder="Search by title name" onChange={(e) => setSearch(e.target.value)} />
+                            <Form.Control type="text" placeholder="Search by user name" onChange={(e) => setSearch(e.target.value)} />
                         </InputGroup>
                     </Col>
                     {/* <Col style={{ maxWidth: "10%", marginTop: 112, marginLeft: -1857 }}>
