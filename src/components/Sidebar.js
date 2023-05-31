@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
@@ -17,6 +17,9 @@ export default (props = {}) => {
   const CollapsableNavItem = (props) => {
     const { eventKey, title, icon, children = null } = props;
     const defaultKey = pathname.indexOf(eventKey) !== -1 ? eventKey : "";
+
+
+
     return (
       <Accordion as={Nav.Item} defaultActiveKey={defaultKey}>
         <Accordion.Item eventKey={eventKey}>
@@ -55,6 +58,15 @@ export default (props = {}) => {
       </Nav.Item>
     );
   };
+
+  const [resiAdd, setResiAdd] = useState("");
+  const [address, setAddress] = useState("");
+  useEffect(() => {
+    const resiAdd = localStorage.getItem("ResiAdd");
+    setResiAdd(resiAdd);
+    const address = localStorage.getItem("Address");
+    setAddress(address);
+  }, []);
   return (
     <>
       <Navbar expand={false} collapseOnSelect variant="dark" className="navbar-theme-primary px-4 d-md-none">
@@ -69,7 +81,8 @@ export default (props = {}) => {
         <SimpleBar className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}>
           <div className="sidebar-inner px-4 pt-3">
             <Nav className="flex-column pt-3 pt-md-0">
-
+              <h1><span>{resiAdd}</span></h1>
+              <h2><span>{address}</span></h2>
               <NavItem title="Home" link={Routes.DashboardOverview.path} icon={faChartPie} />
               <NavItem title="Title" icon={faHandHoldingUsd} link={Routes.Title.path} />
               <NavItem title="Designations" icon={faTable} link={Routes.Designations.path} />
