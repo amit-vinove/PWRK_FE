@@ -12,7 +12,7 @@ import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
     const [pageMode, setPageMode] = useState("create");
-    const [roleId, setRoleId] = useState(0);
+    const [id, setId] = useState(0);
     const [officeTypeId, setofficeTypeId] = useState("");
     const [officeTypeIdError, setOfficeTypeIdError] = useState("");
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
@@ -28,8 +28,7 @@ export default () => {
     const jsonData = {
         updateby: "123",
     };
-    const query = new URLSearchParams(window.location.search);
-    const id = query.get("id");
+
     const [updateon, setupdateon] = useState(new Date());
     const handleCancel = () => {
         history.push("/role")
@@ -40,12 +39,15 @@ export default () => {
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
+    const query = new URLSearchParams(window.location.search);
+    const Rid = query.get("id");
 
     useEffect(() => {
-        Axios.post(
-            `${process.env.REACT_APP_API}Role/GetRole/${id}`,
+        Axios.get(
+            `${process.env.REACT_APP_API}Role/GetRole/${Rid}`,
         )
             .then((res) => {
+                setId(res.data.id);
                 setofficeTypeId(res.data.officeTypeId);
                 setRoleName(res.data.roleName);
                 setMaker(res.data.maker);
@@ -53,6 +55,7 @@ export default () => {
                 setViewer(res.data.viewer)
                 setApprover(res.data.approver);
                 setIsActive(res.data.isActive);
+                console.log(res, "id id");
             }).catch((err) => {
                 console.log(err)
             })
@@ -94,7 +97,7 @@ export default () => {
         if (formValid) {
             let UserID = localStorage.getItem("UserId")
             const payload = {
-                roleId: roleId,
+                id: id,
                 officeTypeId: officeTypeId,
                 roleName: roleName,
                 maker: maker,
@@ -172,7 +175,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={officeTypeId}
                                     >
                                         <option value="" disabled>
                                             Choose office type....

@@ -34,8 +34,8 @@ export default () => {
     const [comment, setComment] = useState("");
     const [commentError, setCommentError] = useState("");
     const [seqId, setSeqId] = useState("");
-    const [updateOfficeTypeId, setUpdateOfficeTypeId] = useState("");
-    const [updateOfficeId, setUpdateOfficeId] = useState();
+    const [updateOfficeTypeId, setUpdateOfficeTypeId] = useState(0);
+    const [updateOfficeId, setUpdateOfficeId] = useState(0);
     const [ipAddress, setipAddress] = useState(0);
     const [updatedby, setUpdatedBy] = useState(0);
     const [formValid, setFormValid] = useState(0);
@@ -47,6 +47,11 @@ export default () => {
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
+    const validateEmail = (emailId) => {
+        return emailId.match(
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
     const [updateon, setupdateon] = useState(new Date());
     const handleCancel = () => {
         history.push("/officeUnit")
@@ -92,25 +97,108 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        handleChangeOfficeUnit();
-    }, [officeTypeError])
-    const handleChangeOfficeUnit = () => {
-        if (!officeTypeError) return;
-        if (officeTypeError.length > 50 && officeTypeError.length < 2) {
-            setOfficeTypeError("value Name must be less 50 words");
+        handleContactChange();
+    }, [contactNo])
+
+    const handleContactChange = () => {
+        if (!contactNo) return;
+        if (contactNo.length <= 7 || contactNo.length >= 11) {
+            setContactError("Invalid Mobile Number(Mobile Number  must be 8 to 10 Characters)");
+        }
+        else {
+            setContactError("");
+        }
+    }
+    useEffect(() => {
+        handleEmailChange();
+    }, [emailId])
+    const handleEmailChange = () => {
+        if (!emailId) return;
+        if (validateEmail(emailId) == null)
+            if (emailId != "") {
+                setEmailError("Please Enter Valid Email Address");
+            } else {
+                setEmailError("")
+            }
+    }
+
+    useEffect(() => {
+        handleChangeUnitName();
+    }, [unitName])
+    const handleChangeUnitName = () => {
+        if (!unitName) return;
+        if (unitName.length <= 3 || unitName.length >= 150) {
+            setUnitNameError("unit Name must be between 3 to 150 Characters");
             setFormValid(false)
         } else {
-            setOfficeTypeError("");
+            setUnitNameError("");
             setFormValid(true)
         }
     }
+    useEffect(() => {
+        handleChangeUnitAddress();
+    }, [unitAddress])
+    const handleChangeUnitAddress = () => {
+        if (!unitAddress) return;
+        if (unitAddress.length <= 3 || unitAddress.length >= 500) {
+            setUnitAddressError("unit Address must be between 3 to 500 Characters");
+            setFormValid(false)
+        } else {
+            setUnitAddressError("");
+            setFormValid(true)
+        }
+    }
+    useEffect(() => {
+        handleChangeComment();
+    }, [comment])
+    const handleChangeComment = () => {
+        if (!comment) return;
+        if (comment.length <= 3 || comment.length >= 500) {
+            setCommentError("Comment must be between 3 to 500 Characters");
+            setFormValid(false)
+        } else {
+            setCommentError("");
+            setFormValid(true)
+        }
+    }
+
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (officeTypeId === "") {
-            setOfficeTypeError("Office Type Name is Required");
+        if (unitName === "") { setUnitNameError("unit Name Requeried"); }
+        else if (unitName.length <= 3 || unitName.length >= 150) {
+            setUnitNameError("unit Name must be between 3 to 150 Characters");
+        } else {
+            setEmailError("")
         }
-        else if (contactNo.length === 9) {
-            setContactError("Contact Number Name must be 10 ");
+        if (unitName === "") {
+            setUnitNameError("unit Name Requeried");
+        }
+        else if (unitName.length <= 3 || unitName.length >= 150) {
+            setUnitNameError("unit Name must be between 3 to 150 Characters");
+        }
+
+        if (unitAddress === "") {
+            setUnitAddressError("unit Address Requeried");
+        }
+        else if (unitAddress.length <= 3 || unitAddress.length >= 500) {
+            setUnitAddressError("unit Address must be between 3 to 500 Characters");
+        }
+
+
+        if (emailId === "") {
+            setEmailError("Email Is Requeried")
+        } else {
+            setEmailError("")
+        }
+        if (comment === "") {
+            setCommentError("comment Is Requeried")
+        }
+        else if (comment.length <= 3 || comment.length >= 500) {
+            setCommentError("Comment must be between 3 to 500 Characters");
+        } else {
+            setCommentError("")
         }
         if (formValid) {
             let UserID = localStorage.getItem("UserId");
@@ -133,20 +221,22 @@ export default () => {
                 updatedBy: UserID,
                 ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}OfficeUnit/SetOfficeUnit`,
-                payload
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "Office Unit Saved Sucessfully", "success");
+            if (validateEmail(emailId)) {
+                Axios.post(
+                    `${process.env.REACT_APP_API}OfficeUnit/SetOfficeUnit`,
+                    payload
+                )
+                    .then((response) => {
+                        console.log(response.data);
+                        Swal.fire("Save", "Office Unit Saved Sucessfully", "success");
 
-                    history.push("/officeUnit")
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        };
+                        history.push("/officeUnit")
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            };
+        }
     }
     return (
         <>
@@ -237,13 +327,14 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Unit Name</Form.Label>
-                                    {/* {stateNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                                    )} */}
+                                    {unitNameError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{unitNameError}</p>
+                                    )}
                                     <Form.Control required type="text" placeholder="Enter value here" value={unitName}
                                         onChange={(e) => {
                                             setUnitName(e.target.value);
-                                            //setStateNameError("");
+                                            setUnitNameError("");
+                                            handleChangeUnitName();
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -252,27 +343,28 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Unit Address</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
+                                    {unitAddressError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{unitAddressError}</p>
+                                    )}
                                     <Form.Control required type="text" placeholder="Enter value here" value={unitAddress}
                                         onChange={(e) => {
                                             setUnitAddress(e.target.value);
-                                            // setDistNameError("");
-                                            // handleChangeDisstName()
+                                            setUnitAddressError("");
+                                            handleChangeUnitAddress();
                                         }} />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Email Id</Form.Label>
-                                    {/* {stateNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                                    )} */}
+                                    {emailError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{emailError}</p>
+                                    )}
                                     <Form.Control required type="text" placeholder="Enter value here" value={emailId}
                                         onChange={(e) => {
                                             setEmailId(e.target.value);
-                                            //setStateNameError("");
+                                            setEmailError("");
+                                            handleEmailChange();
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -284,11 +376,11 @@ export default () => {
                                     {contactError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{contactError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter value here" value={contactNo}
+                                    <Form.Control required type="number" placeholder="Enter value here" value={contactNo}
                                         onChange={(e) => {
                                             setContactNo(e.target.value);
                                             setContactError("");
-                                            // handleChangeDisstName()
+                                            handleContactChange();
                                         }} />
                                 </Form.Group>
                             </Col>
@@ -324,13 +416,14 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Comment</Form.Label>
-                                    {/* {stateNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                                    )} */}
+                                    {commentError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{commentError}</p>
+                                    )}
                                     <Form.Control required type="text" placeholder="Enter value here" value={comment}
                                         onChange={(e) => {
                                             setComment(e.target.value);
-                                            //setStateNameError("");
+                                            setCommentError();
+                                            handleChangeComment();
                                         }} />
                                 </Form.Group>
                             </Col>

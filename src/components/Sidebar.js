@@ -69,11 +69,12 @@ export default (props = {}) => {
         <SimpleBar className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}>
           <div className="sidebar-inner px-4 pt-3">
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Dashboard" link={Routes.DashboardOverview.path} icon={faChartPie} />
+
+              <NavItem title="Home" link={Routes.DashboardOverview.path} icon={faChartPie} />
               <NavItem title="Title" icon={faHandHoldingUsd} link={Routes.Title.path} />
+              <NavItem title="Designations" icon={faTable} link={Routes.Designations.path} />
               <NavItem title="District" icon={faHandHoldingUsd} link={Routes.District.path} />
               <NavItem title="State" icon={faHandHoldingUsd} link={Routes.State.path} />
-              <NavItem title="Designations" icon={faTable} link={Routes.Designations.path} />
               <NavItem title="RTI Designations" icon={faTable} link={Routes.RTIDesignations.path} />
               <NavItem title="DDO Type" icon={faHandHoldingUsd} link={Routes.DDOType.path} />
               <NavItem title="Modules" icon={faTable} link={Routes.Module.path} />
@@ -85,11 +86,15 @@ export default (props = {}) => {
               <NavItem title="Office Account Detail" icon={faHandHoldingUsd} link={Routes.OfficeAccDetail.path} />
               <NavItem title="Other Office" icon={faHandHoldingUsd} link={Routes.OtherOffice.path} />
               <NavItem title="User" icon={faTable} link={Routes.User.path} />
-              <NavItem title="OfficeDetail" icon={faTable} link={Routes.OfficeDetail.path} />
-              <NavItem title="Profile" icon={faUser} link={Routes.Profile.path} />
+
+
+
+              {/*start extra field of sidebar */}
+              {/* <NavItem title="OfficeDetail" icon={faTable} link={Routes.OfficeDetail.path} /> */}
+              {/* <NavItem title="Profile" icon={faUser} link={Routes.Profile.path} /> */}
 
               {/* <NavItem title="Table2" link={Routes.BootstrapTables.path} icon={faTable} /> */}
-              <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} />
+              {/* <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} />
               <CollapsableNavItem eventKey="examples/" title="Auth Pages" icon={faFileAlt}>
                 <NavItem title="Sign In" link={Routes.Signin.path} />
                 <NavItem title="Sign Up" link={Routes.Signup.path} />
@@ -116,7 +121,8 @@ export default (props = {}) => {
                 <NavItem title="Tabs" link={Routes.Tabs.path} />
                 <NavItem title="Toasts" link={Routes.Toasts.path} />
                 <NavItem title="Tooltips" link={Routes.Tooltips.path} />
-              </CollapsableNavItem>
+              </CollapsableNavItem> */}
+              {/*end extra field of sidebar */}
             </Nav>
           </div>
         </SimpleBar>

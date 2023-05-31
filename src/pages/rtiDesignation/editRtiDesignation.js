@@ -109,7 +109,7 @@ export default () => {
                                     showConfirmButton: false,
                                     timer: 1500,
                                 });
-                                history.push("/state")
+                                history.push("/rti-designations")
                             })
                             .catch(() => {
                                 Swal.fire("RTI designation not Update.");

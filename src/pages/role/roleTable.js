@@ -103,14 +103,12 @@ export const RoleTable = ({ searchText }) => {
     }, [searchText, tempRoleData]);
 
     const TableRow = (props) => {
-        const { srNo, roleId, roleName, isActive } = props;
+        const { id, roleName, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
 
         return (
             <tr>
-                <td>
-                    <Card.Link className="fw-normal">{srNo}</Card.Link>
-                </td>
+
                 <td>
                     <span className="fw-normal">{roleName}</span>
                 </td>
@@ -136,14 +134,14 @@ export const RoleTable = ({ searchText }) => {
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => {
-                                handleEdit(roleId);
+                                handleEdit(id);
                             }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item
                                 className="text-danger"
                                 onClick={() => {
-                                    handleDelete(roleId);
+                                    handleDelete(id);
                                 }}
                             >
                                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
@@ -162,7 +160,6 @@ export const RoleTable = ({ searchText }) => {
                     <Table hover className="user-table align-items-center">
                         <thead>
                             <tr>
-                                <th className="border-bottom">Sr No</th>
                                 <th className="border-bottom">Role Name</th>
                                 <th className="border-bottom">Status</th>
                                 <th className="border-bottom">Action</th>
@@ -172,9 +169,9 @@ export const RoleTable = ({ searchText }) => {
                             {currentItems &&
                                 currentItems.map((t) => (
                                     <TableRow
-                                        key={`transaction-${t.roleId}`}
+                                        key={`transaction-${t.id}`}
                                         {...t}
-                                        roleId={t.roleId}
+                                        id={t.id}
                                     />
                                 ))}
                         </tbody>

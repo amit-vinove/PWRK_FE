@@ -12,7 +12,7 @@ import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
     const [pageMode, setPageMode] = useState("create");
-    const [roleId, setRoleId] = useState(0);
+    const [id, setId] = useState(0);
     const [officeTypeId, setofficeTypeId] = useState("");
     const [officeTypeError, setOfficeTypeError] = useState("");
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
@@ -67,9 +67,9 @@ export default () => {
             setOfficeTypeError("Office Type Name is Required");
         }
         if (formValid) {
-           let UserID=localStorage.getItem("UserId")
+            let UserID = localStorage.getItem("UserId")
             const payload = {
-                roleId: roleId,
+                id: id,
                 officeTypeId: officeTypeId,
                 roleName: roleName,
                 maker: maker,
