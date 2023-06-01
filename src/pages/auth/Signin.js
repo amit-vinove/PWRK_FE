@@ -43,7 +43,7 @@ const Login = (props) => {
     };
     if (password !== "" && loginId !== "") {
       let result = await axios
-        .post(`http://122.176.101.76:8085/api/Account/SignIn`, payload)
+        .post(`${process.env.REACT_APP_API}Account/SignIn`, payload)
         .then((res) => {
           //console.log(res, "res");
           if (res.data.message != null) {

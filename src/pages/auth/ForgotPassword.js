@@ -1,63 +1,74 @@
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, Card, Button, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import Swal from "sweetalert2";
-
-import { Routes } from "../../routes";
-import { useState } from "react";
-import { useEffect } from "react";
 import axios from "axios";
 
+import { Routes } from "../../routes";
 
-const ForgotPassword = (props) => {
-  // State variables
+const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const navigate = useHistory();
+
   useEffect(() => {
     const loginToken = localStorage.getItem("token");
     if (loginToken) {
-      navigate("/")
+      navigate.push("/");
     }
-  }, [])
-  const handleReset = async (e) => {
-    e.preventDefault();
-    if (validateEmail(email)) {
-      let result = await axios
-        .post(
-          `http://122.176.101.76:8085/api/Account/ForgotPassword?EmailID=${email}`
-        )
-        .then((res) => {
-          Swal.fire(res.data);
-          navigate(Routes.Signin.path);
-        })
-        .catch((err) => {
-          Swal.fire(
-            "Your mail is not valid !",
-            "Plese enter your registered Email",
-            "warning"
-          );
+  }, [navigate]);
 
-        });
-    } else {
-      console.log(validateEmail(email));
-      console.log(email);
-      if (email === "") {
-        setError("Please Enter Your Registered Email");
-      } else {
-        setError("This is Not Registered Email ID");
-      }
-    }
-  };
-
-  const [error, setError] = useState("");
   const validateEmail = (email) => {
     return email.match(
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
+
+  const handleReset = async (e) => {
+    e.preventDefault();
+    try {
+      if (validateEmail(email)) {
+        const res = await axios.post(`${process.env.REACT_APP_API}Account/ForgetPassword?emailId=${email}`);
+        if (res.data === "User does not exist") {
+          Swal.fire({
+            title: "Your email is not valid!",
+            text: "Please enter your registered email.",
+            icon: 'warning'
+          })
+          return;
+        }
+        Swal.fire({
+          icon: 'success',
+          text: 'Password Reset link send on your mail..',
+        },);
+        navigate.push(Routes.Signin.path);
+      }
+
+      else {
+        if (email !== email) {
+          Swal.fire({
+            title: "Your email is not valid!",
+            text: "Please enter your registered email.",
+            icon: 'warning'
+          }
+          );
+        } else {
+          setError("This is not a registered email address.");
+        }
+      }
+    }
+    catch (err) {
+      Swal.fire({
+        title: "Your email is not valid!",
+        text: "Please enter your registered email.",
+        icon: 'warning'
+      }
+      );
+    }
+  };
+
 
 
   return (
@@ -81,6 +92,7 @@ const ForgotPassword = (props) => {
                       <Form.Control autoFocus required type="text" placeholder="example@company.com" onChange={(e) => setEmail(e.target.value)} />
                     </InputGroup>
                   </div>
+                  {error && <p className="text-danger">{error}</p>}
                   <Button variant="primary" type="submit" className="w-100">
                     Recover password
                   </Button>
@@ -93,4 +105,5 @@ const ForgotPassword = (props) => {
     </main>
   );
 };
+
 export default ForgotPassword;

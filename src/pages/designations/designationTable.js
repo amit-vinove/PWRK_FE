@@ -162,7 +162,7 @@ export const DesignationTable = ({ searchText }) => {
               <tr>
                 <th className="border-bottom">Id</th>
                 <th className="border-bottom">Designation Name</th>
-                <th className="border-bottom">Designation OrderId</th>
+                <th className="border-bottom">Designation Order Id</th>
                 <th className="border-bottom">Designation Short</th>
                 <th className="border-bottom">Status</th>
                 <th className="border-bottom">Action</th>
