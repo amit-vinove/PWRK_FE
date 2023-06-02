@@ -145,6 +145,7 @@ export default () => {
             .get(
                 `${process.env.REACT_APP_API}Office/GetOffice/${id}`
             ).then((res) => {
+                setofficeId(res.data.officeId);
                 setofficeTypeId(res.data.officeTypeId);
                 setOfficeName(res.data.officeName);
                 setOfficeNameHindi(res.data.officeNameHindi);
@@ -297,7 +298,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={officeTypeId}
                                     >
                                         <option value="" disabled>
                                             Choose office type....
@@ -398,7 +399,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={stateId}
                                     >
                                         <option value="" disabled>
                                             Choose state name....
@@ -421,7 +422,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={disttId}
                                     >
                                         <option value="" disabled>
                                             Choose district name....
@@ -720,7 +721,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={designationId}
                                     >
                                         <option value="" disabled>
                                             Choose designation....
@@ -743,7 +744,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={officeLevelId}
                                     >
                                         <option value="" disabled>
                                             Choose office level....
@@ -764,7 +765,7 @@ export default () => {
                                         disablePortal
                                         id="combo-box-demo"
                                         sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
+                                        value={rtiDesigId}
                                     >
                                         <option value="" disabled>
                                             Choose RTI designation....

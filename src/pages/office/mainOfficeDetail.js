@@ -14,6 +14,7 @@ import {
 import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
+import Select from "react-select";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
@@ -74,58 +75,124 @@ export default () => {
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4);
     };
-    const handleOfficeTypeChange = (event) => {
-        setofficeTypeId(event.target.value);
+    const handleOfficeTypeChange = (selectedOption) => {
+        setofficeTypeId(selectedOption.value);
     };
+
     const getAllOfficeType = async () => {
-        let result = await Axios.get(
-            `${process.env.REACT_APP_API}OfficeType/GetOfficeType`
-        );
-        setOfficeTypeDropdownData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+            const formattedData = result.data.map((officeType) => ({
+                value: officeType.officeTypeId,
+                label: officeType.officeTypeName,
+            }));
+            setOfficeTypeDropdownData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleStateChange = (event) => {
-        setStateId(event.target.value);
+
+    const handleStateChange = (selectedOption) => {
+        setStateId(selectedOption.value);
     };
+
     const getAllState = async () => {
-        let result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
-        setStateDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
+            const formattedData = result.data.map((state) => ({
+                value: state.stateId,
+                label: state.stateName,
+            }));
+            setStateDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleDistrictChange = (event) => {
-        setDisttId(event.target.value);
+
+
+
+
+    const handleDistrictChange = (selectedOption) => {
+        setDisttId(selectedOption.value);
     };
+
     const getAllDistrict = async () => {
-        let result = await Axios.get(
-            `${process.env.REACT_APP_API}District/GetDistrict`
-        );
-        setDisttDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}District/GetDistrict`);
+            const formattedData = result.data.map((district) => ({
+                value: district.disttId,
+                label: district.distName,
+            }));
+            setDisttDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleOfficeLevelChange = (event) => {
-        setOfficeLevelId(event.target.value);
+
+
+
+
+
+
+    const handleOfficeLevelChange = (selectedOption) => {
+        setOfficeLevelId(selectedOption.value);
     };
+
     const getAllOfficeLevel = async () => {
-        let result = await Axios.get(
-            `${process.env.REACT_APP_API}OfficeLevel/GetOfficeLevel`
-        );
-        setOfficeLevelDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}OfficeLevel/GetOfficeLevel`);
+            const formattedData = result.data.map((officeLevel) => ({
+                value: officeLevel.officeLevelId,
+                label: officeLevel.officeLevel,
+            }));
+            setOfficeLevelDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleDesignationChange = (event) => {
-        setdesignationId(event.target.value);
+
+
+
+
+
+
+
+    const handleDesignationChange = (selectedOption) => {
+        setdesignationId(selectedOption.value);
     };
+
     const getAllDesignation = async () => {
-        let result = await Axios.get(
-            `${process.env.REACT_APP_API}Designation/GetDesignation`
-        );
-        setdesignationDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
+            const formattedData = result.data.map((designation) => ({
+                value: designation.designationId,
+                label: designation.designationName,
+            }));
+            setdesignationDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleRTIDesignationChange = (event) => {
-        setRtiDesigId(event.target.value);
+
+
+    const handleRTIDesignationChange = (selectedOption) => {
+        setRtiDesigId(selectedOption.value);
     };
+
     const getAllRTIDesignation = async () => {
-        let result = await Axios.get(
-            `${process.env.REACT_APP_API}RTIDesignation/GetRTIDesignation`
-        );
-        setRtiDesigDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}RTIDesignation/GetRTIDesignation`);
+            const formattedData = result.data.map((rtidesignation) => ({
+                value: rtidesignation.rtiDesigId,
+                label: rtidesignation.rtiDesignation,
+            }));
+            setRtiDesigDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+
 
     useEffect(() => {
         getAllState();
@@ -222,24 +289,16 @@ export default () => {
                     <Form>
                         <Row>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Office Type Id</Form.Label>
-                                    <Form.Select
+                                <Form.Group id="officeTypeId">
+                                    <Form.Label>Office Type</Form.Label>
+                                    {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                                    <Select
+                                        value={officeTypeDropdownData.find((option) => option.value === officeTypeId)}
+                                        options={officeTypeDropdownData}
                                         onChange={handleOfficeTypeChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose office type....
-                                        </option>
-                                        {officeTypeDropdownData.map((s) => (
-                                            <option key={s.officeTypeId} value={s.officeTypeId}>
-                                                {s.officeTypeName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -323,24 +382,16 @@ export default () => {
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="officeTypeId">
                                     <Form.Label>State Name</Form.Label>
-                                    <Form.Select
+                                    {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                                    <Select
+                                        value={stateDData.find((option) => option.value === stateId)}
+                                        options={stateDData}
                                         onChange={handleStateChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose state name....
-                                        </option>
-                                        {stateDData.map((s) => (
-                                            <option key={s.stateId} value={s.stateId}>
-                                                {s.stateName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>

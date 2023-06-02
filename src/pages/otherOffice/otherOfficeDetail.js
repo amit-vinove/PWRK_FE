@@ -7,6 +7,7 @@ import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-boot
 import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
+import Select from "react-select";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
@@ -48,16 +49,24 @@ export default () => {
         handleChangeOfficeAcc();
     }, [ddoCodeName])
 
-    const handleDdoTypeChange = (event) => {
-        setDdoTypeId(event.target.value);
-
-        //setUserNameError("");
+    const handleDdoTypeChange = (selectedOption) => {
+        setDdoTypeId(selectedOption.value);
     };
 
     const getAllDdoType = async () => {
-        let result = await Axios.get(`${process.env.REACT_APP_API}DDOType/GetDDOType`);
-        setDdoTypeDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}DDOType/GetDDOType`);
+            const formattedData = result.data.map((ddoType) => ({
+                value: ddoType.ddoTypeId,
+                label: ddoType.ddoType,
+            }));
+            setDdoTypeDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+   
 
     useEffect(() => {
         getAllDdoType();
@@ -131,28 +140,17 @@ export default () => {
                     <h5 className="mb-4">General information</h5>
                     <Form>
                         <Row>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                        <Col md={6} className="mb-3">
+                                <Form.Group id="officeTypeId">
                                     <Form.Label>DDO Type</Form.Label>
-                                    {/* {ddot && (
+                                    {/* {ddo && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )} */}
-                                    <Form.Select
+                                    <Select
+                                        value={ddoTypeDData.find((option) => option.value === ddoTypeId)}
+                                        options={ddoTypeDData}
                                         onChange={handleDdoTypeChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose Ddo type....
-                                        </option>
-                                        {ddoTypeDData.map((s) => (
-                                            <option key={s.ddoTypeId} value={s.ddoTypeId}>
-                                                {s.ddoType}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">

@@ -32,6 +32,7 @@ export const OfficeTable = ({ searchText }) => {
             ))
     }
 
+
     const handlePrev = () => {
         setCurrentPage((prevPage) => prevPage - 1);
         setShowPreviousButton(true);
@@ -51,7 +52,6 @@ export const OfficeTable = ({ searchText }) => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = officeData.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(officeData.length / itemsPerPage);
-
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -292,69 +292,69 @@ export const OfficeTable = ({ searchText }) => {
     };
     return (
         <>
-        <Card border="light" className="table-wrapper table-responsive shadow-sm">
-            <Card.Body className="pt-0">
-                <Table hover className="user-table align-items-center">
-                    <thead>
-                        <tr>
-                            <th className="border-bottom">Sr No</th>
-                            <th className="border-bottom">Office Id</th>
-                            <th className="border-bottom">Office Type Id</th>
-                            <th className="border-bottom">Office Name</th>
-                            <th className="border-bottom">Office Name Hindi</th>
-                            <th className="border-bottom">Office Code</th>
-                            <th className="border-bottom">Address</th>
-                            <th className="border-bottom">State Id</th>
-                            <th className="border-bottom">District Id</th>
-                            <th className="border-bottom">Pin Code</th>
-                            <th className="border-bottom">Std Code</th>
-                            <th className="border-bottom">Contact Number</th>
-                            <th className="border-bottom">Email id</th>
-                            <th className="border-bottom">Longitude</th>
-                            <th className="border-bottom">Latitude</th>
-                            <th className="border-bottom">Parent Id 1</th>
-                            <th className="border-bottom">Parent Id 1 WEF</th>
-                            <th className="border-bottom">Parent Id 2</th>
-                            <th className="border-bottom">Parent Id 2 WEF</th>
-                            <th className="border-bottom">Parent Id 3</th>
-                            <th className="border-bottom">Parent Id 3 WEF</th>
-                            <th className="border-bottom">Parent Id 4</th>
-                            <th className="border-bottom">Parent Id 4 WEF</th>
-                            <th className="border-bottom">Designation Id</th>
-                            <th className="border-bottom">Office Level Id</th>
-                            <th className="border-bottom">RTI Designetion Id</th>
-                            <th className="border-bottom">Rti Juris</th>
-                            <th className="border-bottom">Juris Diction</th>
-                            <th className="border-bottom">Comment</th>
-                            <th className="border-bottom">Seq Id</th>
-                            <th className="border-bottom">Status</th>
-                            <th className="border-bottom">Is Visible</th>
-                            <th className="border-bottom">Update Office Type Id</th>
-                            <th className="border-bottom">Updated On</th>
-                            <th className="border-bottom">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {officeData && officeData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
-                    </tbody>
-                </Table>
-               
-            </Card.Body>
-        </Card>
-          <div className="d-flex justify-content-center">
-          <Pagination>
-            {showPreviousButton && (
-              <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
-                Prev. Page
-              </Pagination.Prev>
-            )}
-            {showNextButton && (
-              <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
-                Next Page
-              </Pagination.Next>
-            )}
-          </Pagination>
-        </div>
-      </>
+            <Card border="light" className="table-wrapper table-responsive shadow-sm">
+                <Card.Body className="pt-0">
+                    <Table hover className="user-table align-items-center">
+                        <thead>
+                            <tr>
+                                <th className="border-bottom">Sr No</th>
+                                <th className="border-bottom">Office Id</th>
+                                <th className="border-bottom">Office Type Id</th>
+                                <th className="border-bottom">Office Name</th>
+                                <th className="border-bottom">Office Name Hindi</th>
+                                <th className="border-bottom">Office Code</th>
+                                <th className="border-bottom">Address</th>
+                                <th className="border-bottom">State Id</th>
+                                <th className="border-bottom">District Id</th>
+                                <th className="border-bottom">Pin Code</th>
+                                <th className="border-bottom">Std Code</th>
+                                <th className="border-bottom">Contact Number</th>
+                                <th className="border-bottom">Email id</th>
+                                <th className="border-bottom">Longitude</th>
+                                <th className="border-bottom">Latitude</th>
+                                <th className="border-bottom">Parent Id 1</th>
+                                <th className="border-bottom">Parent Id 1 WEF</th>
+                                <th className="border-bottom">Parent Id 2</th>
+                                <th className="border-bottom">Parent Id 2 WEF</th>
+                                <th className="border-bottom">Parent Id 3</th>
+                                <th className="border-bottom">Parent Id 3 WEF</th>
+                                <th className="border-bottom">Parent Id 4</th>
+                                <th className="border-bottom">Parent Id 4 WEF</th>
+                                <th className="border-bottom">Designation Id</th>
+                                <th className="border-bottom">Office Level Id</th>
+                                <th className="border-bottom">RTI Designetion Id</th>
+                                <th className="border-bottom">Rti Juris</th>
+                                <th className="border-bottom">Juris Diction</th>
+                                <th className="border-bottom">Comment</th>
+                                <th className="border-bottom">Seq Id</th>
+                                <th className="border-bottom">Status</th>
+                                <th className="border-bottom">Is Visible</th>
+                                <th className="border-bottom">Update Office Type Id</th>
+                                <th className="border-bottom">Updated On</th>
+                                <th className="border-bottom">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems && currentItems.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
+                        </tbody>
+                    </Table>
+
+                </Card.Body>
+            </Card>
+            <div className="d-flex justify-content-center">
+                <Pagination>
+                    {showPreviousButton && (
+                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                            Prev. Page
+                        </Pagination.Prev>
+                    )}
+                    {showNextButton && (
+                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                            Next Page
+                        </Pagination.Next>
+                    )}
+                </Pagination>
+            </div>
+        </>
     );
 };

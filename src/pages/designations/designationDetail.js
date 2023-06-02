@@ -1,50 +1,61 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment-timezone";
 import Datetime from "react-datetime";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-import {useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { Col, Row, Card, Form, Button, InputGroup } from "@themesberg/react-bootstrap";
+import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
+import Select from "react-select";
+
 export default () => {
     const history = useHistory();
-    const [officeTypeId, setofficeTypeId] = useState(0);
+    const [officeTypeId, setOfficeTypeId] = useState(0);
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [officeTypeError, setOfficeTypeError] = useState("");
-    const [designationName, setdesignationName] = useState("");
+    const [designationName, setDesignationName] = useState("");
     const [designationNameError, setDesignationNameError] = useState("");
-    const [designationShort, setdesignationShort] = useState("");
+    const [designationShort, setDesignationShort] = useState("");
     const [designationShortError, setDesignationShortError] = useState("");
-    const [designationOrderId, setdesignationOrderId] = useState("1");
+    const [designationOrderId, setDesignationOrderId] = useState("1");
     const [isActive, setIsActive] = useState(true);
-    const [ipAddress, setipAddress] = useState("");
+    const [ipAddress, setIpAddress] = useState("");
     const [ipAddressError, setIpAddressError] = useState(0);
-    const [updateby, setupdateby] = useState(0);
+    const [updateby, setUpdateBy] = useState(0);
     const [formValid, setFormValid] = useState(false);
-    const [updateon, setupdateon] = useState(new Date());
+    const [updateon, setUpdateOn] = useState(new Date());
     const jsonData = {
         updateby: "123",
-    }
-    const handleCancel = () => {
-        history.push("/designations")
-    }
-    const fetchIp = async () => {
-        const res = await axios.get('https://geolocation-db.com/json/')
-        console.log(res.data.IPv4);
-        setipAddress(res.data.IPv4)
-    }
-    const handleOfficeTypeChange = (event) => {
-        setofficeTypeId(event.target.value);
+    };
 
-        //setUserNameError("");
+    const handleCancel = () => {
+        history.push("/designations");
+    };
+
+    const fetchIp = async () => {
+        const res = await axios.get("https://geolocation-db.com/json/");
+        console.log(res.data.IPv4);
+        setIpAddress(res.data.IPv4);
+    };
+
+    const handleOfficeTypeChange = (selectedOption) => {
+        setOfficeTypeId(selectedOption.value);
     };
 
     const getAllOfficeType = async () => {
-        let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
-        setOfficeTypeDropdownData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+            const formattedData = result.data.map((officeType) => ({
+                value: officeType.officeTypeId,
+                label: officeType.officeTypeName,
+            }));
+            setOfficeTypeDropdownData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
@@ -54,59 +65,58 @@ export default () => {
 
     useEffect(() => {
         handleChangeDesignationName();
-    }, [designationName])
+    }, [designationName]);
+
     const handleChangeDesignationName = () => {
         if (!designationName) return;
-        if (designationName.length < 3 ||
-            designationName.length > 150) {
-            setDesignationNameError("Designation Name must be between 3 to 150 words");
-            setFormValid(false)
+        if (designationName.length < 3 || designationName.length > 150) {
+            setDesignationNameError("Designation Name must be between 3 to 150 characters");
+            setFormValid(false);
         } else {
             setDesignationNameError("");
-            setFormValid(true)
+            setFormValid(true);
         }
-    }
+    };
+
     useEffect(() => {
         handleChangeDesignationShort();
-    }, [designationShort])
+    }, [designationShort]);
+
     const handleChangeDesignationShort = () => {
         if (!designationShort) return;
-        if (designationShort.length <= 2 ||
-            designationShort.length > 150) {
-            setDesignationShortError("Designation Name must be between 3 to 150 words");
-            setFormValid(false)
+        if (designationShort.length <= 2 || designationShort.length > 150) {
+            setDesignationShortError("Designation Name must be between 3 to 150 characters");
+            setFormValid(false);
         } else {
             setDesignationShortError("");
-            setFormValid(true)
+            setFormValid(true);
         }
-    }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (designationName === null || designationName === "") {
-            setDesignationNameError("designation is required");
-
-        } else if (designationName.length <= 2 ||
-            designationName.length > 150) {
-            setDesignationNameError("Designation Name must be between 3 to 150 words");
-        }
-        else {
+            setDesignationNameError("Designation is required");
+        } else if (designationName.length <= 2 || designationName.length > 150) {
+            setDesignationNameError("Designation Name must be between 3 to 150 characters");
+        } else {
             setDesignationNameError("");
-
         }
+
         if (designationShort === null || designationShort === "") {
-            setDesignationShortError("designation short is required");
-
-        } else if (designationShort.length <= 2 ||
-            designationShort.length > 150) {
-            setDesignationShortError("Designation Name must be between 3 to 150 words");
+            setDesignationShortError("Designation short is required");
+        } else if (designationShort.length <= 2 || designationShort.length > 150) {
+            setDesignationShortError("Designation Name must be between 3 to 150 characters");
+        } else {
+            setDesignationShortError("");
         }
-
-        else { setDesignationShortError(""); }
 
         if (officeTypeId === "") {
-            setOfficeTypeError("Office Type is required/Input Only Numereic value");
+            setOfficeTypeError("Office Type is required/Input Only Numeric value");
+        } else {
+            setOfficeTypeError("");
+        }
 
-        } else { setOfficeTypeError(""); }
         if (formValid) {
             let UserID = localStorage.getItem("UserId");
             const payload = {
@@ -119,34 +129,31 @@ export default () => {
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
-            Axios.post(
-                `${process.env.REACT_APP_API}Designation/SetDesignation`,
-                payload
-            )
+
+            Axios.post(`${process.env.REACT_APP_API}Designation/SetDesignation`, payload)
                 .then((response) => {
                     console.log(response.data);
-                    Swal.fire("Save", "Designation Saved Sucessfully", "success");
-
-                    history.push("/designations")
+                    Swal.fire("Save", "Designation Saved Successfully", "success");
+                    history.push("/designations");
                 })
                 .catch((response) => {
                     if (response.response.status === 409) {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: response.response.data,
-                      });
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: response.response.data,
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong! Please login again",
+                        });
                     }
-                    else {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: "Somthing went wrong ! please login again",
-                      });
-                    }
-                  })
-        };
-    }
+                });
+        }
+    };
+
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -160,85 +167,84 @@ export default () => {
                     <Form>
                         <Row>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Office Type Id</Form.Label>
+                                <Form.Group id="officeTypeId">
+                                    <Form.Label>Office Type</Form.Label>
                                     {officeTypeError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )}
-                                    <Form.Select
+                                    <Select
+                                        value={officeTypeDropdownData.find((option) => option.value === officeTypeId)}
+                                        options={officeTypeDropdownData}
                                         onChange={handleOfficeTypeChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose office type....
-                                        </option>
-                                        {officeTypeDropdownData.map((s) => (
-                                            <option key={s.officeTypeId} value={s.officeTypeId}>
-                                                {s.officeTypeName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="designationName">
                                     <Form.Label>Designation Name</Form.Label>
                                     {designationNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{designationNameError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter Designation name here" value={designationName}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Designation name here"
+                                        value={designationName}
                                         onChange={(e) => {
-                                            setdesignationName(e.target.value);
-                                            setDesignationNameError("");
-                                            handleChangeDesignationName()
-                                        }} />
+                                            setDesignationName(e.target.value);
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="designationShort">
                                     <Form.Label>Designation Short Name</Form.Label>
                                     {designationShortError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{designationShortError}</p>
                                     )}
-                                    <Form.Control required type="text" placeholder="Enter designation short here" value={designationShort}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter designation short here"
+                                        value={designationShort}
                                         onChange={(e) => {
-                                            setdesignationShort(e.target.value);
-                                            setDesignationShortError("");
-                                            handleChangeDesignationShort();
-                                        }} />
+                                            setDesignationShort(e.target.value);
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="designationOrderId">
                                     <Form.Label>Designation Order Id</Form.Label>
-                                    {/* {designationNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{designationNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter designation Order here" value={designationOrderId}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter designation Order here"
+                                        value={designationOrderId}
                                         onChange={(e) => {
-                                            setdesignationOrderId(e.target.value);
-                                        }} />
+                                            setDesignationOrderId(e.target.value);
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={6} className="mb-3" >
-                                <Row >
+                            <Col md={6} className="mb-3">
+                                <Row>
                                     <Form.Label> <br /> </Form.Label>
-                                    <Col md={1} className="mb-1" >   <input
-                                        class="form-check-input" type="checkbox"
-                                        checked={isActive}
-                                        onChange={(e) => {
-                                            setIsActive(e.target.checked);
-                                        }}
-                                        value={isActive}
-                                        id="defaultCheck1"
-                                    /></Col>
+                                    <Col md={1} className="mb-1" >
+                                        <Form.Check
+                                            type="checkbox"
+                                            checked={isActive}
+                                            onChange={(e) => {
+                                                setIsActive(e.target.checked);
+                                            }}
+                                            value={isActive}
+                                            id="defaultCheck1"
+                                        />
+                                    </Col>
                                     <Col md={5} className="mb-2" >
                                         <Form.Label>Status</Form.Label>
                                     </Col>
@@ -246,7 +252,7 @@ export default () => {
                             </Col>
                         </Row>
                         <div className="mt-3">
-                            <Button variant="primary" type="submit" onClick={handleCancel} >Cancel</Button>
+                            <Button variant="primary" type="submit" onClick={handleCancel}>Cancel</Button>
                             <Button variant="primary" type="submit" style={{ marginLeft: 10 }} onClick={handleSubmit}>Save All</Button>
                         </div>
                     </Form>
@@ -255,3 +261,4 @@ export default () => {
         </>
     );
 };
+

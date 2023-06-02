@@ -7,7 +7,7 @@ import { Row, Col, Nav, Form, Image, Navbar, Dropdown, Container, ListGroup, Inp
 import { Routes } from "../routes";
 import { Link, useHistory } from "react-router-dom";
 import NOTIFICATIONS_DATA from "../data/notifications";
-import Profile4 from "../assets/img/team/profile-picture-3.jpg";
+import Profile4 from "../assets/img/team/profile-picture-4.jpg";
 import Swal from "sweetalert2";
 
 

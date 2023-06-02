@@ -255,7 +255,7 @@ export const UserTable = ({ searchText }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {userData && userData.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
+                            {currentItems && currentItems.map(t => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
                         </tbody>
                     </Table>
                 </Card.Body>

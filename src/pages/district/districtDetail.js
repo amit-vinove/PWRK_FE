@@ -8,6 +8,7 @@ import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
 import MenuItem from '@material-ui/core/MenuItem';
 import axios from "axios";
+import Select from "react-select";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
@@ -35,13 +36,26 @@ export default () => {
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
-    const handleStateChange = (event) => {
-        setStateId(event.target.value);
+
+
+    const handleStateChange = (selectedOption) => {
+        setStateId(selectedOption.value);
     };
+
     const getAllState = async () => {
-        let result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
-        setStateDropdownData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
+            const formattedData = result.data.map((state) => ({
+                value: state.stateId,
+                label: state.stateName,
+            }));
+            setStateDropdownData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+
 
     useEffect(() => {
         getAllState();
@@ -136,32 +150,20 @@ export default () => {
                     <h5 className="mb-4">General information</h5>
                     <Form>
                         <Row>
+
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="officeTypeId">
                                     <Form.Label>State Name</Form.Label>
                                     {stateNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                                     )}
-                                    <Form.Select
+                                    <Select
+                                        value={stateDropdownData.find((option) => option.value === stateId)}
+                                        options={stateDropdownData}
                                         onChange={handleStateChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose state name....
-                                        </option>
-                                        {stateDropdownData.map((s) => (
-                                            <option key={s.stateId} value={s.stateId}>
-                                                {s.stateName}
-                                            </option>
-                                        ))}
-                                        {/* Add other menu items here */}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
-
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>District Name</Form.Label>

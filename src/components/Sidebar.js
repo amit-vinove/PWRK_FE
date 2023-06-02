@@ -82,7 +82,10 @@ export default (props = {}) => {
           <div className="sidebar-inner px-4 pt-3">
             <Nav className="flex-column pt-3 pt-md-0">
               <h1><span>{resiAdd}</span></h1>
-              <h2><span>{address}</span></h2>
+              <h5><span>{address.slice(0, 15)}</span></h5>
+              <h5><span>{address.slice(15, 40)}</span></h5>
+              <h5><span>{address.slice(40, 100)}</span></h5>
+              {/* <h2><span>{address}</span></h2> */}
               <NavItem title="Home" link={Routes.DashboardOverview.path} icon={faChartPie} />
               <NavItem title="Title" icon={faHandHoldingUsd} link={Routes.Title.path} />
               <NavItem title="Designations" icon={faTable} link={Routes.Designations.path} />

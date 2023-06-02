@@ -7,6 +7,7 @@ import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-boot
 import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
+import Select from "react-select";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
@@ -29,12 +30,21 @@ export default () => {
         console.log(res.data.IPv4);
         setIpAddress(res.data.IPv4)
     }
-    const handleOfficeTypeChange = (event) => {
-        setOfficeTypeId(event.target.value);
-    }
+    const handleOfficeTypeChange = (selectedOption) => {
+        setOfficeTypeId(selectedOption.value);
+    };
+
     const getAllOfficeType = async () => {
-        let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
-        setOfficeTypeDropdownData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+            const formattedData = result.data.map((officeType) => ({
+                value: officeType.officeTypeId,
+                label: officeType.officeTypeName,
+            }));
+            setOfficeTypeDropdownData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
@@ -105,27 +115,16 @@ export default () => {
                     <Form>
                         <Row>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Office Type Id </Form.Label>
-                                    {/* {stateNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
+                                <Form.Group id="officeTypeId">
+                                    <Form.Label>Office Type</Form.Label>
+                                    {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )} */}
-                                    <Form.Select
+                                    <Select
+                                        value={officeTypeDropdownData.find((option) => option.value === officeTypeId)}
+                                        options={officeTypeDropdownData}
                                         onChange={handleOfficeTypeChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose office type....
-                                        </option>
-                                        {officeTypeDropdownData.map((s) => (
-                                            <option key={s.officeTypeId} value={s.officeTypeId}>
-                                                {s.officeTypeName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">

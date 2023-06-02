@@ -7,6 +7,7 @@ import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-boot
 import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
+import Select from "react-select";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
@@ -56,36 +57,59 @@ export default () => {
     const handleCancel = () => {
         history.push("/officeUnit")
     }
-    const handleOfficeTypeChange = (event) => {
-        setOfficeTypeId(event.target.value);
-
-        //setUserNameError("");
+    const handleOfficeTypeChange = (selectedOption) => {
+        setOfficeTypeId(selectedOption.value);
     };
 
     const getAllOfficeType = async () => {
-        let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
-        setOfficeTypeDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+            const formattedData = result.data.map((officeType) => ({
+                value: officeType.officeTypeId,
+                label: officeType.officeTypeName,
+            }));
+            setOfficeTypeDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleOfficeChange = (event) => {
-        setOfficeId(event.target.value);
 
-        //setUserNameError("");
+
+    const handleOfficeChange = (selectedOption) => {
+        setOfficeId(selectedOption.value);
     };
 
     const getAllOffice = async () => {
-        let result = await Axios.get(`${process.env.REACT_APP_API}Office/GetOffice`);
-        setOfficeDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}Office/GetOffice`);
+            const formattedData = result.data.map((office) => ({
+                value: office.officeId,
+                label: office.officeName,
+            }));
+            setOfficeDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const handleDesignationChange = (event) => {
-        setDesignationId(event.target.value);
 
-        //setUserNameError("");
+
+
+    const handleDesignationChange = (selectedOption) => {
+        setDesignationId(selectedOption.value);
     };
 
     const getAllDesignation = async () => {
-        let result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
-        SetDesignationDData(result.data);
+        try {
+            const result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
+            const formattedData = result.data.map((designation) => ({
+                value: designation.designationId,
+                label: designation.designationName,
+            }));
+            SetDesignationDData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
 
@@ -251,77 +275,44 @@ export default () => {
                     <Form>
                         <Row>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Office Type Id</Form.Label>
+                                <Form.Group id="officeTypeId">
+                                    <Form.Label>Office Type</Form.Label>
                                     {officeTypeError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )}
-                                    <Form.Select
+                                    <Select
+                                        value={officeTypeDData.find((option) => option.value === officeTypeId)}
+                                        options={officeTypeDData}
                                         onChange={handleOfficeTypeChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose office type....
-                                        </option>
-                                        {officeTypeDData.map((s) => (
-                                            <option key={s.officeTypeId} value={s.officeTypeId}>
-                                                {s.officeTypeName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="office">
                                     <Form.Label>Office</Form.Label>
-                                    {/* {officeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeError}</p>
+                                    {/* {officee && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )} */}
-                                    <Form.Select
+                                    <Select
+                                        value={officeDData.find((option) => option.value === officeId)}
+                                        options={officeDData}
                                         onChange={handleOfficeChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose office....
-                                        </option>
-                                        {officeDData.map((s) => (
-                                            <option key={s.officeId} value={s.officeId}>
-                                                {s.officeName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Designation</Form.Label>
-                                    {/* {designationId && (
+                                <Form.Group id="designation">
+                                    <Form.Label>Designation Name</Form.Label>
+                                    {/* {desig && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )} */}
-                                    <Form.Select
+                                    <Select
+                                        value={designationDData.find((option) => option.value === designationId)}
+                                        options={designationDData}
                                         onChange={handleDesignationChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose designation....
-                                        </option>
-                                        {designationDData.map((s) => (
-                                            <option key={s.designationId} value={s.designationId}>
-                                                {s.designationName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
