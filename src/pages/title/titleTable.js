@@ -87,6 +87,8 @@ export const TitleTable = ({ searchText }) => {
         getTitle();
     }, []);
 
+
+
     useEffect(() => {
         if (searchText) {
             searchTitle(searchText);
@@ -102,6 +104,11 @@ export const TitleTable = ({ searchText }) => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+    useEffect(() => {
+        setShowPreviousButton(currentPage > 1);
+        setShowNextButton(currentPage < totalPages);
+    }, [currentPage, totalPages]);
 
 
     const TableRow = ({ srNo, titleId, titleName, isActive }) => {

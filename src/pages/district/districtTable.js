@@ -75,6 +75,10 @@ export const DistrictTable = ({ searchText }) => {
     setShowNextButton(nextPage !== totalPages);
   };
 
+  useEffect(() => {
+    getDistrict();
+  }, []);
+
   const handleDelete = (id) => {
     Swal.fire({
       title: "Do You Want To InActive?",
@@ -103,14 +107,20 @@ export const DistrictTable = ({ searchText }) => {
       }
     });
   };
-
-  useEffect(() => {
-    getDistrict();
-  }, []);
-
   useEffect(() => {
     searchDistrict(searchText);
   }, [searchText]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = districtData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(districtData.length / itemsPerPage);
+
+  useEffect(() => {
+    setShowPreviousButton(currentPage > 1);
+    setShowNextButton(currentPage < totalPages);
+  }, [currentPage, totalPages]);
+
 
   const TableRow = (props) => {
     const { srNo, stateId, disttId, distName, distShortName, isActive } = props;
@@ -170,10 +180,7 @@ export const DistrictTable = ({ searchText }) => {
     );
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = districtData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(districtData.length / itemsPerPage);
+
 
 
   return (

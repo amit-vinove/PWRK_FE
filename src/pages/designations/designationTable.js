@@ -25,6 +25,7 @@ export const DesignationTable = ({ searchText }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const history = useHistory();
+  const [totalData, setTotalData] = useState(0);
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
   const handleEdit = (id) => {
@@ -65,6 +66,11 @@ export const DesignationTable = ({ searchText }) => {
     getDesignation();
   }, []);
 
+  // useEffect(() => {
+  //   setShowPreviousButton(currentPage > 1);
+  //   setShowNextButton(currentPage < totalPages);
+  // }, [currentPage, totalPages]);
+
   const getDesignation = async () => {
     try {
       const response = await axios.get(API);
@@ -74,6 +80,7 @@ export const DesignationTable = ({ searchText }) => {
           item.designationShort.toLowerCase().includes(searchText.toLowerCase())
       );
       setDesignationData(filteredData);
+      setTotalData(response.data.length);
     } catch (error) {
       console.log(error);
     }
@@ -100,6 +107,11 @@ export const DesignationTable = ({ searchText }) => {
     indexOfLastItem
   );
   const totalPages = Math.ceil(designationData.length / itemsPerPage);
+
+  useEffect(() => {
+    setShowPreviousButton(currentPage > 1);
+    setShowNextButton(currentPage < totalPages);
+  }, [currentPage, totalPages]);
 
   const TableRow = (props) => {
     const {
@@ -194,13 +206,12 @@ export const DesignationTable = ({ searchText }) => {
       </Card>
 
       <div className="d-flex justify-content-between align-items-center">
-        <div>
-          Total data: {designationData.length}
+        <div className="text-center mb-3">
+          <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
         </div>
         <div>
           Showing page {currentPage} of {totalPages}
         </div>
-
         <Pagination>
           {showPreviousButton && (
             <Pagination.Prev

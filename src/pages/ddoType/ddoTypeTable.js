@@ -16,6 +16,7 @@ export const DDOTypeTable = ({ searchText }) => {
     const [ddoTypeData, setDDOTypeData] = useState([]);
     const [tempDDoTypeData, setTempDDoTypeData] = useState([]);
     const [currentPage, setCurrentPage] = useState(defaultPage);
+    const [totalData, setTotalData] = useState(0);
     const [showPreviousButton, setShowPreviousButton] = useState(false);
     const [showNextButton, setShowNextButton] = useState(true);
     const history = useHistory();
@@ -23,6 +24,7 @@ export const DDOTypeTable = ({ searchText }) => {
         await axios.get(API).then((response) => {
             setDDOTypeData(response.data);
             setTempDDoTypeData(response.data);
+            setTotalData(response.data.length);
         });
     }
     async function searchDDOType(searchText) {
@@ -66,14 +68,22 @@ export const DDOTypeTable = ({ searchText }) => {
     }
     const handlePrev = () => {
         setCurrentPage((prevPage) => prevPage - 1);
+        setShowPreviousButton(true);
+        setShowNextButton(true);
     };
 
     const handleNext = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
+        setShowPreviousButton(true);
+        setShowNextButton(nextPage !== totalPages);
     };
     useEffect(() => {
         getDDOType();
     }, []);
+
+    
+
     useEffect(() => {
         searchDDOType(searchText);
         setCurrentPage(defaultPage);
@@ -154,20 +164,30 @@ export const DDOTypeTable = ({ searchText }) => {
                     </Table>
                 </Card.Body>
             </Card>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-between align-items-center">
+                <div className="text-center mb-3">
+                    <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+                </div>
+                <div>
+                    Showing page {currentPage} of {totalPages}
+                </div>
                 <Pagination>
-                    <Pagination.Prev
-                        disabled={currentPage === 1}
-                        onClick={handlePrev}
-                    >
-                        Prev. Page
-                    </Pagination.Prev>
-                    <Pagination.Next
-                        disabled={currentPage === totalPages}
-                        onClick={handleNext}
-                    >
-                        Next Page
-                    </Pagination.Next>
+                    {showPreviousButton && (
+                        <Pagination.Prev
+                            disabled={currentPage === 1}
+                            onClick={handlePrev}
+                        >
+                            Prev. Page
+                        </Pagination.Prev>
+                    )}
+                    {showNextButton && (
+                        <Pagination.Next
+                            disabled={currentPage === totalPages}
+                            onClick={handleNext}
+                        >
+                            Next Page
+                        </Pagination.Next>
+                    )}
                 </Pagination>
             </div>
         </>

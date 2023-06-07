@@ -12,6 +12,7 @@ export const UserTable = ({ searchText }) => {
     const [userData, setUserData] = useState([]);
     const [tempUserData, setTempUserData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalData, setTotalData] = useState(0);
     const [itemsPerPage] = useState(10);
     const history = useHistory();
     const [showPreviousButton, setShowPreviousButton] = useState(false);
@@ -20,6 +21,7 @@ export const UserTable = ({ searchText }) => {
         await axios.get(API).then((response) => {
             setUserData(response.data);
             setTempUserData(response.data);
+            setTotalData(response.data.length);
         });
     }
     async function searchUser(searchText) {
@@ -35,21 +37,25 @@ export const UserTable = ({ searchText }) => {
         setCurrentPage((prevPage) => prevPage - 1);
         setShowPreviousButton(true);
         setShowNextButton(true);
-
     };
 
     const handleNext = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
         setShowPreviousButton(true);
-        if (currentPage + 1 === Math.ceil(userData.length / itemsPerPage)) {
-            setShowNextButton(false);
-        }
+        setShowNextButton(nextPage !== totalPages);
     };
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = userData.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(userData.length / itemsPerPage);
+
+    useEffect(() => {
+        setShowPreviousButton(currentPage > 1);
+        setShowNextButton(currentPage < totalPages);
+    }, [currentPage, totalPages]);
+
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -260,15 +266,27 @@ export const UserTable = ({ searchText }) => {
                     </Table>
                 </Card.Body>
             </Card>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-between align-items-center">
+                <div className="text-center mb-3">
+                    <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+                </div>
+                <div>
+                    Showing page {currentPage} of {totalPages}
+                </div>
                 <Pagination>
                     {showPreviousButton && (
-                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                        <Pagination.Prev
+                            disabled={currentPage === 1}
+                            onClick={handlePrev}
+                        >
                             Prev. Page
                         </Pagination.Prev>
                     )}
                     {showNextButton && (
-                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                        <Pagination.Next
+                            disabled={currentPage === totalPages}
+                            onClick={handleNext}
+                        >
                             Next Page
                         </Pagination.Next>
                     )}

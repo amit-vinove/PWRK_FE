@@ -23,9 +23,16 @@ export const StateTable = ({ searchText }) => {
         getState();
     }, []);
 
+    // useEffect(() => {
+    //     setShowPreviousButton(currentPage > 1);
+    //     setShowNextButton(currentPage < totalPages);
+    //   }, [currentPage, totalPages]);
+
     useEffect(() => {
         searchState(searchText);
     }, [searchText]);
+
+
 
     const getState = async () => {
         try {
@@ -94,6 +101,11 @@ export const StateTable = ({ searchText }) => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = stateData.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(stateData.length / itemsPerPage);
+
+    useEffect(() => {
+        setShowPreviousButton(currentPage > 1);
+        setShowNextButton(currentPage < totalPages);
+    }, [currentPage, totalPages]);
 
     const TableRow = (props) => {
         const { srNo, stateId, country, stateName, isActive } = props;

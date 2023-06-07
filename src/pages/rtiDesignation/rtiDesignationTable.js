@@ -87,6 +87,11 @@ export const RTIDesignationTable = ({ searchText }) => {
     getRtiDesignation();
   }, []);
 
+  // useEffect(() => {
+  //   setShowPreviousButton(currentPage > 1);
+  //   setShowNextButton(currentPage < totalPages);
+  // }, [currentPage, totalPages]);
+
   useEffect(() => {
     searchDesignation(searchText);
     setCurrentPage(defaultPage);

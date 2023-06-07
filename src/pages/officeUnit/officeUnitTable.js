@@ -21,12 +21,14 @@ export const OfficeUnitTable = ({ searchText }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const history = useHistory();
+    const [totalData, setTotalData] = useState(0);
     const [showPreviousButton, setShowPreviousButton] = useState(false);
     const [showNextButton, setShowNextButton] = useState(true);
     async function getOfficeUnit() {
         await axios.get(API).then((response) => {
             setOfficeUnitData(response.data);
             setTempOfficeUnitData(response.data);
+            setTotalData(response.data.length);
         });
     }
     async function searchState(searchText) {
@@ -40,21 +42,24 @@ export const OfficeUnitTable = ({ searchText }) => {
         setCurrentPage((prevPage) => prevPage - 1);
         setShowPreviousButton(true);
         setShowNextButton(true);
-
     };
 
     const handleNext = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
         setShowPreviousButton(true);
-        if (currentPage + 1 === Math.ceil(officeUnitData.length / itemsPerPage)) {
-            setShowNextButton(false);
-        }
+        setShowNextButton(nextPage !== totalPages);
     };
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = officeUnitData.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(officeUnitData.length / itemsPerPage);
+
+    useEffect(() => {
+        setShowPreviousButton(currentPage > 1);
+        setShowNextButton(currentPage < totalPages);
+    }, [currentPage, totalPages]);
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -207,15 +212,27 @@ export const OfficeUnitTable = ({ searchText }) => {
 
                 </Card.Body>
             </Card>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-between align-items-center">
+                <div className="text-center mb-3">
+                    <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+                </div>
+                <div>
+                    Showing page {currentPage} of {totalPages}
+                </div>
                 <Pagination>
                     {showPreviousButton && (
-                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                        <Pagination.Prev
+                            disabled={currentPage === 1}
+                            onClick={handlePrev}
+                        >
                             Prev. Page
                         </Pagination.Prev>
                     )}
                     {showNextButton && (
-                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                        <Pagination.Next
+                            disabled={currentPage === totalPages}
+                            onClick={handleNext}
+                        >
                             Next Page
                         </Pagination.Next>
                     )}

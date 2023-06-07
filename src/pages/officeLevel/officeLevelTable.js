@@ -28,13 +28,14 @@ export const OfficeLevelTable = ({ searchText }) => {
     const [itemsPerPage] = useState(10);
     const [showPreviousButton, setShowPreviousButton] = useState(false);
     const [showNextButton, setShowNextButton] = useState(true);
-
+    const [totalData, setTotalData] = useState(0);
     const history = useHistory();
 
     async function getOfficeLevel() {
         await axios.get(API).then((response) => {
             setOfficeLevelData(response.data);
             setTempOfficeLevelData(response.data);
+            setTotalData(response.data.length);
         });
     }
 
@@ -48,10 +49,15 @@ export const OfficeLevelTable = ({ searchText }) => {
 
     const handlePrev = () => {
         setCurrentPage((prevPage) => prevPage - 1);
+        setShowPreviousButton(true);
+        setShowNextButton(true);
     };
 
     const handleNext = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
+        setShowPreviousButton(true);
+        setShowNextButton(nextPage !== totalPages);
     };
 
     const handleEdit = (id) => {
@@ -183,20 +189,30 @@ export const OfficeLevelTable = ({ searchText }) => {
                     </Table>
                 </Card.Body>
             </Card>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-between align-items-center">
+                <div className="text-center mb-3">
+                    <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+                </div>
+                <div>
+                    Showing page {currentPage} of {totalPages}
+                </div>
                 <Pagination>
-                    <Pagination.Prev
-                        disabled={currentPage === 1}
-                        onClick={handlePrev}
-                    >
-                        Prev. Page
-                    </Pagination.Prev>
-                    <Pagination.Next
-                        disabled={currentPage === totalPages}
-                        onClick={handleNext}
-                    >
-                        Next Page
-                    </Pagination.Next>
+                    {showPreviousButton && (
+                        <Pagination.Prev
+                            disabled={currentPage === 1}
+                            onClick={handlePrev}
+                        >
+                            Prev. Page
+                        </Pagination.Prev>
+                    )}
+                    {showNextButton && (
+                        <Pagination.Next
+                            disabled={currentPage === totalPages}
+                            onClick={handleNext}
+                        >
+                            Next Page
+                        </Pagination.Next>
+                    )}
                 </Pagination>
             </div>
         </>
