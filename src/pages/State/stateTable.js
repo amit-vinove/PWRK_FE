@@ -11,6 +11,7 @@ const API = `${process.env.REACT_APP_API}State/GetState`;
 export const StateTable = ({ searchText }) => {
     const [stateData, setStateData] = useState([]);
     const [stateId, setStateId] = useState(0);
+    const [totalData, setTotalData] = useState(0);
     const history = useHistory();
     const [tempStateData, setTempStateData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -31,6 +32,7 @@ export const StateTable = ({ searchText }) => {
             const response = await axios.get(API);
             setStateData(response.data);
             setTempStateData(response.data);
+            setTotalData(response.data.length);
         } catch (error) {
             console.log(error);
         }
@@ -50,11 +52,10 @@ export const StateTable = ({ searchText }) => {
     };
 
     const handleNext = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
         setShowPreviousButton(true);
-        if (currentPage + 1 === Math.ceil(stateData.length / itemsPerPage)) {
-            setShowNextButton(false);
-        }
+        setShowNextButton(nextPage !== totalPages);
     };
 
     const handleDelete = (id) => {
@@ -93,8 +94,6 @@ export const StateTable = ({ searchText }) => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = stateData.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(stateData.length / itemsPerPage);
-
-
 
     const TableRow = (props) => {
         const { srNo, stateId, country, stateName, isActive } = props;
@@ -172,20 +171,33 @@ export const StateTable = ({ searchText }) => {
                 </Card.Body>
             </Card>
 
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-between align-items-center">
+                <div className="text-center mb-3">
+                    <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+                </div>
+                <div>
+                    Showing page {currentPage} of {totalPages}
+                </div>
                 <Pagination>
                     {showPreviousButton && (
-                        <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+                        <Pagination.Prev
+                            disabled={currentPage === 1}
+                            onClick={handlePrev}
+                        >
                             Prev. Page
                         </Pagination.Prev>
                     )}
                     {showNextButton && (
-                        <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+                        <Pagination.Next
+                            disabled={currentPage === totalPages}
+                            onClick={handleNext}
+                        >
                             Next Page
                         </Pagination.Next>
                     )}
                 </Pagination>
             </div>
+
         </>
     );
 };

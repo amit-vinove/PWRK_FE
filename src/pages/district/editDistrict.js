@@ -45,7 +45,13 @@ export default () => {
             const result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
             const formattedData = result.data.map((state) => ({
                 value: state.stateId,
-                label: state.stateName,
+                label: (
+                    <span style={{ color: state.isActive ? "green" : "red" }}>
+                        {state.stateName}
+                        {" -- "}
+                        {state.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setStateDropdownData(formattedData);
         } catch (error) {

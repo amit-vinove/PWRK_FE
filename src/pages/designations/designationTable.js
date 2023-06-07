@@ -28,14 +28,14 @@ export const DesignationTable = ({ searchText }) => {
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
   const handleEdit = (id) => {
-    history.push(`/editDesignations?id=${id}`)
-  }
+    history.push(`/editDesignations?id=${id}`);
+  };
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Do You Want To Delete?",
+      title: "Do You Want To InActive?",
       showCancelButton: true,
       icon: "warning",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, InActive it!",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
     }).then((result) => {
@@ -47,14 +47,14 @@ export const DesignationTable = ({ searchText }) => {
           .then((res) => {
             Swal.fire({
               icon: "success",
-              title: "Your work has been Deleted",
+              title: "Your work has been InActive",
               showConfirmButton: false,
               timer: 1500,
             });
             getDesignation();
           })
           .catch(() => {
-            Swal.fire("Designation not deleted.");
+            Swal.fire("Designation not InActive.");
           });
         console.log(id, "titleId");
       }
@@ -83,7 +83,6 @@ export const DesignationTable = ({ searchText }) => {
     setCurrentPage((prevPage) => prevPage - 1);
     setShowPreviousButton(true);
     setShowNextButton(true);
-
   };
 
   const handleNext = () => {
@@ -96,7 +95,10 @@ export const DesignationTable = ({ searchText }) => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = designationData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = designationData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
   const totalPages = Math.ceil(designationData.length / itemsPerPage);
 
   const TableRow = (props) => {
@@ -108,7 +110,11 @@ export const DesignationTable = ({ searchText }) => {
       ipAddress,
       isActive,
     } = props;
-    const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
+    const statusVariant = isActive
+      ? "success"
+      : !isActive
+        ? "danger"
+        : "primary";
     return (
       <tr>
         <td>
@@ -130,9 +136,17 @@ export const DesignationTable = ({ searchText }) => {
         </td>
         <td>
           <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
+            >
               <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                <FontAwesomeIcon
+                  icon={faEllipsisH}
+                  className="icon-dark"
+                />
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -142,7 +156,10 @@ export const DesignationTable = ({ searchText }) => {
               <Dropdown.Item onClick={() => { handleEdit(designationId) }}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
-              <Dropdown.Item className="text-danger" onClick={() => { handleDelete(designationId) }}>
+              <Dropdown.Item
+                className="text-danger"
+                onClick={() => { handleDelete(designationId) }}
+              >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -151,7 +168,6 @@ export const DesignationTable = ({ searchText }) => {
       </tr>
     );
   };
-
 
   return (
     <>
@@ -176,15 +192,29 @@ export const DesignationTable = ({ searchText }) => {
           </Table>
         </Card.Body>
       </Card>
-      <div className="d-flex justify-content-center">
+
+      <div className="d-flex justify-content-between align-items-center">
+        <div>
+          Total data: {designationData.length}
+        </div>
+        <div>
+          Showing page {currentPage} of {totalPages}
+        </div>
+
         <Pagination>
           {showPreviousButton && (
-            <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
+            <Pagination.Prev
+              disabled={currentPage === 1}
+              onClick={handlePrev}
+            >
               Prev. Page
             </Pagination.Prev>
           )}
           {showNextButton && (
-            <Pagination.Next disabled={currentPage === totalPages} onClick={handleNext}>
+            <Pagination.Next
+              disabled={currentPage === totalPages}
+              onClick={handleNext}
+            >
               Next Page
             </Pagination.Next>
           )}

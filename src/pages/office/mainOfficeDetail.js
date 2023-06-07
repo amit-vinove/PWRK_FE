@@ -79,18 +79,29 @@ export default () => {
         setofficeTypeId(selectedOption.value);
     };
 
+
+
+
     const getAllOfficeType = async () => {
         try {
             const result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
             const formattedData = result.data.map((officeType) => ({
                 value: officeType.officeTypeId,
-                label: officeType.officeTypeName,
+                label: (
+                    <span style={{ color: officeType.isActive ? "green" : "red" }}>
+                        {officeType.officeTypeName}
+                        {" -- "}
+                        {officeType.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setOfficeTypeDropdownData(formattedData);
         } catch (error) {
             console.error(error);
         }
     };
+
+
 
     const handleStateChange = (selectedOption) => {
         setStateId(selectedOption.value);
@@ -101,7 +112,13 @@ export default () => {
             const result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
             const formattedData = result.data.map((state) => ({
                 value: state.stateId,
-                label: state.stateName,
+                label: (
+                    <span style={{ color: state.isActive ? "green" : "red" }}>
+                        {state.stateName}
+                        {" -- "}
+                        {state.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setStateDData(formattedData);
         } catch (error) {
@@ -109,19 +126,23 @@ export default () => {
         }
     };
 
-
-
-
     const handleDistrictChange = (selectedOption) => {
         setDisttId(selectedOption.value);
     };
+
 
     const getAllDistrict = async () => {
         try {
             const result = await Axios.get(`${process.env.REACT_APP_API}District/GetDistrict`);
             const formattedData = result.data.map((district) => ({
                 value: district.disttId,
-                label: district.distName,
+                label: (
+                    <span style={{ color: district.isActive ? "green" : "red" }}>
+                        {district.distName}
+                        {" -- "}
+                        {district.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setDisttDData(formattedData);
         } catch (error) {
@@ -131,12 +152,10 @@ export default () => {
 
 
 
-
-
-
     const handleOfficeLevelChange = (selectedOption) => {
         setOfficeLevelId(selectedOption.value);
     };
+
 
     const getAllOfficeLevel = async () => {
         try {
@@ -151,22 +170,43 @@ export default () => {
         }
     };
 
-
-
-
-
+    // const getAllOfficeLevel = async () => {
+    //     try {
+    //         const result = await Axios.get(`${process.env.REACT_APP_API}OfficeLevel/GetOfficeLevel`);
+    //         const formattedData = result.data.map((officeLevel) => ({
+    //             value: officeLevel.officeLevelId,
+    //             label: (
+    //                 <span style={{ color: officeLevel.isActive ? "green" : "red" }}>
+    //                     {officeLevel.officeLevel}
+    //                     {" -- "}
+    //                     {officeLevel.isActive ? "Active" : "Inactive"}
+    //                 </span>
+    //             ),
+    //         }));
+    //         setOfficeLevelDData(formattedData);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
 
     const handleDesignationChange = (selectedOption) => {
         setdesignationId(selectedOption.value);
     };
 
+
     const getAllDesignation = async () => {
         try {
             const result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
             const formattedData = result.data.map((designation) => ({
                 value: designation.designationId,
-                label: designation.designationName,
+                label: (
+                    <span style={{ color: designation.isActive ? "green" : "red" }}>
+                        {designation.designationName}
+                        {" -- "}
+                        {designation.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setdesignationDData(formattedData);
         } catch (error) {
@@ -179,21 +219,25 @@ export default () => {
         setRtiDesigId(selectedOption.value);
     };
 
+
     const getAllRTIDesignation = async () => {
         try {
             const result = await Axios.get(`${process.env.REACT_APP_API}RTIDesignation/GetRTIDesignation`);
             const formattedData = result.data.map((rtidesignation) => ({
                 value: rtidesignation.rtiDesigId,
-                label: rtidesignation.rtiDesignation,
+                label: (
+                    <span style={{ color: rtidesignation.isActive ? "green" : "red" }}>
+                        {rtidesignation.rtiDesignation}
+                        {" -- "}
+                        {rtidesignation.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setRtiDesigDData(formattedData);
         } catch (error) {
             console.error(error);
         }
     };
-
-
-
     useEffect(() => {
         getAllState();
         getAllDistrict();
@@ -397,24 +441,16 @@ export default () => {
                         </Row>
                         <Row>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="officeTypeId">
                                     <Form.Label>District Name</Form.Label>
-                                    <Form.Select
+                                    {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                                    <Select
+                                        value={disttDData.find((option) => option.value === disttId)}
+                                        options={disttDData}
                                         onChange={handleDistrictChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose district name....
-                                        </option>
-                                        {disttDData.map((s) => (
-                                            <option key={s.disttId} value={s.disttId}>
-                                                {s.distName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
@@ -696,68 +732,44 @@ export default () => {
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Designation</Form.Label>
-                                    <Form.Select
+                                <Form.Group id="officeTypeId">
+                                    <Form.Label>Designation Name</Form.Label>
+                                    {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                                    <Select
+                                        value={designationDData.find((option) => option.value === designationId)}
+                                        options={designationDData}
                                         onChange={handleDesignationChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose designation....
-                                        </option>
-                                        {designationDData.map((s) => (
-                                            <option key={s.designationId} value={s.designationId}>
-                                                {s.designationName}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="officeTypeId">
                                     <Form.Label>Office Level</Form.Label>
-                                    <Form.Select
+                                    {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                                    <Select
+                                        value={officeLevelDData.find((option) => option.value === officeLevelId)}
+                                        options={officeLevelDData}
                                         onChange={handleOfficeLevelChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose office level....
-                                        </option>
-                                        {officeLevelDData.map((s) => (
-                                            <option key={s.officeLevelId} value={s.officeLevelId}>
-                                                {s.officeLevel}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
+                                <Form.Group id="officeTypeId">
                                     <Form.Label>RTI Designation</Form.Label>
-                                    <Form.Select
+                                    {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                                    <Select
+                                        value={rtiDesigDData.find((option) => option.value === rtiDesigId)}
+                                        options={rtiDesigDData}
                                         onChange={handleRTIDesignationChange}
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        sx={{ width: 600 }}
-                                        defaultValue="" // Set the default value to an empty string
-                                    >
-                                        <option value="" disabled>
-                                            Choose RTI designation....
-                                        </option>
-                                        {rtiDesigDData.map((s) => (
-                                            <option key={s.rtiDesigId} value={s.rtiDesigId}>
-                                                {s.rtiDesignation}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>

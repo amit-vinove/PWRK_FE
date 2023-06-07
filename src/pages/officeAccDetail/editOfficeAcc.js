@@ -59,13 +59,20 @@ export default () => {
             const result = await Axios.get(`${process.env.REACT_APP_API}DDOType/GetDDOType`);
             const formattedData = result.data.map((ddoType) => ({
                 value: ddoType.ddoTypeId,
-                label: ddoType.ddoType,
+                label: (
+                    <span style={{ color: ddoType.isActive ? "green" : "red" }}>
+                        {ddoType.ddoType}
+                        {" -- "}
+                        {ddoType.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setDdoTypeDData(formattedData);
         } catch (error) {
             console.error(error);
         }
     };
+
     const query = new URLSearchParams(window.location.search);
     const id = query.get("id");
 

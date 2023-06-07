@@ -14,12 +14,14 @@ export const OfficeTable = ({ searchText }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const history = useHistory();
+    const [totalData, setTotalData] = useState(0);
     const [showPreviousButton, setShowPreviousButton] = useState(false);
     const [showNextButton, setShowNextButton] = useState(true);
     async function getOffice() {
         await axios.get(API).then((response) => {
             setOfficeData(response.data);
             setTempOfficeData(response.data);
+            setTotalData(response.data.length);
         });
     }
     const handleEdit = (id) => {
@@ -354,7 +356,14 @@ export const OfficeTable = ({ searchText }) => {
                         </Pagination.Next>
                     )}
                 </Pagination>
+                <div className="text-center mb-3" style={{ marginInlineStart: 1 }}>
+                    <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+                </div>
             </div>
         </>
+
+
+
+
     );
 };

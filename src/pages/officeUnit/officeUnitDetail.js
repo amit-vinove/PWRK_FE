@@ -60,13 +60,18 @@ export default () => {
     const handleOfficeTypeChange = (selectedOption) => {
         setOfficeTypeId(selectedOption.value);
     };
-
     const getAllOfficeType = async () => {
         try {
             const result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
             const formattedData = result.data.map((officeType) => ({
                 value: officeType.officeTypeId,
-                label: officeType.officeTypeName,
+                label: (
+                    <span style={{ color: officeType.isActive ? "green" : "red" }}>
+                        {officeType.officeTypeName}
+                        {" -- "}
+                        {officeType.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setOfficeTypeDData(formattedData);
         } catch (error) {
@@ -74,7 +79,7 @@ export default () => {
         }
     };
 
-
+    
     const handleOfficeChange = (selectedOption) => {
         setOfficeId(selectedOption.value);
     };
@@ -84,7 +89,13 @@ export default () => {
             const result = await Axios.get(`${process.env.REACT_APP_API}Office/GetOffice`);
             const formattedData = result.data.map((office) => ({
                 value: office.officeId,
-                label: office.officeName,
+                label: (
+                    <span style={{ color: office.isActive ? "green" : "red" }}>
+                        {office.officeName}
+                        {" -- "}
+                        {office.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setOfficeDData(formattedData);
         } catch (error) {
@@ -93,18 +104,23 @@ export default () => {
     };
 
 
-
-
     const handleDesignationChange = (selectedOption) => {
         setDesignationId(selectedOption.value);
     };
+
 
     const getAllDesignation = async () => {
         try {
             const result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
             const formattedData = result.data.map((designation) => ({
                 value: designation.designationId,
-                label: designation.designationName,
+                label: (
+                    <span style={{ color: designation.isActive ? "green" : "red" }}>
+                        {designation.designationName}
+                        {" -- "}
+                        {designation.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             SetDesignationDData(formattedData);
         } catch (error) {

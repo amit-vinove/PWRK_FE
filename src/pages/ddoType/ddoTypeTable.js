@@ -33,10 +33,10 @@ export const DDOTypeTable = ({ searchText }) => {
     }
     const handleDelete = (id) => {
         Swal.fire({
-            title: "Do You Want To Delete?",
+            title: "Do You Want To InActive?",
             showCancelButton: true,
             icon: "warning",
-            confirmButtonText: "Yes, delete it!",
+            confirmButtonText: "Yes, InActive it!",
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
         }).then((result) => {
@@ -48,14 +48,14 @@ export const DDOTypeTable = ({ searchText }) => {
                     .then((res) => {
                         Swal.fire({
                             icon: "success",
-                            title: "Your work has been Deleted",
+                            title: "Your data has been InActive",
                             showConfirmButton: false,
                             timer: 1500,
                         });
                         getDDOType();
                     })
                     .catch(() => {
-                        Swal.fire("DDO type not deleted.");
+                        Swal.fire("DDO type not InActive.");
                     });
                 console.log(id, "DDO");
             }
@@ -127,7 +127,7 @@ export const DDOTypeTable = ({ searchText }) => {
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item className="text-danger" onClick={() => { handleDelete(ddoTypeId) }}>
-                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> InActive
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>

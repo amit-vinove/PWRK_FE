@@ -25,7 +25,7 @@ import {
   ButtonGroup,
 } from "@themesberg/react-bootstrap";
 import axios from "axios";
-import {useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 
@@ -36,7 +36,10 @@ export const DistrictTable = ({ searchText }) => {
   const [districtData, setDistrictData] = useState([]);
   const [tempDistrictData, setTempDistrictData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalData, setTotalData] = useState(0);
   const [itemsPerPage] = useState(10);
+  const [showPreviousButton, setShowPreviousButton] = useState(false);
+  const [showNextButton, setShowNextButton] = useState(true);
 
   async function getDistrict() {
     await axios.get(API).then((response) => {
@@ -61,18 +64,23 @@ export const DistrictTable = ({ searchText }) => {
 
   const handlePrev = () => {
     setCurrentPage((prevPage) => prevPage - 1);
+    setShowPreviousButton(true);
+    setShowNextButton(true);
   };
 
   const handleNext = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    setShowPreviousButton(true);
+    setShowNextButton(nextPage !== totalPages);
   };
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Do You Want To Delete?",
+      title: "Do You Want To InActive?",
       showCancelButton: true,
       icon: "warning",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, InActive it!",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
     }).then((result) => {
@@ -82,14 +90,14 @@ export const DistrictTable = ({ searchText }) => {
           .then((res) => {
             Swal.fire({
               icon: "success",
-              title: "Your work has been Deleted",
+              title: "Your work has been InActive",
               showConfirmButton: false,
               timer: 1500,
             });
             getDistrict();
           })
           .catch(() => {
-            Swal.fire("district not deleted.");
+            Swal.fire("district not InActive.");
           });
         console.log(id, "districtId");
       }
@@ -167,6 +175,7 @@ export const DistrictTable = ({ searchText }) => {
   const currentItems = districtData.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(districtData.length / itemsPerPage);
 
+
   return (
     <>
       <Card border="light" className="table-wrapper table-responsive shadow-sm">
@@ -190,17 +199,30 @@ export const DistrictTable = ({ searchText }) => {
           </Table>
         </Card.Body>
       </Card>
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-between align-items-center">
+        <div className="text-center mb-3">
+          <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+        </div>
+        <div>
+          Showing page {currentPage} of {totalPages}
+        </div>
         <Pagination>
-          <Pagination.Prev disabled={currentPage === 1} onClick={handlePrev}>
-            Prev. Page
-          </Pagination.Prev>
-          <Pagination.Next
-            disabled={currentPage === totalPages}
-            onClick={handleNext}
-          >
-            Next Page
-          </Pagination.Next>
+          {showPreviousButton && (
+            <Pagination.Prev
+              disabled={currentPage === 1}
+              onClick={handlePrev}
+            >
+              Prev. Page
+            </Pagination.Prev>
+          )}
+          {showNextButton && (
+            <Pagination.Next
+              disabled={currentPage === totalPages}
+              onClick={handleNext}
+            >
+              Next Page
+            </Pagination.Next>
+          )}
         </Pagination>
       </div>
     </>

@@ -42,18 +42,41 @@ export default () => {
         setStateId(selectedOption.value);
     };
 
+
+
     const getAllState = async () => {
         try {
             const result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
             const formattedData = result.data.map((state) => ({
                 value: state.stateId,
-                label: state.stateName,
+                label: (
+                    <span style={{ color: state.isActive ? "green" : "red" }}>
+                        {state.stateName}
+                        {" -- "}
+                        {state.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setStateDropdownData(formattedData);
         } catch (error) {
             console.error(error);
         }
     };
+
+
+
+    // const getAllState = async () => {
+    //     try {
+    //         const result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
+    //         const formattedData = result.data.map((state) => ({
+    //             value: state.stateId,
+    //             label: state.stateName,
+    //         }));
+    //         setStateDropdownData(formattedData);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
 
 

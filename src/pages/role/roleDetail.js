@@ -47,13 +47,21 @@ export default () => {
             const result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
             const formattedData = result.data.map((officeType) => ({
                 value: officeType.officeTypeId,
-                label: officeType.officeTypeName,
+                label: (
+                    <span style={{ color: officeType.isActive ? "green" : "red" }}>
+                        {officeType.officeTypeName}
+                        {" -- "}
+                        {officeType.isActive ? "Active" : "Inactive"}
+                    </span>
+                ),
             }));
             setOfficeTypeDropdownData(formattedData);
         } catch (error) {
             console.error(error);
         }
     };
+
+
     useEffect(() => {
         getAllOfficeType();
         fetchIp();
