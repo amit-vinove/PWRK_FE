@@ -37,6 +37,7 @@ export const DistrictTable = ({ searchText }) => {
   const [tempDistrictData, setTempDistrictData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalData, setTotalData] = useState(0);
+  const [filteredData, setFilteredData] = useState([]);
   const [itemsPerPage] = useState(10);
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
@@ -45,6 +46,7 @@ export const DistrictTable = ({ searchText }) => {
     await axios.get(API).then((response) => {
       setDistrictData(response.data);
       setTempDistrictData(response.data);
+      setTotalData(response.data.length);
     });
   }
 
@@ -55,7 +57,8 @@ export const DistrictTable = ({ searchText }) => {
           i.districtName.toLowerCase().includes(searchText.toLowerCase()) ||
           i.districtShortName.toLowerCase().includes(searchText.toLowerCase())
       )
-    );
+    ); setFilteredData(filteredData);
+    setTotalData(filteredData.length);
   }
 
   const handleEdit = (id) => {

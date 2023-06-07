@@ -19,18 +19,22 @@ import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 
 const API = `${process.env.REACT_APP_API}Designation/GetDesignation`;
+const defaultPage = 1;
 
 export const DesignationTable = ({ searchText }) => {
   const [designationData, setDesignationData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [filteredData, setFilteredData] = useState([]);
   const history = useHistory();
   const [totalData, setTotalData] = useState(0);
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
+
   const handleEdit = (id) => {
     history.push(`/editDesignations?id=${id}`);
   };
+
   const handleDelete = (id) => {
     Swal.fire({
       title: "Do You Want To InActive?",
@@ -66,24 +70,24 @@ export const DesignationTable = ({ searchText }) => {
     getDesignation();
   }, []);
 
-  // useEffect(() => {
-  //   setShowPreviousButton(currentPage > 1);
-  //   setShowNextButton(currentPage < totalPages);
-  // }, [currentPage, totalPages]);
-
   const getDesignation = async () => {
     try {
       const response = await axios.get(API);
-      const filteredData = response.data.filter(
-        (item) =>
-          item.designationName.toLowerCase().includes(searchText.toLowerCase()) ||
-          item.designationShort.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setDesignationData(filteredData);
+      setDesignationData(response.data);
       setTotalData(response.data.length);
     } catch (error) {
-      console.log(error);
+      console.error("Error retrieving designation data:", error);
     }
+  };
+
+  const searchDesignation = (searchText) => {
+    const filteredData = designationData.filter(
+      (item) =>
+        item.designationName.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.designationShort.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredData(filteredData);
+    setTotalData(filteredData.length);
   };
 
   const handlePrev = () => {
@@ -95,18 +99,27 @@ export const DesignationTable = ({ searchText }) => {
   const handleNext = () => {
     setCurrentPage((prevPage) => prevPage + 1);
     setShowPreviousButton(true);
-    if (currentPage + 1 === Math.ceil(designationData.length / itemsPerPage)) {
+    if (currentPage + 1 === Math.ceil(totalData.length / itemsPerPage)) {
       setShowNextButton(false);
     }
   };
 
+  useEffect(() => {
+    if (searchText) {
+      searchDesignation(searchText);
+      setCurrentPage(defaultPage);
+      setShowPreviousButton(false);
+      setShowNextButton(true);
+    } else {
+      setFilteredData(designationData);
+      setTotalData(designationData.length);
+    }
+  }, [searchText, designationData]);
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = designationData.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-  const totalPages = Math.ceil(designationData.length / itemsPerPage);
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   useEffect(() => {
     setShowPreviousButton(currentPage > 1);
@@ -122,11 +135,7 @@ export const DesignationTable = ({ searchText }) => {
       ipAddress,
       isActive,
     } = props;
-    const statusVariant = isActive
-      ? "success"
-      : !isActive
-        ? "danger"
-        : "primary";
+    const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
     return (
       <tr>
         <td>
@@ -155,22 +164,19 @@ export const DesignationTable = ({ searchText }) => {
               className="text-dark m-0 p-0"
             >
               <span className="icon icon-sm">
-                <FontAwesomeIcon
-                  icon={faEllipsisH}
-                  className="icon-dark"
-                />
+                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => { handleEdit(designationId) }}>
+              <Dropdown.Item onClick={() => handleEdit(designationId)}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
               <Dropdown.Item
                 className="text-danger"
-                onClick={() => { handleDelete(designationId) }}
+                onClick={() => handleDelete(designationId)}
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
               </Dropdown.Item>
@@ -207,7 +213,7 @@ export const DesignationTable = ({ searchText }) => {
 
       <div className="d-flex justify-content-between align-items-center">
         <div className="text-center mb-3">
-          <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+          <h6>Total Data: {totalData}</h6>
         </div>
         <div>
           Showing page {currentPage} of {totalPages}

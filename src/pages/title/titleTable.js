@@ -32,8 +32,9 @@ export const TitleTable = ({ searchText }) => {
     const searchTitle = (searchText) => {
         const filteredTitleData = titleData.filter((item) =>
             item.titleName.toLowerCase().includes(searchText.toLowerCase()) ||
-            item.isActive.toString().toLowerCase().includes(searchText.toLowerCase())
+                item.isActive ? 'active' === searchText.toLowerCase() : 'inactive' === searchText.toLowerCase()
         );
+
         setFilteredData(filteredTitleData);
     };
     const handleDelete = async (id) => {
