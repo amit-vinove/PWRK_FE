@@ -257,7 +257,7 @@ export default () => {
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
-                                    <Form.Label>Designation Order Id</Form.Label>
+                                    <Form.Label>Designation Order ID</Form.Label>
                                     {/* {designationNameError && (
                                         <p style={{ color: "red", fontSize: "15px" }}>*{designationNameError}</p>
                                     )} */}

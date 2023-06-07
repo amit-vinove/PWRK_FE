@@ -30,7 +30,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 
 const API = `${process.env.REACT_APP_API}District/GetDistrict`;
-
+const defaultPage = 1;
 export const DistrictTable = ({ searchText }) => {
   const history = useHistory();
   const [districtData, setDistrictData] = useState([]);
@@ -42,22 +42,26 @@ export const DistrictTable = ({ searchText }) => {
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
 
-  async function getDistrict() {
-    await axios.get(API).then((response) => {
+
+  const getDistrict = async () => {
+    try {
+      const response = await axios.get(API);
       setDistrictData(response.data);
       setTempDistrictData(response.data);
       setTotalData(response.data.length);
-    });
+    } catch (error) {
+      console.error("Error retrieving designation data:", error);
+
+    };
   }
 
-  async function searchDistrict(searchText) {
-    setDistrictData(
-      tempDistrictData.filter(
-        (i) =>
-          i.districtName.toLowerCase().includes(searchText.toLowerCase()) ||
-          i.districtShortName.toLowerCase().includes(searchText.toLowerCase())
-      )
-    ); setFilteredData(filteredData);
+  const searchDistrict = () => {
+    const filteredData = districtData.filter(
+      (item) =>
+        item.districtName.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.districtShortName.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredData(filteredData);
     setTotalData(filteredData.length);
   }
 
@@ -111,8 +115,17 @@ export const DistrictTable = ({ searchText }) => {
     });
   };
   useEffect(() => {
-    searchDistrict(searchText);
-  }, [searchText]);
+    if (searchText) {
+      searchDistrict(searchText);
+      setCurrentPage(defaultPage);
+      setShowPreviousButton(false);
+      setShowNextButton(true);
+    } else {
+      setFilteredData(districtData);
+      setTotalData(districtData.length);
+    }
+  }, [searchText, districtData]);
+
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

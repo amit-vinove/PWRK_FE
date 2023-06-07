@@ -238,7 +238,7 @@ export default () => {
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="designationOrderId">
-                                    <Form.Label>Designation Order Id</Form.Label>
+                                    <Form.Label>Designation Order ID</Form.Label>
                                     <Form.Control
                                         required
                                         type="text"
