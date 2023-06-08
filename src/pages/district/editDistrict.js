@@ -48,8 +48,8 @@ export default () => {
                 label: (
                     <span style={{ color: state.isActive ? "green" : "red" }}>
                         {state.stateName}
-                        {" -- "}
-                        {state.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {state.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));

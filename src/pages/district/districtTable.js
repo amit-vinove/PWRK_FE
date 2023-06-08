@@ -31,6 +31,7 @@ import "sweetalert2/src/sweetalert2.scss";
 
 const API = `${process.env.REACT_APP_API}District/GetDistrict`;
 const defaultPage = 1;
+
 export const DistrictTable = ({ searchText }) => {
   const history = useHistory();
   const [districtData, setDistrictData] = useState([]);
@@ -42,7 +43,6 @@ export const DistrictTable = ({ searchText }) => {
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
 
-
   const getDistrict = async () => {
     try {
       const response = await axios.get(API);
@@ -50,25 +50,32 @@ export const DistrictTable = ({ searchText }) => {
       setTempDistrictData(response.data);
       setTotalData(response.data.length);
     } catch (error) {
-      console.error("Error retrieving designation data:", error);
-
-    };
-  }
+      console.error("Error retrieving district data:", error);
+    }
+  };
 
   const searchDistrict = () => {
-    const filteredData = districtData.filter(
+    const filteredData = tempDistrictData.filter(
       (item) =>
-        item.districtName.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.districtShortName.toLowerCase().includes(searchText.toLowerCase())
+        item.distName &&
+          item.distShortName &&
+          (item.distName.toLowerCase().includes(searchText?.toLowerCase()) ||
+            item.distShortName.toLowerCase().includes(searchText?.toLowerCase())) ||
+          item.isActive ? 'active' === searchText.toLowerCase() : 'inactive' === searchText.toLowerCase()
     );
     setFilteredData(filteredData);
     setTotalData(filteredData.length);
-  }
+    setCurrentPage(defaultPage);
+    setShowPreviousButton(false);
+    setShowNextButton(true);
+  };
 
   const handleEdit = (id) => {
     history.push(`/editDistrict?id=${id}`);
   };
-
+  const handleView = (id) => {
+    history.push(`/viewDistrict?id=${id}`);
+  };
   const handlePrev = () => {
     setCurrentPage((prevPage) => prevPage - 1);
     setShowPreviousButton(true);
@@ -88,10 +95,10 @@ export const DistrictTable = ({ searchText }) => {
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Do You Want To InActive?",
+      title: "Do You Want To Inactive?",
       showCancelButton: true,
       icon: "warning",
-      confirmButtonText: "Yes, InActive it!",
+      confirmButtonText: "Yes, Inactive it!",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
     }).then((result) => {
@@ -101,50 +108,45 @@ export const DistrictTable = ({ searchText }) => {
           .then((res) => {
             Swal.fire({
               icon: "success",
-              title: "Your work has been InActive",
+              title: "Your work has been Inactive",
               showConfirmButton: false,
               timer: 1500,
             });
             getDistrict();
           })
           .catch(() => {
-            Swal.fire("district not InActive.");
+            Swal.fire("District not Inactive.");
           });
         console.log(id, "districtId");
       }
     });
   };
+
   useEffect(() => {
     if (searchText) {
-      searchDistrict(searchText);
+      searchDistrict();
+    } else {
+      setFilteredData(tempDistrictData);
+      setTotalData(tempDistrictData.length);
       setCurrentPage(defaultPage);
       setShowPreviousButton(false);
       setShowNextButton(true);
-    } else {
-      setFilteredData(districtData);
-      setTotalData(districtData.length);
     }
-  }, [searchText, districtData]);
-
+  }, [searchText, tempDistrictData]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = districtData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(districtData.length / itemsPerPage);
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   useEffect(() => {
     setShowPreviousButton(currentPage > 1);
     setShowNextButton(currentPage < totalPages);
   }, [currentPage, totalPages]);
 
-
   const TableRow = (props) => {
     const { srNo, stateId, disttId, distName, distShortName, isActive } = props;
-    const statusVariant = isActive
-      ? "success"
-      : !isActive
-        ? "danger"
-        : "primary";
+    const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
     return (
       <tr>
         <td>
@@ -177,7 +179,7 @@ export const DistrictTable = ({ searchText }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={() => handleView(disttId)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
               <Dropdown.Item onClick={() => handleEdit(disttId)}>
@@ -187,7 +189,7 @@ export const DistrictTable = ({ searchText }) => {
                 className="text-danger"
                 onClick={() => handleDelete(disttId)}
               >
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -195,9 +197,6 @@ export const DistrictTable = ({ searchText }) => {
       </tr>
     );
   };
-
-
-
 
   return (
     <>
@@ -224,7 +223,7 @@ export const DistrictTable = ({ searchText }) => {
       </Card>
       <div className="d-flex justify-content-between align-items-center">
         <div className="text-center mb-3">
-          <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+          <h6>Total Data: {totalData}</h6>
         </div>
         <div>
           Showing page {currentPage} of {totalPages}

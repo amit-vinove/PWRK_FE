@@ -147,7 +147,7 @@ export const TitleTable = ({ searchText }) => {
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item className="text-danger" onClick={() => handleDelete(titleId)}>
-                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>

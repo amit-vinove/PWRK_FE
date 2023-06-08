@@ -61,8 +61,8 @@ export default () => {
                 label: (
                     <span style={{ color: ddoType.isActive ? "green" : "red" }}>
                         {ddoType.ddoType}
-                        {" -- "}
-                        {ddoType.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {ddoType.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));

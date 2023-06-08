@@ -34,12 +34,15 @@ export const ModuleTable = ({ searchText }) => {
   const handleEdit = (id) => {
     history.push(`editModule?id=${id}`)
   }
+  const handleView = (id) => {
+    history.push(`viewModule?id=${id}`)
+  }
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Do You Want To Delete?",
+      title: "Do You Want To Inactive?",
       showCancelButton: true,
       icon: "warning",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, Inactive it!",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
     }).then((result) => {
@@ -51,14 +54,14 @@ export const ModuleTable = ({ searchText }) => {
           .then((res) => {
             Swal.fire({
               icon: "success",
-              title: "Your work has been Deleted",
+              title: "Your work has been Inactive",
               showConfirmButton: false,
               timer: 1500,
             });
             getModules();
           })
           .catch(() => {
-            Swal.fire("Module not deleted.");
+            Swal.fire("Module not Inactive.");
           });
         console.log(id, "moduleid");
       }
@@ -137,14 +140,14 @@ export const ModuleTable = ({ searchText }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={() => { handleView(moduleId) }}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
               <Dropdown.Item onClick={() => { handleEdit(moduleId) }}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item >
               <Dropdown.Item className="text-danger" onClick={() => { handleDelete(moduleId) }}>
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

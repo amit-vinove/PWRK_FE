@@ -48,7 +48,9 @@ export const StateTable = ({ searchText }) => {
     const searchState = (searchText) => {
         setStateData(
             tempStateData.filter((i) =>
-                i.stateName.toLowerCase().includes(searchText.toLowerCase())
+                i.stateName.toLowerCase().includes(searchText.toLowerCase()) ||
+                    i.country.toLowerCase().includes(searchText.toLowerCase()) ||
+                    i.isActive ? 'active' === searchText.toLowerCase() : 'inactive' === searchText.toLowerCase()
             )
         );
     };
@@ -67,10 +69,10 @@ export const StateTable = ({ searchText }) => {
 
     const handleDelete = (id) => {
         Swal.fire({
-            title: "Do You Want To Delete?",
+            title: "Do You Want To Inactive?",
             showCancelButton: true,
             icon: "warning",
-            confirmButtonText: "Yes, delete it!",
+            confirmButtonText: "Yes, Inactive it!",
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
         }).then((result) => {
@@ -80,17 +82,20 @@ export const StateTable = ({ searchText }) => {
                     .then((res) => {
                         Swal.fire({
                             icon: "success",
-                            title: "Your work has been Deleted",
+                            title: "Your work has been Inactive",
                             showConfirmButton: false,
                             timer: 1500,
                         });
                         getState();
                     })
                     .catch(() => {
-                        Swal.fire("State not deleted.");
+                        Swal.fire("State not Inactive.");
                     });
             }
         });
+    };
+    const handleView = (id) => {
+        history.push(`/viewState?id=${id}`);
     };
 
     const handleEdit = (id) => {
@@ -135,15 +140,17 @@ export const StateTable = ({ searchText }) => {
                             </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => handleView(stateId)}>
+                                <FontAwesomeIcon icon={faEye} className="me-2" /> View
+                            </Dropdown.Item>
                             <Dropdown.Item onClick={() => handleEdit(stateId)}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
+
                             <Dropdown.Item onClick={() => handleDelete(stateId)}>
-                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
                             </Dropdown.Item>
-                            <Dropdown.Item>
-                                <FontAwesomeIcon icon={faEye} className="me-2" /> View
-                            </Dropdown.Item>
+
                         </Dropdown.Menu>
                     </Dropdown>
                 </td>

@@ -63,10 +63,10 @@ export const OfficeAccDetailTable = ({ searchText }) => {
 
     const handleDelete = (id) => {
         Swal.fire({
-            title: "Do You Want To Delete?",
+            title: "Do You Want To Inactive?",
             showCancelButton: true,
             icon: "warning",
-            confirmButtonText: "Yes, delete it!",
+            confirmButtonText: "Yes, Inactive it!",
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
         }).then((result) => {
@@ -78,14 +78,14 @@ export const OfficeAccDetailTable = ({ searchText }) => {
                     .then((res) => {
                         Swal.fire({
                             icon: "success",
-                            title: "Your work has been Deleted",
+                            title: "Your work has been Inactive",
                             showConfirmButton: false,
                             timer: 1500,
                         });
                         getOfficeAccountDetail();
                     })
                     .catch(() => {
-                        Swal.fire("State not deleted.");
+                        Swal.fire("State not Inactive.");
                     });
             }
         });
@@ -196,7 +196,7 @@ export const OfficeAccDetailTable = ({ searchText }) => {
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item >
                             <Dropdown.Item className="text-danger" onClick={() => { handleDelete(officeId) }}>
-                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>

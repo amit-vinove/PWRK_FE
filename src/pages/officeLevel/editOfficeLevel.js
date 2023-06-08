@@ -68,8 +68,8 @@ export default () => {
                 label: (
                     <span style={{ color: officeType.isActive ? "green" : "red" }}>
                         {officeType.officeTypeName}
-                        {" -- "}
-                        {officeType.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {officeType.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));

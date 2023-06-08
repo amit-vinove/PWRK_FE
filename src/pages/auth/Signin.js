@@ -47,6 +47,7 @@ const Login = (props) => {
         .then((res) => {
           //console.log(res, "res");
           if (res.data.message != null) {
+            console.log(res.data.message, "responce");
             Swal.fire(
               {
                 text: 'LoginId / Password is incorrect.',

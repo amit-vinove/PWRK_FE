@@ -46,12 +46,13 @@ export default () => {
   const [isActive, setisActive] = useState(true);
   const [ipAddress, setIpAddress] = useState("");
   const [updateby, setupdateby] = useState("");
-  const [loginLockedDate, setloginLockedDate] = useState(null);
-  const [lastLoginDateTime, setlastLoginDateTime] = useState(null);
+  const [loginLockedDate, setloginLockedDate] = useState(new Date());
+  const [lastLoginDateTime, setlastLoginDateTime] = useState(new Date());
   const [value, setValue] = useState("0");
   const jsonData = {
     updateby: "123",
   };
+
   const [updateon, setupdateon] = useState(new Date());
   const handleCancel = () => {
     history.push("/user")
@@ -190,7 +191,7 @@ export default () => {
         updateby: UserID,
       };
       Axios.post(
-        `${process.env.REACT_APP_API}User/SetUser`,
+        `${process.env.REACT_APP_API}Account/SignUp`,
         payload
       )
         .then((response) => {
@@ -269,7 +270,7 @@ export default () => {
                     defaultValue="" // Set the default value to an empty string
                   >
                     <option value="" disabled>
-                      Choose office type....
+                      Choose Title....
                     </option>
                     {titleDropdownData.map((s) => (
                       <option key={s.titleId} value={s.titleId}>
@@ -507,6 +508,20 @@ export default () => {
               </Col>
             </Row>
             <Row>
+              <Col md={6} className="mb-3">
+                <Form.Group id="firstName">
+                  <Form.Label>Password</Form.Label>
+                  {/* {empIDError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{login}</p>
+                  )} */}
+                  <Form.Control required type="text" placeholder="Enter Title here" value={password}
+                    onChange={(e) => {
+                      setpassword(e.target.value);
+                      //setEmpIDError("");
+                    }} />
+                </Form.Group>
+              </Col>
+
               <Col md={6} className="mb-3">
                 <Form.Group id="firstName">
                   <Form.Label>Update Office Id</Form.Label>

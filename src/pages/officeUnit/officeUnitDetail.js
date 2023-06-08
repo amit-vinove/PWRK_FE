@@ -68,8 +68,8 @@ export default () => {
                 label: (
                     <span style={{ color: officeType.isActive ? "green" : "red" }}>
                         {officeType.officeTypeName}
-                        {" -- "}
-                        {officeType.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {officeType.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));
@@ -92,8 +92,8 @@ export default () => {
                 label: (
                     <span style={{ color: office.isActive ? "green" : "red" }}>
                         {office.officeName}
-                        {" -- "}
-                        {office.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {office.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));
@@ -117,8 +117,8 @@ export default () => {
                 label: (
                     <span style={{ color: designation.isActive ? "green" : "red" }}>
                         {designation.designationName}
-                        {" -- "}
-                        {designation.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {designation.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));

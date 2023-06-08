@@ -34,7 +34,9 @@ export const DesignationTable = ({ searchText }) => {
   const handleEdit = (id) => {
     history.push(`/editDesignations?id=${id}`);
   };
-
+  const handleView = (id) => {
+    history.push(`/viewDesignations?id=${id}`);
+  };
   const handleDelete = (id) => {
     Swal.fire({
       title: "Do You Want To InActive?",
@@ -84,7 +86,8 @@ export const DesignationTable = ({ searchText }) => {
     const filteredData = designationData.filter(
       (item) =>
         item.designationName.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.designationShort.toLowerCase().includes(searchText.toLowerCase())
+          item.designationShort.toLowerCase().includes(searchText.toLowerCase()) ||
+          item.isActive ? 'active' === searchText.toLowerCase() : 'inactive' === searchText.toLowerCase()
     );
     setFilteredData(filteredData);
     setTotalData(filteredData.length);
@@ -168,7 +171,7 @@ export const DesignationTable = ({ searchText }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={() => handleView(designationId)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
               <Dropdown.Item onClick={() => handleEdit(designationId)}>
@@ -178,7 +181,7 @@ export const DesignationTable = ({ searchText }) => {
                 className="text-danger"
                 onClick={() => handleDelete(designationId)}
               >
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

@@ -63,6 +63,9 @@ export const DDOTypeTable = ({ searchText }) => {
             }
         });
     };
+    const handleView = (id) => {
+        history.push(`/viewDdoType?id=${id}`)
+    }
     const handleEdit = (id) => {
         history.push(`/editDdoType?id=${id}`)
     }
@@ -82,7 +85,7 @@ export const DDOTypeTable = ({ searchText }) => {
         getDDOType();
     }, []);
 
-    
+
 
     useEffect(() => {
         searchDDOType(searchText);
@@ -130,14 +133,14 @@ export const DDOTypeTable = ({ searchText }) => {
                             </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleView(ddoTypeId) }}>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => { handleEdit(ddoTypeId) }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item className="text-danger" onClick={() => { handleDelete(ddoTypeId) }}>
-                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> InActive
+                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>

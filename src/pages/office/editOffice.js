@@ -90,8 +90,8 @@ export default () => {
                 label: (
                     <span style={{ color: officeType.isActive ? "green" : "red" }}>
                         {officeType.officeTypeName}
-                        {" -- "}
-                        {officeType.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {officeType.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));
@@ -113,8 +113,8 @@ export default () => {
                 label: (
                     <span style={{ color: state.isActive ? "green" : "red" }}>
                         {state.stateName}
-                        {" -- "}
-                        {state.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {state.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));
@@ -137,8 +137,8 @@ export default () => {
                 label: (
                     <span style={{ color: district.isActive ? "green" : "red" }}>
                         {district.distName}
-                        {" -- "}
-                        {district.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {district.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));
@@ -201,8 +201,8 @@ export default () => {
                 label: (
                     <span style={{ color: designation.isActive ? "green" : "red" }}>
                         {designation.designationName}
-                        {" -- "}
-                        {designation.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {designation.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));
@@ -226,8 +226,8 @@ export default () => {
                 label: (
                     <span style={{ color: rtidesignation.isActive ? "green" : "red" }}>
                         {rtidesignation.rtiDesignation}
-                        {" -- "}
-                        {rtidesignation.isActive ? "Active" : "Inactive"}
+                        {/* {" -- "}
+                        {rtidesignation.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));

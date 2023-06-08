@@ -63,13 +63,16 @@ export const OfficeLevelTable = ({ searchText }) => {
     const handleEdit = (id) => {
         history.push(`/editOfficeLevel?id=${id}`);
     };
+    const handleView = (id) => {
+        history.push(`/viewOfficeLevel?id=${id}`);
+    };
 
     const handleDelete = (id) => {
         Swal.fire({
-            title: "Do You Want To Delete?",
+            title: "Do You Want To Inactive?",
             showCancelButton: true,
             icon: "warning",
-            confirmButtonText: "Yes, delete it!",
+            confirmButtonText: "Yes, Inactive it!",
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
         }).then((result) => {
@@ -81,14 +84,14 @@ export const OfficeLevelTable = ({ searchText }) => {
                     .then((res) => {
                         Swal.fire({
                             icon: "success",
-                            title: "Your work has been Deleted",
+                            title: "Your work has been Inactive",
                             showConfirmButton: false,
                             timer: 1500,
                         });
                         getOfficeLevel();
                     })
                     .catch(() => {
-                        Swal.fire("Office Level not deleted.");
+                        Swal.fire("Office Level not Inactive.");
                     });
             }
         });
@@ -141,7 +144,7 @@ export const OfficeLevelTable = ({ searchText }) => {
                             </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleView(id)}>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => handleEdit(id)}>
@@ -151,7 +154,7 @@ export const OfficeLevelTable = ({ searchText }) => {
                                 className="text-danger"
                                 onClick={() => handleDelete(id)}
                             >
-                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
