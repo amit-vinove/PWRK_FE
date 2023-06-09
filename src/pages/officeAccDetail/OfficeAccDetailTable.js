@@ -28,7 +28,12 @@ export const OfficeAccDetailTable = ({ searchText }) => {
     async function searchState(searchText) {
         setOfficeAccDetailData(
             tempOfficeAccDetailData.filter((i) =>
-                i.stateName.toLowerCase().includes(searchText.toLowerCase())
+                i.ddoCodeName.toLowerCase().includes(searchText.toLowerCase()) ||
+                i.bankName.toLowerCase().includes(searchText.toLowerCase()) ||
+                i.bankAddress.toLowerCase().includes(searchText.toLowerCase()) ||
+                i.bankIFSC.toLowerCase().includes(searchText.toLowerCase()) ||
+                (i.isActive && searchText.toLowerCase() === 'active') ||
+                (!i.isActive && searchText.toLowerCase() === 'inactive')
             ))
     }
     const query = new URLSearchParams(window.location.search);

@@ -83,12 +83,20 @@ export const DesignationTable = ({ searchText }) => {
   };
 
   const searchDesignation = (searchText) => {
-    const filteredData = designationData.filter(
-      (item) =>
-        item.designationName.toLowerCase().includes(searchText.toLowerCase()) ||
-          item.designationShort.toLowerCase().includes(searchText.toLowerCase()) ||
-          item.isActive ? 'active' === searchText.toLowerCase() : 'inactive' === searchText.toLowerCase()
-    );
+    const filteredData = designationData.filter((item) => {
+      const lowercaseSearchText = searchText.toLowerCase();
+      const lowercaseDesignationName = item.designationName.toLowerCase();
+      const lowercaseDesignationShort = item.designationShort.toLowerCase();
+      const isActiveText = item.isActive ? "active" : "inactive";
+
+      return (
+        lowercaseDesignationName.includes(lowercaseSearchText) ||
+        lowercaseDesignationShort.includes(lowercaseSearchText) ||
+        (item.isActive && searchText.toLowerCase() === 'active') ||
+        (!item.isActive && searchText.toLowerCase() === 'inactive')
+      );
+    });
+
     setFilteredData(filteredData);
     setTotalData(filteredData.length);
   };

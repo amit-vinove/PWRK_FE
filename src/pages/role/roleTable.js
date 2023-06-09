@@ -41,7 +41,9 @@ export const RoleTable = ({ searchText }) => {
     const searchState = (searchText) => {
         setRoleData(
             tempRoleData.filter((i) =>
-                i.roleName.toLowerCase().includes(searchText.toLowerCase())
+                i.roleName.toLowerCase().includes(searchText.toLowerCase()) ||
+                (i.isActive && searchText.toLowerCase() === 'active') ||
+                (!i.isActive && searchText.toLowerCase() === 'inactive')
             )
         );
     };

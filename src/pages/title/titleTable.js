@@ -32,11 +32,13 @@ export const TitleTable = ({ searchText }) => {
     const searchTitle = (searchText) => {
         const filteredTitleData = titleData.filter((item) =>
             item.titleName.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.isActive ? 'active' === searchText.toLowerCase() : 'inactive' === searchText.toLowerCase()
+            (item.isActive && searchText.toLowerCase() === 'active') ||
+            (!item.isActive && searchText.toLowerCase() === 'inactive')
         );
 
         setFilteredData(filteredTitleData);
     };
+
     const handleDelete = async (id) => {
         try {
             const result = await Swal.fire({
@@ -84,11 +86,10 @@ export const TitleTable = ({ searchText }) => {
         setShowPreviousButton(true);
         setShowNextButton(nextPage !== totalPages);
     };
+
     useEffect(() => {
         getTitle();
     }, []);
-
-
 
     useEffect(() => {
         if (searchText) {
@@ -110,7 +111,6 @@ export const TitleTable = ({ searchText }) => {
         setShowPreviousButton(currentPage > 1);
         setShowNextButton(currentPage < totalPages);
     }, [currentPage, totalPages]);
-
 
     const TableRow = ({ srNo, titleId, titleName, isActive }) => {
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
@@ -158,7 +158,6 @@ export const TitleTable = ({ searchText }) => {
 
     return (
         <>
-
             <Card border="light" className="table-wrapper table-responsive shadow-sm">
                 <Card.Body className="pt-0">
                     <Table hover className="user-table align-items-center">
@@ -171,14 +170,20 @@ export const TitleTable = ({ searchText }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {currentItems.map((t) => <TableRow key={`transaction-${t.srNo}`} {...t} />)}
+                            {currentItems.map((t, index) => (
+                                <TableRow
+                                    key={`transaction-${t.titleId}`}
+                                    srNo={index + 1}
+                                    {...t}
+                                />
+                            ))}
                         </tbody>
                     </Table>
                 </Card.Body>
             </Card>
             <div className="d-flex justify-content-between align-items-center">
                 <div className="text-center mb-3">
-                    <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+                    <h6>Total Data: {totalData}</h6>
                 </div>
                 <div>
                     Showing page {currentPage} of {totalPages}
@@ -202,7 +207,6 @@ export const TitleTable = ({ searchText }) => {
                     )}
                 </Pagination>
             </div>
-
         </>
     );
 };

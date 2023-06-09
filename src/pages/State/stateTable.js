@@ -23,11 +23,6 @@ export const StateTable = ({ searchText }) => {
         getState();
     }, []);
 
-    // useEffect(() => {
-    //     setShowPreviousButton(currentPage > 1);
-    //     setShowNextButton(currentPage < totalPages);
-    //   }, [currentPage, totalPages]);
-
     useEffect(() => {
         searchState(searchText);
     }, [searchText]);
@@ -47,11 +42,16 @@ export const StateTable = ({ searchText }) => {
 
     const searchState = (searchText) => {
         setStateData(
-            tempStateData.filter((i) =>
-                i.stateName.toLowerCase().includes(searchText.toLowerCase()) ||
-                    i.country.toLowerCase().includes(searchText.toLowerCase()) ||
-                    i.isActive ? 'active' === searchText.toLowerCase() : 'inactive' === searchText.toLowerCase()
-            )
+            tempStateData.filter((i) => {
+                const isActive = i.isActive ? "active" : "inactive";
+                const searchTextLower = searchText.toLowerCase();
+                return (
+                    i.stateName.toLowerCase().includes(searchTextLower) ||
+                    i.country.toLowerCase().includes(searchTextLower) ||
+                    (i.isActive && searchText.toLowerCase() === 'active') ||
+                    (!i.isActive && searchText.toLowerCase() === 'inactive')
+                );
+            })
         );
     };
     const handlePrev = () => {

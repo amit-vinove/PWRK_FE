@@ -1,8 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
-import axios from 'axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAngleDown,
+  faAngleUp,
+  faArrowDown,
+  faArrowUp,
+  faEdit,
+  faEllipsisH,
+  faExternalLinkAlt,
+  faEye,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  Col,
+  Row,
+  Nav,
+  Card,
+  Image,
+  Button,
+  Table,
+  Dropdown,
+  ProgressBar,
+  Pagination,
+  ButtonGroup,
+} from "@themesberg/react-bootstrap";
+import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
@@ -11,34 +33,45 @@ const API = `${process.env.REACT_APP_API}RTIDesignation/GetRTIDesignation`;
 const itemsPerPage = 10;
 const defaultPage = 1;
 
-export const RTIDesignationTable = () => {
-  const [rtiDesignationData, setDesignationData] = useState([]);
+export const RTIDesignationTable = ({ searchText }) => {
+  const [rtiDesignationData, setRtiDesignationData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(defaultPage);
   const [totalData, setTotalData] = useState(0);
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
-  const [searchText, setSearchText] = useState(''); // Updated: Moved searchText state to RTIDesignationTable component
+
   const history = useHistory();
 
-  async function getRtiDesignation() {
+
+
+  useEffect(() => {
+    searchDesignation(searchText);
+    setCurrentPage(defaultPage);
+  }, [searchText]);
+
+
+  const getRtiDesignation = async () => {
     await axios.get(API).then((response) => {
-      setDesignationData(response.data);
+      setRtiDesignationData(response.data);
+      setFilteredData(response.data);
       setTotalData(response.data.length);
     });
-  }
+  };
 
-  async function searchDesignation(searchText) {
-    if (searchText.trim() === '') {
-      setDesignationData(rtiDesignationData); // Reset designation data if search text is empty
-    } else {
-      const filteredData = rtiDesignationData.filter((i) =>
-        i.rtiDesignation.toLowerCase().includes(searchText.toLowerCase()) ||
-        (i.isActive && 'active' === searchText.toLowerCase()) ||
-        (!i.isActive && 'inactive' === searchText.toLowerCase())
+  const searchDesignation = (searchText) => {
+    const filteredData = rtiDesignationData.filter((item) => {
+      const isActive = item.isActive ? "active" : "inactive";
+      const searchTextLower = searchText.toLowerCase();
+      return (
+        item.rtiDesignation.toLowerCase().includes(searchTextLower) ||
+        (item.isActive && searchText.toLowerCase() === 'active') ||
+        (!item.isActive && searchText.toLowerCase() === 'inactive')
+
       );
-      setDesignationData(filteredData);
-    }
-  }
+    });
+    setFilteredData(filteredData);
+  };
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -51,9 +84,7 @@ export const RTIDesignationTable = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .post(
-            `${process.env.REACT_APP_API}deleteRTIDesignation/${id}` // Updated: Removed duplicate API URL segment
-          )
+          .post(`${process.env.REACT_APP_API}deleteRTIDesignation/${id}`)
           .then((res) => {
             Swal.fire({
               icon: "success",
@@ -73,52 +104,40 @@ export const RTIDesignationTable = () => {
   const handleEdit = (id) => {
     history.push(`/editRtiDesignations?id=${id}`);
   };
+
   const handleView = (id) => {
     history.push(`/viewRtiDesignations?id=${id}`);
   };
 
   const handlePrev = () => {
     setCurrentPage((prevPage) => prevPage - 1);
-    setShowPreviousButton(true);
-    setShowNextButton(true);
   };
 
   const handleNext = () => {
-    const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
-    setShowPreviousButton(true);
-    setShowNextButton(nextPage !== totalPages);
+    setCurrentPage((prevPage) => prevPage + 1);
   };
 
   useEffect(() => {
     getRtiDesignation();
   }, []);
 
-  useEffect(() => {
-    searchDesignation(searchText); // Updated: Call searchDesignation directly in the useEffect hook
-    setCurrentPage(defaultPage);
-  }, [searchText]);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = rtiDesignationData.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-  const totalPages = Math.ceil(rtiDesignationData.length / itemsPerPage);
 
   useEffect(() => {
     setShowPreviousButton(currentPage > 1);
-    setShowNextButton(currentPage < totalPages);
-  }, [currentPage, totalPages]);
+    setShowNextButton(currentPage < totalPages());
+  }, [currentPage]);
+
+  const totalPages = () => Math.ceil(filteredData.length / itemsPerPage);
+
+  const getPaginatedData = () => {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    return filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  };
 
   const TableRow = (props) => {
     const { rtiDesigId, rtiDesignation, ipAddress, isActive } = props;
-    const statusVariant = isActive
-      ? "success"
-      : !isActive
-        ? "danger"
-        : "primary";
+    const statusVariant = isActive ? "success" : "danger";
     return (
       <tr>
         <td>
@@ -129,7 +148,7 @@ export const RTIDesignationTable = () => {
         </td>
         <td>
           <span className={`fw-normal text-${statusVariant}`}>
-            {isActive ? "Active" : !isActive ? "Inactive" : "Unknown"}
+            {isActive ? "Active" : "Inactive"}
           </span>
         </td>
         <td>
@@ -141,10 +160,7 @@ export const RTIDesignationTable = () => {
               className="text-dark m-0 p-0"
             >
               <span className="icon icon-sm">
-                <FontAwesomeIcon
-                  icon={faEllipsisH}
-                  className="icon-dark"
-                />
+                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -158,7 +174,8 @@ export const RTIDesignationTable = () => {
                 className="text-danger"
                 onClick={() => handleDelete(rtiDesigId)}
               >
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update Status
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Update
+                Status
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -181,20 +198,19 @@ export const RTIDesignationTable = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems &&
-                currentItems.map((t) => (
-                  <TableRow key={`transaction-${t.srNo}`} {...t} />
-                ))}
+              {getPaginatedData().map((t) => (
+                <TableRow key={`transaction-${t.srNo}`} {...t} />
+              ))}
             </tbody>
           </Table>
         </Card.Body>
       </Card>
       <div className="d-flex justify-content-between align-items-center">
         <div className="text-center mb-3">
-          <h6>Total Data: {totalData}</h6> {/* Display the total data count */}
+          <h6>Total Data: {totalData}</h6>
         </div>
         <div>
-          Showing page {currentPage} of {totalPages}
+          Showing page {currentPage} of {totalPages()}
         </div>
         <Pagination>
           {showPreviousButton && (
@@ -207,7 +223,7 @@ export const RTIDesignationTable = () => {
           )}
           {showNextButton && (
             <Pagination.Next
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages()}
               onClick={handleNext}
             >
               Next Page

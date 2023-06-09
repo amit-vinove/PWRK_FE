@@ -35,7 +35,18 @@ export const OfficeTable = ({ searchText }) => {
     async function searchOffice(searchText) {
         setOfficeData(
             tempOfficeData.filter((i) =>
-                i.officeName.toLowerCase().includes(searchText.toLowerCase())
+                i.officeName.toLowerCase().includes(searchText.toLowerCase()) ||
+                i.officeNameHindi.toLowerCase().includes(searchText.toLowerCase()) ||
+                i.address.toLowerCase().includes(searchText.toLowerCase()) ||
+                // i.officeName.toLowerCase().includes(searchText.toLowerCase()) ||
+                // i.officeName.toLowerCase().includes(searchText.toLowerCase()) ||
+                // i.officeName.toLowerCase().includes(searchText.toLowerCase()) ||
+                // i.officeName.toLowerCase().includes(searchText.toLowerCase()) ||
+                // i.officeName.toLowerCase().includes(searchText.toLowerCase()) ||
+                (i.isActive && searchText.toLowerCase() === 'active') ||
+                (!i.isActive && searchText.toLowerCase() === 'inactive')
+                //     (i.isVisible && searchText.toLowerCase() === 'active') ||
+                // (!i.isVisible && searchText.toLowerCase() === 'inactive')
             ))
     }
 

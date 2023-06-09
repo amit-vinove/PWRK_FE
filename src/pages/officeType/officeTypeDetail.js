@@ -31,36 +31,73 @@ export default () => {
     const handleCancel = () => {
         history.push("/officeType")
     }
-    
+
     const fetchIp = async () => {
         const res = await axios.get('https://geolocation-db.com/json/')
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4)
     }
     useEffect(() => {
-        handleChangeOfficeType();
+        fetchIp();
+    }, []);
+    useEffect(() => {
+        handleChangeOfficeTypeName();
     }, [officeTypeName])
-    const handleChangeOfficeType = () => {
+    const handleChangeOfficeTypeName = () => {
         if (!officeTypeName) return;
-        if (officeTypeName.length > 50 && officeTypeName.length < 2) {
-            setOfficeTypeNameError("Title Name must be less 50 words");
+        if (officeTypeName.length < 3 ||
+            officeTypeName.length > 150) {
+            setOfficeTypeNameError("office Type Name must be between 3 to 150 words");
             setFormValid(false)
         } else {
-            setOfficeTypeError("");
+            setOfficeTypeNameError("");
             setFormValid(true)
         }
     }
     useEffect(() => {
-        fetchIp();
-    }, [])
+        handleChangeOfficeTypeNameShort();
+    }, [officeTypeNameShort])
+    const handleChangeOfficeTypeNameShort = () => {
+        if (!officeTypeNameShort) return;
+        if (officeTypeNameShort.length < 3 ||
+            officeTypeNameShort.length > 50) {
+            setOfficeTypeNameShortError("office Type Short Name must be between 3 to 50 words");
+            setFormValid(false)
+        } else {
+            setOfficeTypeNameShortError("");
+            setFormValid(true)
+        }
+    }
+
+
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (officeTypeName === "") {
-            setOfficeTypeNameError("District Name is Required");
+            setOfficeTypeNameError("Office Type Name is Required");
         }
-        else if (officeTypeNameShort.length > 50) {
-            setOfficeTypeNameShortError("title Name must be less 50 words");
+        else {
+            setOfficeTypeNameError("");
         }
+
+
+        if (officeTypeId === "") {
+            setOfficeTypeError("Office ID is Required/Input Only Numeric Value");
+        } else {
+            setOfficeTypeError("");
+        }
+        if (officeTypeNameShort === "") {
+            setOfficeTypeNameShortError("Office Short is Required");
+        } else {
+            setOfficeTypeNameShortError("");
+        }
+        if (ipAddress === "") {
+            setIpAddressError("IpAddress ID is Required");
+        } else {
+            setIpAddressError("");
+        }
+
         if (formValid) {
             const payload = {
                 officeTypeId: officeTypeId,

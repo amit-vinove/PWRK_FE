@@ -29,7 +29,10 @@ export const OfficeTypeTable = ({ searchText }) => {
     async function searchState(searchText) {
         setOfficeTypeData(
             tempOfficeTypeData.filter((i) =>
-                i.officeTypeName.toLowerCase().includes(searchText.toLowerCase())
+                i.officeTypeName.toLowerCase().includes(searchText.toLowerCase()) ||
+                i.officeTypeNameShort.toLowerCase().includes(searchText.toLowerCase()) ||
+                (i.isActive && searchText.toLowerCase() === 'active') ||
+                (!i.isActive && searchText.toLowerCase() === 'inactive')
             ))
     }
     const handlePrev = () => {

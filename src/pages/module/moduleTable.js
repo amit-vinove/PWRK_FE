@@ -28,7 +28,9 @@ export const ModuleTable = ({ searchText }) => {
     setModuleData(
       tempModuleData.filter((i) =>
         i.maduleName.toLowerCase().includes(searchText.toLowerCase()) ||
-        i.moduleNameShort.toLowerCase().includes(searchText.toLowerCase())
+        i.moduleNameShort.toLowerCase().includes(searchText.toLowerCase()) ||
+        (i.isActive && searchText.toLowerCase() === 'active') ||
+        (!i.isActive && searchText.toLowerCase() === 'inactive')
       ))
   }
   const handleEdit = (id) => {

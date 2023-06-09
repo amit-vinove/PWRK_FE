@@ -54,28 +54,14 @@ export const DistrictTable = ({ searchText }) => {
     }
   };
 
-  const searchDistrict = () => {
-    const filteredData = tempDistrictData.filter(
-      (item) =>
-        item.distName &&
-          item.distShortName &&
-          (item.distName.toLowerCase().includes(searchText?.toLowerCase()) ||
-            item.distShortName.toLowerCase().includes(searchText?.toLowerCase())) ||
-          item.isActive ? 'active' === searchText.toLowerCase() : 'inactive' === searchText.toLowerCase()
-    );
-    setFilteredData(filteredData);
-    setTotalData(filteredData.length);
-    setCurrentPage(defaultPage);
-    setShowPreviousButton(false);
-    setShowNextButton(true);
-  };
-
   const handleEdit = (id) => {
     history.push(`/editDistrict?id=${id}`);
   };
+
   const handleView = (id) => {
     history.push(`/viewDistrict?id=${id}`);
   };
+
   const handlePrev = () => {
     setCurrentPage((prevPage) => prevPage - 1);
     setShowPreviousButton(true);
@@ -88,10 +74,6 @@ export const DistrictTable = ({ searchText }) => {
     setShowPreviousButton(true);
     setShowNextButton(nextPage !== totalPages);
   };
-
-  useEffect(() => {
-    getDistrict();
-  }, []);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -123,8 +105,30 @@ export const DistrictTable = ({ searchText }) => {
   };
 
   useEffect(() => {
+    getDistrict();
+  }, []);
+
+  useEffect(() => {
     if (searchText) {
-      searchDistrict();
+      const filteredData = tempDistrictData.filter((item) => {
+        const lowercaseSearchText = searchText.toLowerCase();
+        const lowercaseDistName = item.distName.toLowerCase();
+        const lowercaseDistShortName = item.distShortName.toLowerCase();
+        const isActiveText = item.isActive ? "active" : "inactive";
+
+        return (
+          lowercaseDistName.includes(lowercaseSearchText) ||
+          lowercaseDistShortName.includes(lowercaseSearchText) ||
+          (item.isActive && searchText.toLowerCase() === 'active') ||
+          (!item.isActive && searchText.toLowerCase() === 'inactive')
+        );
+      });
+
+      setFilteredData(filteredData);
+      setTotalData(filteredData.length);
+      setCurrentPage(defaultPage);
+      setShowPreviousButton(false);
+      setShowNextButton(true);
     } else {
       setFilteredData(tempDistrictData);
       setTotalData(tempDistrictData.length);
@@ -146,7 +150,8 @@ export const DistrictTable = ({ searchText }) => {
 
   const TableRow = (props) => {
     const { srNo, stateId, disttId, distName, distShortName, isActive } = props;
-    const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
+    const statusVariant = isActive ? "success" : "danger";
+
     return (
       <tr>
         <td>
@@ -163,7 +168,7 @@ export const DistrictTable = ({ searchText }) => {
         </td>
         <td>
           <span className={`fw-normal text-${statusVariant}`}>
-            {isActive ? "Active" : !isActive ? "Inactive" : "Unknown"}
+            {isActive ? "Active" : "Inactive"}
           </span>
         </td>
         <td>
