@@ -61,6 +61,14 @@ export const OfficeUnitTable = ({ searchText }) => {
         setShowNextButton(currentPage < totalPages);
     }, [currentPage, totalPages]);
 
+    const handleEdit = (id) => {
+        history.push(`/editOfficeUnit?id=${id}`);
+    };
+    const handleView = (id) => {
+        history.push(`/viewOfficeUnit?id=${id}`);
+    };
+
+
     const handleDelete = (id) => {
         Swal.fire({
             title: "Do You Want To Inactive?",
@@ -97,12 +105,6 @@ export const OfficeUnitTable = ({ searchText }) => {
     const TableRow = (props) => {
         const { srNo, officeUnitId, designationId, unitName, unitAddress, emailId, contactNo, longitude, latitude, comment, seqId,
             officeId } = props;
-        // const statusVariant = isActive
-        //     ? "success"
-        //     : !isActive
-        //         ? "danger"
-        //         : "primary";
-        console.log(officeUnitId);
         return (
             <tr>
                 <td>
@@ -155,10 +157,10 @@ export const OfficeUnitTable = ({ searchText }) => {
                             </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleView(officeUnitId); }}>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleEdit(officeUnitId); }}>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item

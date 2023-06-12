@@ -43,6 +43,10 @@ export const OfficeAccDetailTable = ({ searchText }) => {
         history.push(`/editOfficeAcc?id=${id}`)
 
     };
+    const handleView = (id) => {
+        history.push(`/viewOfficeAcc?id=${id}`)
+
+    };
     const handlePrev = () => {
         setCurrentPage((prevPage) => prevPage - 1);
         setShowPreviousButton(true);
@@ -194,7 +198,7 @@ export const OfficeAccDetailTable = ({ searchText }) => {
                             </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleView(officeId) }}>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => { handleEdit(officeId) }}>

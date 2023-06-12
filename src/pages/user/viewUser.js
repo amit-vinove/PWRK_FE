@@ -1,0 +1,449 @@
+import React, { useState, useEffect } from "react";
+import moment from "moment-timezone";
+import Datetime from "react-datetime";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
+import { Link, useHistory } from "react-router-dom";
+import Axios from "axios";
+import axios from "axios";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/src/sweetalert2.scss";
+export default () => {
+    const history = useHistory();
+    const [pageMode, setPageMode] = useState("create");
+    const [userId, setUserId] = useState(0);
+    const [empId, setempId] = useState(0);
+    const [empIDError, setEmpIDError] = useState("");
+    const [officeTypeId, setofficeTypeId] = useState(0);
+    const [officeTypeError, setOfficeTypeError] = useState("");
+    const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
+    const [titleId, settitleId] = useState(0);
+    const [titleDropdownData, setTitleDropdownData] = useState([]);
+    const [titleError, setTitleError] = useState("");
+    const [userName, setuserName] = useState("");
+    const [userNameError, setUserNameError] = useState("");
+    const [designationId, setdesignationId] = useState("");
+    const [designationDropdownData, setDesignationDropdownData] = useState([]);
+    const [designationError, setDesignationError] = useState("");
+    const [mobileNo1, setmobileNo1] = useState(0);
+    const [mobileNo2, setmobileNo2] = useState(0);
+    const [mobileNo2Error, setMobileNo2Error] = useState("");
+    const [emailId, setemailId] = useState("");
+    const [resiAdd, setresiAdd] = useState("");
+    const [resiAddError, setresiAddError] = useState("");
+    const [stateId, setstateId] = useState(0);
+    const [stateDropdownData, setStateDropdownData] = useState([]);
+    const [disttId, setdisttId] = useState(0);
+    const [disttDropdownData, setDisttDropdownData] = useState([]);
+    const [pinCode, setpinCode] = useState(0);
+    const [pinCodeError, setPinCodeError] = useState("");
+    const [loginId, setloginId] = useState("");
+    const [password, setpassword] = useState("");
+    const [invalidLoginCount, setinvalidLoginCount] = useState("");
+    const [updateOfficeTypeId, setupdateOfficeTypeId] = useState("");
+    const [updateOfficeId, setupdateOfficeId] = useState("");
+    const [isActive, setisActive] = useState(true);
+    const [ipAddress, setIpAddress] = useState(0);
+    const [updateby, setupdateby] = useState("");
+    const [loginLockedDate, setloginLockedDate] = useState(null);
+    const [lastLoginDateTime, setlastLoginDateTime] = useState(null);
+    const [value, setValue] = useState("0");
+    const jsonData = {
+        updateby: "123",
+    };
+    const [updateon, setupdateon] = useState(new Date());
+    const handleCancel = () => {
+        history.push("/user")
+    }
+
+    const query = new URLSearchParams(window.location.search);
+    const id = query.get("id");
+
+    const handleOfficeTypeChange = (event) => {
+        setofficeTypeId(event.target.value);
+
+        //setUserNameError("");
+    };
+
+    const getAllOfficeType = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+        setOfficeTypeDropdownData(result.data);
+    };
+
+    const handleTitleChange = (event) => {
+        settitleId(event.target.value);
+    };
+
+    const getAllTitle = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}Title/GetTitle`);
+        setTitleDropdownData(result.data);
+    };
+
+    const handleDesignationChange = (event) => {
+        setdesignationId(event.target.value);
+
+        //setUserNameError("");
+    };
+
+    const getAllDesignation = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
+        setDesignationDropdownData(result.data);
+    };
+
+
+    const handleStateChange = (event) => {
+        setstateId(event.target.value);
+    };
+
+    const getAllState = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
+        setStateDropdownData(result.data);
+    };
+
+    const handleDistrictChange = (event) => {
+        setdisttId(event.target.value);
+    };
+
+    const getAllDistrict = async () => {
+        let result = await Axios.get(`${process.env.REACT_APP_API}District/GetDistrict`);
+        setDisttDropdownData(result.data);
+    };
+    useEffect(() => {
+        getAllOfficeType();
+        getAllTitle();
+        getAllState();
+        getAllDistrict();
+        getAllDesignation();
+
+    }, []);
+
+
+
+    useEffect(() => {
+        axios
+            .get(
+                `${process.env.REACT_APP_API}UserProfile/Get/${id}`
+            ).then((res) => {
+                setUserId(res.data.userId);
+                setempId(res.data.empId);
+                setofficeTypeId(res.data.officeTypeId);
+                settitleId(res.data.titleId);
+                setuserName(res.data.userName);
+                setdesignationId(res.data.designationId);
+                setmobileNo1(res.data.mobileNo1);
+                setmobileNo2(res.data.mobileNo2);
+                setemailId(res.data.emailId);
+                setresiAdd(res.data.resiAdd);
+                setstateId(res.data.stateId);
+                setdisttId(res.data.disttId);
+                setpinCode(res.data.pinCode);
+                setloginId(res.data.loginId);
+                setisActive(res.data.isActive);
+                setpassword(res.data.password);
+                setinvalidLoginCount(res.data.invalidLoginCount);
+                setupdateOfficeTypeId(res.data.updateOfficeTypeId);
+                setupdateOfficeId(res.data.updateOfficeId);
+                setloginLockedDate(res.data.loginLockedDate);
+                setlastLoginDateTime(res.data.lastLoginDateTime);
+                setupdateon(res.data.updateon);
+                console.log(res, "res")
+            }).catch(() => {
+
+            })
+
+    }, []);
+
+    return (
+        <>
+            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+                <div className="d-block mb-4 mb-md-0">
+                    <h4>User Details</h4>
+                </div>
+            </div>
+            <Card border="light" className="bg-white shadow-sm mb-4">
+                <Card.Body>
+                    <h5 className="mb-4">General information</h5>
+                    <Form>
+                        <Row>
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Employee Id</Form.Label>
+                                    {empIDError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{empIDError}</p>
+                                    )}
+                                    <Form.Control required type="text" disabled placeholder="Enter value here" value={empId}
+                                        onChange={(e) => {
+                                            setempId(e.target.value);
+                                            setEmpIDError("");
+                                        }} />
+                                </Form.Group>
+                            </Col>
+
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Office Type Id</Form.Label>
+                                    {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )}
+                                    <Form.Select
+                                        onChange={handleOfficeTypeChange}
+                                        disablePortal
+                                        disabled
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        value={officeTypeId}
+                                    >
+                                        <option value="" disabled>
+                                            Choose office type....
+                                        </option>
+                                        {officeTypeDropdownData.map((s) => (
+                                            <option key={s.officeTypeId} value={s.officeTypeId}>
+                                                {s.officeTypeName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Title</Form.Label>
+                                    {titleError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{titleError}</p>
+                                    )}
+                                    <Form.Select
+                                        onChange={handleTitleChange}
+                                        disablePortal
+                                        disabled
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        value={titleId}
+                                    >
+                                        <option value="" disabled>
+                                            Choose office type....
+                                        </option>
+                                        {titleDropdownData.map((s) => (
+                                            <option key={s.titleId} value={s.titleId}>
+                                                {s.titleName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>User Name</Form.Label>
+                                    {userNameError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{userNameError}</p>
+                                    )}
+                                    <Form.Control required type="text" disabled placeholder="Enter value here" value={userName}
+                                        onChange={(e) => {
+                                            setuserName(e.target.value);
+                                            setUserNameError("");
+                                        }} />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Designation</Form.Label>
+                                    {designationError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{designationError}</p>
+                                    )}
+                                    <Form.Select
+                                        onChange={handleDesignationChange}
+                                        disablePortal
+                                        disabled
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        value={designationId}
+                                    >
+                                        <option value="" disabled>
+                                            Choose designation....
+                                        </option>
+                                        {designationDropdownData.map((s) => (
+                                            <option key={s.designationId} value={s.designationId}>
+                                                {s.designationName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Mobile Number 1</Form.Label>
+                                    {/* {mobi && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                  )} */}
+                                    <Form.Control required type="text" disabled placeholder="Enter value here" value={mobileNo1}
+
+                                        onChange={(e) => {
+                                            setmobileNo1(e.target.value);
+                                            // setOfficeTypeError("");
+                                        }} />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Mobile Number 2</Form.Label>
+                                    {mobileNo2Error && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{mobileNo2Error}</p>
+                                    )}
+                                    <Form.Control required type="text" disabled placeholder="Enter value here" value={mobileNo2}
+                                        onChange={(e) => {
+                                            setmobileNo2(e.target.value);
+                                            setMobileNo2Error("");
+
+                                        }} />
+                                </Form.Group>
+                            </Col>
+
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Email Id</Form.Label>
+                                    {/* {officeTypeError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                  )} */}
+                                    <Form.Control required type="text" disabled placeholder="Enter value here" value={emailId}
+
+                                        onChange={(e) => {
+                                            setemailId(e.target.value);
+                                            //setOfficeTypeError("");
+                                        }} />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Residence Address</Form.Label>
+                                    {resiAddError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{resiAddError}</p>
+                                    )}
+                                    <Form.Control required type="text" disabled placeholder="Enter value here" value={resiAdd}
+                                        onChange={(e) => {
+                                            setresiAdd(e.target.value);
+                                            setresiAddError("");
+                                        }} />
+                                </Form.Group>
+                            </Col>
+
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>State Name</Form.Label>
+                                    {/* {state && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                  )} */}
+                                    <Form.Select
+                                        onChange={handleStateChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        sx={{ width: 600 }}
+                                        value={stateId}
+                                        disabled
+                                    >
+                                        <option value="" disabled>
+                                            Choose State....
+                                        </option>
+                                        {stateDropdownData.map((s) => (
+                                            <option key={s.stateId} value={s.stateId}>
+                                                {s.stateName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>District Name</Form.Label>
+                                    {/* {officeTypeError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                  )} */}
+                                    <Form.Select
+                                        onChange={handleDistrictChange}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        disabled
+                                        sx={{ width: 600 }}
+                                        value={disttId}
+                                    >
+                                        <option value="" disabled>
+                                            Choose District....
+                                        </option>
+                                        {disttDropdownData.map((s) => (
+                                            <option key={s.disttId} value={s.disttId}>
+                                                {s.distName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>PIN Code</Form.Label>
+                                    {pinCodeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{pinCodeError}</p>
+                                    )}
+                                    <Form.Control required type="text" disabled placeholder="Enter value here" value={pinCode}
+                                        onChange={(e) => {
+                                            setpinCode(e.target.value);
+                                            setPinCodeError("");
+                                        }} />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6} className="mb-3">
+                                <Form.Group id="firstName">
+                                    <Form.Label>Login Id</Form.Label>
+                                    {/* {empIDError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{login}</p>
+                  )} */}
+                                    <Form.Control required type="text" disabled placeholder="Enter value here" value={loginId}
+
+                                        onChange={(e) => {
+                                            setloginId(e.target.value);
+                                            //setEmpIDError("");
+                                        }} />
+                                </Form.Group>
+                            </Col>
+                            <Col md={6} className="mb-3" >
+                                <Row >
+                                    <Form.Label> <br /> </Form.Label>
+                                    <Col md={1} className="mb-1" >   <input
+                                        class="form-check-input" type="checkbox"
+                                        checked={isActive}
+                                        disabled
+                                        onChange={(e) => {
+                                            setisActive(e.target.checked);
+                                        }}
+                                        value={isActive}
+                                        id="defaultCheck1"
+                                    /></Col>
+                                    <Col md={5} className="mb-2" >
+                                        <Form.Label>Status</Form.Label>
+                                    </Col>
+                                </Row>
+                            </Col>
+
+                        </Row>
+
+                        <div className="mt-3">
+                            <Button variant="primary" type="submit" onClick={handleCancel} >Back</Button>
+                        </div>
+                    </Form>
+                </Card.Body>
+            </Card>
+        </>
+    );
+};

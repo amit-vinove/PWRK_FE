@@ -10,6 +10,7 @@ import axios from "axios";
 import Select from "react-select";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
+
 export default () => {
     const history = useHistory();
     const [pageMode, setPageMode] = useState("create");
@@ -18,26 +19,30 @@ export default () => {
     const [officeTypeError, setOfficeTypeError] = useState("");
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [roleName, setRoleName] = useState("");
-    const [maker, setMaker] = useState("");
-    const [checker, setChecker] = useState("");
-    const [viewer, setViewer] = useState("");
-    const [approver, setApprover] = useState("");
+    const [roleNameError, setRoleNameError] = useState("");
+    const [maker, setMaker] = useState(0);
+    const [checker, setChecker] = useState(0);
+    const [viewer, setViewer] = useState(0);
+    const [approver, setApprover] = useState(0);
     const [updateby, setupdateby] = useState(0);
     const [isActive, setIsActive] = useState(true);
     const [ipAddress, setipAddress] = useState(0);
-    const [formValid, setFormValid] = useState("");
+    const [formValid, setFormValid] = useState(false);
     const jsonData = {
         updateby: "123",
     };
     const [updateon, setupdateon] = useState(new Date());
+
     const handleCancel = () => {
-        history.push("/role")
-    }
+        history.push("/role");
+    };
+
     const fetchIp = async () => {
-        const res = await axios.get('https://geolocation-db.com/json/')
+        const res = await axios.get('https://geolocation-db.com/json/');
         console.log(res.data.IPv4);
-        setipAddress(res.data.IPv4)
-    }
+        setipAddress(res.data.IPv4);
+    };
+
     const handleOfficeTypeChange = (selectedOption) => {
         setofficeTypeId(selectedOption.value);
     };
@@ -50,8 +55,6 @@ export default () => {
                 label: (
                     <span style={{ color: officeType.isActive ? "green" : "red" }}>
                         {officeType.officeTypeName}
-                        {/* {" -- "}
-                        {officeType.isActive ? "Active" : "Inactive"} */}
                     </span>
                 ),
             }));
@@ -61,31 +64,58 @@ export default () => {
         }
     };
 
-
     useEffect(() => {
         getAllOfficeType();
         fetchIp();
     }, []);
+
     useEffect(() => {
         handleChangeRole();
-    }, [officeTypeId])
+    }, [roleName]);
+
     const handleChangeRole = () => {
-        if (!officeTypeId) return;
-        if (officeTypeId.length > 50 && officeTypeId.length < 2) {
-            setOfficeTypeError("Title Name must be less 50 words");
-            setFormValid(false)
+        if (!roleName) return;
+        if (roleName.length < 3 || roleName.length > 150) {
+            setRoleNameError("Role Name must be between 3 to 150 characters");
+            setFormValid(false);
         } else {
-            setRoleName("");
-            setFormValid(true)
+            setRoleNameError("");
+            setFormValid(true);
         }
-    }
+    };
+
+    useEffect(() => {
+        handleChangeOfficeType();
+    }, [officeTypeId]);
+
+    const handleChangeOfficeType = () => {
+        if (!officeTypeId) return;
+        if (officeTypeId === "" || officeTypeId === null) {
+            setOfficeTypeError("Office type is required");
+            setFormValid(false);
+        } else {
+            setOfficeTypeError("");
+            setFormValid(true);
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (officeTypeId === "") {
-            setOfficeTypeError("Office Type Name is Required");
+        if (officeTypeId === "" || officeTypeId === null) {
+            setOfficeTypeError("Office Type is required");
+        } else {
+            setOfficeTypeError("");
         }
+        if (roleName === null || roleName === "") {
+            setRoleNameError("Role Name is required");
+        } else if (roleName.length <= 2 || roleName.length > 150) {
+            setRoleNameError("Role Name must be between 3 to 150 characters");
+        } else {
+            setRoleNameError("");
+        }
+
         if (formValid) {
-            let UserID = localStorage.getItem("UserId")
+            let UserID = localStorage.getItem("UserId");
             const payload = {
                 id: id,
                 officeTypeId: officeTypeId,
@@ -99,20 +129,22 @@ export default () => {
                 updateon: updateon,
                 ipAddress: ipAddress,
             };
+
             Axios.post(
                 `${process.env.REACT_APP_API}Role/SetRole`,
                 payload
             )
                 .then((response) => {
                     console.log(response.data);
-                    Swal.fire("Save", "Role Saved Sucessfully", "success");
-                    history.push("/role")
+                    Swal.fire("Save", "Role Saved Successfully", "success");
+                    history.push("/role");
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-        };
-    }
+        }
+    };
+
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -128,21 +160,30 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Role Name</Form.Label>
-                                    {/* {role && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Role here" value={roleName}
+                                    {roleNameError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>
+                                            *{roleNameError}
+                                        </p>
+                                    )}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter Role here"
+                                        value={roleName}
                                         onChange={(e) => {
                                             setRoleName(e.target.value);
-                                            //setModuleNameError("");
-                                        }} />
+                                            setRoleNameError("");
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="officeTypeId">
                                     <Form.Label>Office Type</Form.Label>
                                     {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                        <p style={{ color: "red", fontSize: "15px" }}>
+                                            *{officeTypeError}
+                                        </p>
                                     )}
                                     <Select
                                         value={officeTypeDropdownData.find((option) => option.value === officeTypeId)}
@@ -156,27 +197,29 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Maker</Form.Label>
-                                    {/* {role && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter value here" value={maker}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter value here"
+                                        value={maker}
                                         onChange={(e) => {
                                             setMaker(e.target.value);
-                                            //setModuleNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Checker</Form.Label>
-                                    {/* {moduleNameShortError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameShortError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter value here" value={checker}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter value here"
+                                        value={checker}
                                         onChange={(e) => {
                                             setChecker(e.target.value);
-                                            //setModuleNameShortError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -184,53 +227,61 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Approver</Form.Label>
-                                    {/* {role && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter value here" value={approver}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter value here"
+                                        value={approver}
                                         onChange={(e) => {
                                             setApprover(e.target.value);
-                                            //setModuleNameError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Viewer</Form.Label>
-                                    {/* {moduleNameShortError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameShortError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter value here" value={viewer}
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter value here"
+                                        value={viewer}
                                         onChange={(e) => {
                                             setViewer(e.target.value);
-                                            //setModuleNameShortError("");
-                                        }} />
+                                        }}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
-
-                            <Col md={6} className="mb-3" >
-                                <Row >
+                            <Col md={6} className="mb-3">
+                                <Row>
                                     <Form.Label> <br /> </Form.Label>
-                                    <Col md={1} className="mb-1" >   <input
-                                        class="form-check-input" type="checkbox"
-                                        checked={isActive}
-                                        onChange={(e) => {
-                                            setIsActive(e.target.checked);
-                                        }}
-                                        value={isActive}
-                                        id="defaultCheck1"
-                                    /></Col>
-                                    <Col md={5} className="mb-2" >
+                                    <Col md={1} className="mb-1">
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            checked={isActive}
+                                            onChange={(e) => {
+                                                setIsActive(e.target.checked);
+                                            }}
+                                            value={isActive}
+                                            id="defaultCheck1"
+                                        />
+                                    </Col>
+                                    <Col md={5} className="mb-2">
                                         <Form.Label>Status</Form.Label>
                                     </Col>
                                 </Row>
                             </Col>
                         </Row>
                         <div className="mt-3">
-                            <Button variant="primary" type="submit" onClick={handleCancel} >Cancel</Button>
-                            <Button variant="primary" type="submit" style={{ marginLeft: 10 }} onClick={(e) => handleSubmit(e)}>Save All</Button>
+                            <Button variant="primary" type="button" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" type="submit" style={{ marginLeft: 10 }} onClick={handleSubmit}>
+                                Save All
+                            </Button>
                         </div>
                     </Form>
                 </Card.Body>

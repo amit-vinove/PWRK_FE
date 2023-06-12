@@ -7,6 +7,7 @@ import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-boot
 import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
 import axios from "axios";
+import Select from "react-select";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 export default () => {
@@ -62,55 +63,132 @@ export default () => {
     console.log(res.data.IPv4);
     setIpAddress(res.data.IPv4)
   }
-  const handleOfficeTypeChange = (event) => {
-    setofficeTypeId(event.target.value);
-
-    //setUserNameError("");
+  const handleOfficeTypeChange = (selectedOption) => {
+    setofficeTypeId(selectedOption.value);
   };
+
 
   const getAllOfficeType = async () => {
-    let result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
-    setOfficeTypeDropdownData(result.data);
+    try {
+      const result = await Axios.get(`${process.env.REACT_APP_API}OfficeType/GetOfficeType`);
+      const formattedData = result.data.map((officeType) => ({
+        value: officeType.officeTypeId,
+        label: (
+          <span style={{ color: officeType.isActive ? "green" : "red" }}>
+            {officeType.officeTypeName}
+            {/* {" -- "}
+                    {officeType.isActive ? "Active" : "Inactive"} */}
+          </span>
+        ),
+      }));
+      setOfficeTypeDropdownData(formattedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleTitleChange = (event) => {
-    settitleId(event.target.value);
+
+  const handleTitleChange = (selectedOption) => {
+    settitleId(selectedOption.value);
   };
+
 
   const getAllTitle = async () => {
-    let result = await Axios.get(`${process.env.REACT_APP_API}Title/GetTitle`);
-    setTitleDropdownData(result.data);
+    try {
+      const result = await Axios.get(`${process.env.REACT_APP_API}Title/GetTitle`);
+      const formattedData = result.data.map((title) => ({
+        value: title.titleId,
+        label: (
+          <span style={{ color: title.isActive ? "green" : "red" }}>
+            {title.titleName}
+            {/* {" -- "}
+                  {officeType.isActive ? "Active" : "Inactive"} */}
+          </span>
+        ),
+      }));
+      setTitleDropdownData(formattedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleDesignationChange = (event) => {
-    setdesignationId(event.target.value);
 
-    //setUserNameError("");
+
+
+
+  const handleDesignationChange = (selectedOption) => {
+    setdesignationId(selectedOption.value);
   };
+
 
   const getAllDesignation = async () => {
-    let result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
-    setDesignationDropdownData(result.data);
+    try {
+      const result = await Axios.get(`${process.env.REACT_APP_API}Designation/GetDesignation`);
+      const formattedData = result.data.map((designation) => ({
+        value: designation.designationId,
+        label: (
+          <span style={{ color: designation.isActive ? "green" : "red" }}>
+            {designation.designationName}
+            {/* {" -- "}
+                    {designation.isActive ? "Active" : "Inactive"} */}
+          </span>
+        ),
+      }));
+      setDesignationDropdownData(formattedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
 
-  const handleStateChange = (event) => {
-    setstateId(event.target.value);
+
+  const handleStateChange = (selectedOption) => {
+    setstateId(selectedOption.value);
   };
 
   const getAllState = async () => {
-    let result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
-    setStateDropdownData(result.data);
+    try {
+      const result = await Axios.get(`${process.env.REACT_APP_API}State/GetState`);
+      const formattedData = result.data.map((state) => ({
+        value: state.stateId,
+        label: (
+          <span style={{ color: state.isActive ? "green" : "red" }}>
+            {state.stateName}
+            {/* {" -- "}
+                  {state.isActive ? "Active" : "Inactive"} */}
+          </span>
+        ),
+      }));
+      setStateDropdownData(formattedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleDistrictChange = (event) => {
-    setdisttId(event.target.value);
-  };
 
+
+  const handleDistrictChange = (selectedOption) => {
+    setdisttId(selectedOption.value);
+  };
   const getAllDistrict = async () => {
-    let result = await Axios.get(`${process.env.REACT_APP_API}District/GetDistrict`);
-    setDisttDropdownData(result.data);
+    try {
+      const result = await Axios.get(`${process.env.REACT_APP_API}District/GetDistrict`);
+      const formattedData = result.data.map((district) => ({
+        value: district.disttId,
+        label: (
+          <span style={{ color: district.isActive ? "green" : "red" }}>
+            {district.distName}
+            {/* {" -- "}
+                    {district.isActive ? "Active" : "Inactive"} */}
+          </span>
+        ),
+      }));
+      setDisttDropdownData(formattedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
   useEffect(() => {
     getAllOfficeType();
     getAllTitle();
@@ -196,7 +274,7 @@ export default () => {
       )
         .then((response) => {
           console.log(response.data);
-          Swal.fire("Save", "User Saved Sucessfully", "success");
+          Swal.fire("Save", "User Signup Sucessfully", "success");
           history.push("/user")
         })
         .catch((error) => {
@@ -231,53 +309,31 @@ export default () => {
               </Col>
 
               <Col md={6} className="mb-3">
-                <Form.Group id="firstName">
-                  <Form.Label>Office Type Id</Form.Label>
-                  {officeTypeError && (
-                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                  )}
-                  <Form.Select
+                <Form.Group id="officeTypeId">
+                  <Form.Label>Office Type</Form.Label>
+                  {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                  <Select
+                    value={officeTypeDropdownData.find((option) => option.value === officeTypeId)}
+                    options={officeTypeDropdownData}
                     onChange={handleOfficeTypeChange}
-                    disablePortal
-                    id="combo-box-demo"
-                    sx={{ width: 600 }}
-                    defaultValue="" // Set the default value to an empty string
-                  >
-                    <option value="" disabled>
-                      Choose office type....
-                    </option>
-                    {officeTypeDropdownData.map((s) => (
-                      <option key={s.officeTypeId} value={s.officeTypeId}>
-                        {s.officeTypeName}
-                      </option>
-                    ))}
-                  </Form.Select>
+                  />
                 </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col md={6} className="mb-3">
-                <Form.Group id="firstName">
+                <Form.Group id="officeTypeId">
                   <Form.Label>Title</Form.Label>
-                  {titleError && (
-                    <p style={{ color: "red", fontSize: "15px" }}>*{titleError}</p>
-                  )}
-                  <Form.Select
+                  {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                  <Select
+                    value={titleDropdownData.find((option) => option.value === titleId)}
+                    options={titleDropdownData}
                     onChange={handleTitleChange}
-                    disablePortal
-                    id="combo-box-demo"
-                    sx={{ width: 600 }}
-                    defaultValue="" // Set the default value to an empty string
-                  >
-                    <option value="" disabled>
-                      Choose Title....
-                    </option>
-                    {titleDropdownData.map((s) => (
-                      <option key={s.titleId} value={s.titleId}>
-                        {s.titleName}
-                      </option>
-                    ))}
-                  </Form.Select>
+                  />
                 </Form.Group>
               </Col>
 
@@ -297,27 +353,16 @@ export default () => {
             </Row>
             <Row>
               <Col md={6} className="mb-3">
-                <Form.Group id="firstName">
-                  <Form.Label>Designation</Form.Label>
-                  {designationError && (
-                    <p style={{ color: "red", fontSize: "15px" }}>*{designationError}</p>
-                  )}
-                  <Form.Select
+                <Form.Group id="officeTypeId">
+                  <Form.Label>Designation Name</Form.Label>
+                  {/* {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                  <Select
+                    value={designationDropdownData.find((option) => option.value === designationId)}
+                    options={designationDropdownData}
                     onChange={handleDesignationChange}
-                    disablePortal
-                    id="combo-box-demo"
-                    sx={{ width: 600 }}
-                    defaultValue="" // Set the default value to an empty string
-                  >
-                    <option value="" disabled>
-                      Choose designation....
-                    </option>
-                    {designationDropdownData.map((s) => (
-                      <option key={s.designationId} value={s.designationId}>
-                        {s.designationName}
-                      </option>
-                    ))}
-                  </Form.Select>
+                  />
                 </Form.Group>
               </Col>
 
@@ -381,53 +426,31 @@ export default () => {
               </Col>
 
               <Col md={6} className="mb-3">
-                <Form.Group id="firstName">
+                <Form.Group id="officeTypeId">
                   <Form.Label>State Name</Form.Label>
-                  {/* {state && (
-                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                  {/* {stateNameError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
                   )} */}
-                  <Form.Select
+                  <Select
+                    value={stateDropdownData.find((option) => option.value === stateId)}
+                    options={stateDropdownData}
                     onChange={handleStateChange}
-                    disablePortal
-                    id="combo-box-demo"
-                    sx={{ width: 600 }}
-                    defaultValue="" // Set the default value to an empty string
-                  >
-                    <option value="" disabled>
-                      Choose State....
-                    </option>
-                    {stateDropdownData.map((s) => (
-                      <option key={s.stateId} value={s.stateId}>
-                        {s.stateName}
-                      </option>
-                    ))}
-                  </Form.Select>
+                  />
                 </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col md={6} className="mb-3">
-                <Form.Group id="firstName">
+                <Form.Group id="officeTypeId">
                   <Form.Label>District Name</Form.Label>
                   {/* {officeTypeError && (
-                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                  )} */}
-                  <Form.Select
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                                    )} */}
+                  <Select
+                    value={disttDropdownData.find((option) => option.value === disttId)}
+                    options={disttDropdownData}
                     onChange={handleDistrictChange}
-                    disablePortal
-                    id="combo-box-demo"
-                    sx={{ width: 600 }}
-                    defaultValue="" // Set the default value to an empty string
-                  >
-                    <option value="" disabled>
-                      Choose District....
-                    </option>
-                    {disttDropdownData.map((s) => (
-                      <option key={s.disttId} value={s.disttId}>
-                        {s.distName}
-                      </option>
-                    ))}
-                  </Form.Select>
+                  />
                 </Form.Group>
               </Col>
 

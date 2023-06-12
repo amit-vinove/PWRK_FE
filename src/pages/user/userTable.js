@@ -30,6 +30,9 @@ export const UserTable = ({ searchText }) => {
                 i.userName.toLowerCase().includes(searchText.toLowerCase())
             ))
     }
+    const handleView = (userId) => {
+        history.push(`/viewUser?id=${userId}`);
+    };
     const handleEdit = (userId) => {
         history.push(`/userDetail?id=${userId}`);
     };
@@ -214,7 +217,7 @@ export const UserTable = ({ searchText }) => {
                             </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => { handleView(userId) }}>
                                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => { handleEdit(userId) }}>
@@ -238,20 +241,20 @@ export const UserTable = ({ searchText }) => {
                             <tr>
                                 <th className="border-bottom">sr No</th>
                                 <th className="border-bottom">employee Id</th>
-                                <th className="border-bottom">office Type Id</th>
+                                <th className="border-bottom">office Type</th>
                                 <th className="border-bottom">title Name</th>
                                 <th className="border-bottom">user Name</th>
                                 <th className="border-bottom">designation Name</th>
                                 <th className="border-bottom">mobile No 1</th>
                                 <th className="border-bottom">mobile No 2</th>
                                 <th className="border-bottom">email Id</th>
-                                <th className="border-bottom">resi Add</th>
+                                <th className="border-bottom">Residence Address</th>
                                 <th className="border-bottom">state Id</th>
                                 <th className="border-bottom">role Id</th>
-                                <th className="border-bottom">distt Id</th>
+                                <th className="border-bottom">District Id</th>
                                 <th className="border-bottom">pin Code</th>
                                 <th className="border-bottom">login Id</th>
-                                <th className="border-bottom">invalidLogin Count</th>
+                                <th className="border-bottom">invalid Login Count</th>
                                 <th className="border-bottom">login Locked Date</th>
                                 <th className="border-bottom">last Login Date Time</th>
                                 <th className="border-bottom">Status</th>

@@ -293,35 +293,6 @@ export default () => {
                                 </Row>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Update Office Type Id</Form.Label>
-                                    {/* {officetype && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={updateOfficeTypeId}
-                                        onChange={(e) => {
-                                            setUpdateOfficeTypeId(e.target.value);
-                                            //setStateNameError("");
-                                        }} />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Update Office Id</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
-                                    <Form.Control required type="text" placeholder="Enter Title here" value={updateOfficeId}
-                                        onChange={(e) => {
-                                            setUpdateOfficeId(e.target.value);
-                                            //setDistNameError("");
-                                            //handleChangeDisstName()
-                                        }} />
-                                </Form.Group>
-                            </Col>
-                        </Row>
                         <div className="mt-3">
                             <Button variant="primary" type="submit" onClick={handleCancel} >Cancel</Button>
                             <Button variant="primary" type="submit" style={{ marginLeft: 10 }} onClick={handleSubmit}>Save All</Button>

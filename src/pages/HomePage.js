@@ -93,6 +93,10 @@ import viewOffice from './office/viewOffice';
 import viewRole from './role/viewRole';
 import viewOfficeType from './officeType/viewOfficeType';
 import viewOfficeLevel from './officeLevel/viewOfficeLevel';
+import editOfficeUnit from './officeUnit/editOfficeUnit';
+import viewOfficeUnit from './officeUnit/viewOfficeUnit';
+import viewOfficeAcc from './officeAccDetail/viewOfficeAcc';
+import viewUser from './user/viewUser';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -160,14 +164,17 @@ export default () => (
     <RouteWithSidebar exact path={Routes.ViewModule.path} component={viewModule} />
     <RouteWithSidebar exact path={Routes.ModuleDetail.path} component={moduleDetail} />
     <RouteWithSidebar exact path={Routes.EditModule.path} component={editModule} />
-    {/* MainOfficeAccDetail */}
+    {/* OfficeAccDetail */}
+    <RouteWithSidebar exact path={Routes.ViewOfficeAcc.path} component={viewOfficeAcc} />
     <RouteWithSidebar exact path={Routes.MainOfficeAccDetail.path} component={mainOfficeAccDetail} />
     <RouteWithSidebar exact path={Routes.OfficeAccDetail.path} component={officeAccDeataiPage} />
     <RouteWithSidebar exact path={Routes.editOfficeAcc.path} component={editOfficeAcc} />
     {/* OfficeUnitDetail */}
+    <RouteWithSidebar exact path={Routes.EditOfficeUnit.path} component={editOfficeUnit} />
+    <RouteWithSidebar exact path={Routes.ViewOfficeUnit.path} component={viewOfficeUnit} />
     <RouteWithSidebar exact path={Routes.OfficeUnitDetail.path} component={officeUnitDetail} />
     <RouteWithSidebar exact path={Routes.OfficeUnit.path} component={officeUnitPage} />
-    {/* MainOfficeDetail */}
+    {/* OfficeDetail */}
     <RouteWithSidebar exact path={Routes.ViewOffice.path} component={viewOffice} />
     <RouteWithSidebar exact path={Routes.MainOfficeDetail.path} component={mainOfficeDetail} />
     <RouteWithSidebar exact path={Routes.EditOffice.path} component={editOffice} />
@@ -198,6 +205,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.EditRole.path} component={editRole} />
     <RouteWithSidebar exact path={Routes.Role.path} component={rolePage} />
     {/* UserDetail */}
+    <RouteWithSidebar exact path={Routes.ViewUser.path} component={viewUser} />
     <RouteWithSidebar exact path={Routes.UserDetail.path} component={userDetail} />
     <RouteWithSidebar exact path={Routes.UserSignUp.path} component={userSignUp} />
     <RouteWithSidebar exact path={Routes.User.path} component={userPage} />

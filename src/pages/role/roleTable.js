@@ -114,14 +114,25 @@ export const RoleTable = ({ searchText }) => {
     }, [searchText, tempRoleData]);
 
     const TableRow = (props) => {
-        const { id, roleName, isActive } = props;
+        const { id, roleName, maker, checker, approver, viewer, isActive } = props;
         const statusVariant = isActive ? "success" : !isActive ? "danger" : "primary";
 
         return (
             <tr>
-
                 <td>
                     <span className="fw-normal">{roleName}</span>
+                </td>
+                <td>
+                    <span className="fw-normal">{maker}</span>
+                </td>
+                <td>
+                    <span className="fw-normal">{checker}</span>
+                </td>
+                <td>
+                    <span className="fw-normal">{approver}</span>
+                </td>
+                <td>
+                    <span className="fw-normal">{viewer}</span>
                 </td>
                 <td>
                     <span className={`fw-normal text-${statusVariant}`}>
@@ -167,6 +178,10 @@ export const RoleTable = ({ searchText }) => {
                         <thead>
                             <tr>
                                 <th className="border-bottom">Role Name</th>
+                                <th className="border-bottom">Maker</th>
+                                <th className="border-bottom">Checker</th>
+                                <th className="border-bottom">Approver</th>
+                                <th className="border-bottom">Viewer</th>
                                 <th className="border-bottom">Status</th>
                                 <th className="border-bottom">Action</th>
                             </tr>

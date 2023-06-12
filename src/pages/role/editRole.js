@@ -15,9 +15,10 @@ export default () => {
     const [pageMode, setPageMode] = useState("create");
     const [id, setId] = useState(0);
     const [officeTypeId, setofficeTypeId] = useState("");
-    const [officeTypeIdError, setOfficeTypeIdError] = useState("");
+    const [officeTypeError, setOfficeTypeError] = useState("");
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
     const [roleName, setRoleName] = useState("");
+    const [roleNameError, setRoleNameError] = useState("");
     const [maker, setMaker] = useState("");
     const [checker, setChecker] = useState("");
     const [viewer, setViewer] = useState("");
@@ -92,26 +93,52 @@ export default () => {
         getAllOfficeType();
         fetchIp();
     }, []);
+
     useEffect(() => {
         handleChangeRole();
-    }, [officeTypeId])
+    }, [roleName]);
+
     const handleChangeRole = () => {
-        if (!officeTypeId) return;
-        if (officeTypeId === "") {
-            setOfficeTypeIdError("Office Type is Required");
-            setFormValid(false)
+        if (!roleName) return;
+        if (roleName.length < 3 || roleName.length > 150) {
+            setRoleNameError("Role Name must be between 3 to 150 characters");
+            setFormValid(false);
         } else {
-            setOfficeTypeIdError("");
-            setFormValid(true)
+            setRoleNameError("");
+            setFormValid(true);
         }
-    }
+    };
+
+    useEffect(() => {
+        handleChangeOfficeType();
+    }, [officeTypeId]);
+
+    const handleChangeOfficeType = () => {
+        if (!officeTypeId) return;
+        if (officeTypeId === "" || officeTypeId === null) {
+            setOfficeTypeError("Office type is required");
+            setFormValid(false);
+        } else {
+            setOfficeTypeError("");
+            setFormValid(true);
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (officeTypeId === "") {
-            setOfficeTypeIdError("Office Type is Required");
+        if (officeTypeId === "" || officeTypeId === null) {
+            setOfficeTypeError("Office Type is required");
         } else {
-            setOfficeTypeIdError("");
+            setOfficeTypeError("");
         }
+        if (roleName === null || roleName === "") {
+            setRoleNameError("Role Name is required");
+        } else if (roleName.length <= 2 || roleName.length > 150) {
+            setRoleNameError("Role Name must be between 3 to 150 characters");
+        } else {
+            setRoleNameError("");
+        }
+
         if (formValid) {
             let UserID = localStorage.getItem("UserId")
             const payload = {
@@ -172,21 +199,21 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Role Name</Form.Label>
-                                    {/* {role && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{moduleNameError}</p>
-                                    )} */}
+                                    {roleNameError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{roleNameError}</p>
+                                    )}
                                     <Form.Control required type="text" placeholder="Enter Role here" value={roleName}
                                         onChange={(e) => {
                                             setRoleName(e.target.value);
-                                            //setModuleNameError("");
+                                            setRoleNameError("");
                                         }} />
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Form.Group id="officeTypeId">
                                     <Form.Label>Office Type</Form.Label>
-                                    {officeTypeIdError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeIdError}</p>
+                                    {officeTypeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
                                     )}
                                     <Select
                                         value={officeTypeDropdownData.find((option) => option.value === officeTypeId)}
