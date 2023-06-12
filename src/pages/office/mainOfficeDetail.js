@@ -20,10 +20,9 @@ import "sweetalert2/src/sweetalert2.scss";
 export default () => {
     const history = useHistory();
     const [officeId, setofficeId] = useState(0);
-    const [officeTypeId, setofficeTypeId] = useState("");
+    const [officeTypeId, setofficeTypeId] = useState(0);
     const [officeTypeError, setOfficeTypeError] = useState("");
     const [officeTypeDropdownData, setOfficeTypeDropdownData] = useState([]);
-    const [officeError, setofficeError] = useState("");
     const [officeName, setOfficeName] = useState("");
     const [officeNameError, setofficeNameError] = useState("");
     const [officeNameHindi, setOfficeNameHindi] = useState("");
@@ -60,13 +59,13 @@ export default () => {
     const [parentId4, setParentId4] = useState(0);
     const [parentId4WEF, setParentId4WEF] = useState(new Date());
     const [designationId, setdesignationId] = useState(0);
-    const [designationIdError, setdesignationIdError] = useState("");
+    const [designationError, setdesignationError] = useState("");
     const [designationDData, setdesignationDData] = useState([]);
-    const [officeLevelId, setOfficeLevelId] = useState(null);
-    const [officeLevelIdError, setOfficeLevelIdError] = useState("");
+    const [officeLevelId, setOfficeLevelId] = useState(0);
+    const [officeLevelError, setOfficeLevelError] = useState("");
     const [officeLevelDData, setOfficeLevelDData] = useState([]);
     const [rtiDesigId, setRtiDesigId] = useState(0);
-    const [rtiDesigIdError, setRtiDesigIdError] = useState("");
+    const [rtiDesigError, setRtiDesigError] = useState("");
     const [rtiDesigDData, setRtiDesigDData] = useState([]);
     const [rtiJuris, setRtiJuris] = useState("");
     const [jurisdiction, setJurisDiction] = useState("");
@@ -90,11 +89,18 @@ export default () => {
         console.log(res.data.IPv4);
         setipAddress(res.data.IPv4);
     };
+
+
+    // const handleOfficeTypeChange = (selectedOption) => {
+    //     setofficeTypeId(selectedOption.value);
+    // };
+
     const handleOfficeTypeChange = (selectedOption) => {
-        setofficeTypeId(selectedOption.value);
+        if (selectedOption && selectedOption.value) {
+            setofficeTypeId(selectedOption.value);
+            setOfficeTypeError("");
+        }
     };
-
-
 
 
 
@@ -121,6 +127,7 @@ export default () => {
 
     const handleStateChange = (selectedOption) => {
         setStateId(selectedOption.value);
+        setStateIdError("");
     };
 
     const getAllState = async () => {
@@ -144,6 +151,7 @@ export default () => {
 
     const handleDistrictChange = (selectedOption) => {
         setDisttId(selectedOption.value);
+        setDisttIdError("");
     };
 
 
@@ -170,6 +178,7 @@ export default () => {
 
     const handleOfficeLevelChange = (selectedOption) => {
         setOfficeLevelId(selectedOption.value);
+        setOfficeLevelError("");
     };
 
 
@@ -208,6 +217,7 @@ export default () => {
 
     const handleDesignationChange = (selectedOption) => {
         setdesignationId(selectedOption.value);
+        setdesignationError("");
     };
 
 
@@ -233,8 +243,8 @@ export default () => {
 
     const handleRTIDesignationChange = (selectedOption) => {
         setRtiDesigId(selectedOption.value);
+        setRtiDesigError("");
     };
-
 
     const getAllRTIDesignation = async () => {
         try {
@@ -338,14 +348,57 @@ export default () => {
         }
     };
 
+    useEffect(() => {
+        handleChangeLongitude();
+    }, [longitude]);
+    const handleChangeLongitude = () => {
+        if (!longitude) return;
+        if (longitude.length > 150) {
+            setLongitudeError("Longitude must be less than 150 letter");
+            setFormValid(false);
+        } else {
+            setLongitudeError("");
+            setFormValid(true);
+        }
+    };
 
+    useEffect(() => {
+        handleChangeLatitude();
+    }, [latitude]);
+    const handleChangeLatitude = () => {
+        if (!latitude) return;
+        if (latitude.length > 150) {
+            setLatitudeError("Latitude must be less than 150 letter");
+            setFormValid(false);
+        } else {
+            setLatitudeError("");
+            setFormValid(true);
+        }
+    };
+
+    useEffect(() => {
+        handleChangeParentId1();
+    }, [parentId1]);
+    const handleChangeParentId1 = () => {
+
+        if (parentId1 === null || parentId1 === "") {
+            setParentId1Error("Parent Id 1 is required");
+        } else {
+            setParentId1Error("");
+        }
+    };
+
+
+
+    useEffect(() => {
+        handleChangeEmail();
+    }, [emailId]);
     const handleChangeEmail = () => {
         if (!emailId) {
             setEmailIdError('');
             setFormValid(false);
             return;
         }
-
         if (!validateEmail(emailId)) {
             setEmailIdError('Please enter a valid email format');
             setFormValid(false);
@@ -358,21 +411,25 @@ export default () => {
         }
     };
 
-    useEffect(() => {
-        handleChangeEmail();
-    }, [emailId]);
+
 
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        if (emailId.length > 100) {
-            setEmailIdError("email id must be less than 100 letter");
-        } else if (emailId === "" || emailId === null) {
-            setEmailIdError("please enter email");
+        if (emailId === "" || emailId === null) {
+            setEmailIdError('Please enter email ');
+            setFormValid(false);
+        }
+        else if (!validateEmail(emailId)) {
+            setEmailIdError('Please enter a valid email format');
+            setFormValid(false);
+        } else if (emailId.length > 100) {
+            setEmailIdError('Email must be less than 100 characters');
+            setFormValid(false);
         } else {
-            setEmailIdError("");
+            setEmailIdError('');
+            setFormValid(true);
         }
 
         if (officeName === null || officeName === "") {
@@ -383,7 +440,7 @@ export default () => {
             setofficeNameError("");
         }
 
-        if (officeTypeId === null || officeTypeId === "") {
+        if (officeTypeId === null || officeTypeId === 0) {
             setOfficeTypeError("Office Type is required");
         } else {
             setOfficeTypeError("");
@@ -426,7 +483,31 @@ export default () => {
         } else {
             setPinCodeError("");
         }
-
+        if (parentId1 === null || parentId1 === "") {
+            setParentId1Error("Parent Id 1 is required");
+        } else {
+            setParentId1Error("");
+        }
+        if (parentId1WEF === null || parentId1WEF === "") {
+            setParentId1WEFError("Parent Id 1 WEF is required");
+        } else {
+            setParentId1WEFError("");
+        }
+        if (designationId === null || designationId === 0) {
+            setdesignationError("Designation is required");
+        } else {
+            setdesignationError("");
+        }
+        if (officeLevelId === null || officeLevelId === 0) {
+            setOfficeLevelError("Office level is required");
+        } else {
+            setOfficeLevelError("");
+        }
+        if (rtiDesigId === null || rtiDesigId === 0) {
+            setRtiDesigError("RTI designation is required");
+        } else {
+            setRtiDesigError("");
+        }
         if (formValid) {
             let UserID = localStorage.getItem("UserId");
             const payload = {
@@ -501,11 +582,7 @@ export default () => {
                                     <Select
                                         value={officeTypeDropdownData.find((option) => option.value === officeTypeId)}
                                         options={officeTypeDropdownData}
-                                        onChange={(e) => {
-                                            setOfficeTypeError("");
-                                            handleOfficeTypeChange();
-
-                                        }}
+                                        onChange={handleOfficeTypeChange}
                                     />
                                 </Form.Group>
                             </Col>
@@ -601,10 +678,7 @@ export default () => {
                                     <Select
                                         value={stateDData.find((option) => option.value === stateId)}
                                         options={stateDData}
-                                        onChange={(e) => {
-                                            setStateId(e.target.value);
-                                            setStateIdError("");
-                                        }}
+                                        onChange={handleStateChange}
                                     />
                                 </Form.Group>
                             </Col>
@@ -619,10 +693,7 @@ export default () => {
                                     <Select
                                         value={disttDData.find((option) => option.value === disttId)}
                                         options={disttDData}
-                                        onChange={(e) => {
-                                            setDisttId(e.target.value);
-                                            setDisttIdError("");
-                                        }}
+                                        onChange={handleDistrictChange}
                                     />
                                 </Form.Group>
                             </Col>
@@ -708,9 +779,9 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Longitude</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
+                                    {longitudeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{longitudeError}</p>
+                                    )}
                                     <Form.Control
                                         required
                                         type="text"
@@ -718,8 +789,8 @@ export default () => {
                                         value={longitude}
                                         onChange={(e) => {
                                             setLongitude(e.target.value);
-                                            //setDistNameError("");
-                                            //handleChangeDisstName()
+                                            setLongitudeError("");
+                                            handleChangeLongitude();
                                         }}
                                     />
                                 </Form.Group>
@@ -729,9 +800,9 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Latitude</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
+                                    {latitudeError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{latitudeError}</p>
+                                    )}
                                     <Form.Control
                                         required
                                         type="text"
@@ -739,8 +810,8 @@ export default () => {
                                         value={latitude}
                                         onChange={(e) => {
                                             setLatitude(e.target.value);
-                                            //setDistNameError("");
-                                            //handleChangeDisstName()
+                                            setLatitudeError("");
+                                            handleChangeLatitude();
                                         }}
                                     />
                                 </Form.Group>
@@ -749,9 +820,9 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 1</Form.Label>
-                                    {/* {officetype && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                                    )} */}
+                                    {parentId1Error && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{parentId1Error}</p>
+                                    )}
                                     <Form.Control
                                         required
                                         type="text"
@@ -759,7 +830,7 @@ export default () => {
                                         value={parentId1}
                                         onChange={(e) => {
                                             setParentId1(e.target.value);
-                                            //setStateNameError("");
+                                            setParentId1Error("");
                                         }}
                                     />
                                 </Form.Group>
@@ -769,9 +840,9 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="firstName">
                                     <Form.Label>Parent Id 1 WEF</Form.Label>
-                                    {/* {distNameError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{distNameError}</p>
-                                    )} */}
+                                    {parentId1WEFError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{parentId1WEFError}</p>
+                                    )}
                                     <Form.Control
                                         required
                                         type="text"
@@ -779,8 +850,8 @@ export default () => {
                                         value={parentId1WEF}
                                         onChange={(e) => {
                                             setParentId1WEF(e.target.value);
-                                            //setDistNameError("");
-                                            //handleChangeDisstName()
+                                            setParentId1WEFError("");
+
                                         }}
                                     />
                                 </Form.Group>
@@ -906,11 +977,11 @@ export default () => {
                                 </Form.Group>
                             </Col>
                             <Col md={6} className="mb-3">
-                                <Form.Group id="officeTypeId">
+                                <Form.Group id="designationId">
                                     <Form.Label>Designation Name</Form.Label>
-                                    {/* {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                                    )} */}
+                                    {designationError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{designationError}</p>
+                                    )}
                                     <Select
                                         value={designationDData.find((option) => option.value === designationId)}
                                         options={designationDData}
@@ -923,9 +994,9 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="officeTypeId">
                                     <Form.Label>Office Level</Form.Label>
-                                    {/* {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                                    )} */}
+                                    {officeLevelError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeLevelError}</p>
+                                    )}
                                     <Select
                                         value={officeLevelDData.find((option) => option.value === officeLevelId)}
                                         options={officeLevelDData}
@@ -936,9 +1007,9 @@ export default () => {
                             <Col md={6} className="mb-3">
                                 <Form.Group id="officeTypeId">
                                     <Form.Label>RTI Designation</Form.Label>
-                                    {/* {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                                    )} */}
+                                    {rtiDesigError && (
+                                        <p style={{ color: "red", fontSize: "15px" }}>*{rtiDesigError}</p>
+                                    )}
                                     <Select
                                         value={rtiDesigDData.find((option) => option.value === rtiDesigId)}
                                         options={rtiDesigDData}
