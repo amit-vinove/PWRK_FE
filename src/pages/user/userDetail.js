@@ -263,7 +263,7 @@ export default () => {
   }, [mobileNo1])
   const handleMobile1Change = () => {
     if (mobileNo1.length >= 11) {
-      setMobileNo1Error("Mobile Number  must be of 10 letter");
+      setMobileNo1Error("Mobile Number must be of 10 letter");
     } else {
       setMobileNo1Error("");
     }
