@@ -24,18 +24,21 @@ export default () => {
   const [titleError, setTitleError] = useState("");
   const [userName, setuserName] = useState("");
   const [userNameError, setUserNameError] = useState("");
-  const [designationId, setdesignationId] = useState("");
+  const [designationId, setdesignationId] = useState(0);
   const [designationDropdownData, setDesignationDropdownData] = useState([]);
   const [designationError, setDesignationError] = useState("");
   const [mobileNo1, setmobileNo1] = useState(0);
+  const [mobileNo1Error, setMobileNo1Error] = useState("");
   const [mobileNo2, setmobileNo2] = useState(0);
   const [mobileNo2Error, setMobileNo2Error] = useState("");
   const [emailId, setemailId] = useState("");
   const [resiAdd, setresiAdd] = useState("");
   const [resiAddError, setresiAddError] = useState("");
   const [stateId, setstateId] = useState(0);
+  const [stateNameError, setStateNameError] = useState("")
   const [stateDropdownData, setStateDropdownData] = useState([]);
   const [disttId, setdisttId] = useState(0);
+  const [disttIdError, setdisttIdError] = useState("");
   const [disttDropdownData, setDisttDropdownData] = useState([]);
   const [pinCode, setpinCode] = useState(0);
   const [pinCodeError, setPinCodeError] = useState("");
@@ -65,6 +68,7 @@ export default () => {
   }
   const handleOfficeTypeChange = (selectedOption) => {
     setofficeTypeId(selectedOption.value);
+    setOfficeTypeError("");
   };
 
 
@@ -90,6 +94,7 @@ export default () => {
 
   const handleTitleChange = (selectedOption) => {
     settitleId(selectedOption.value);
+    setTitleError("");
   };
 
 
@@ -118,6 +123,7 @@ export default () => {
 
   const handleDesignationChange = (selectedOption) => {
     setdesignationId(selectedOption.value);
+    setDesignationError("");
   };
 
 
@@ -144,6 +150,7 @@ export default () => {
 
   const handleStateChange = (selectedOption) => {
     setstateId(selectedOption.value);
+    setStateNameError("");
   };
 
   const getAllState = async () => {
@@ -169,6 +176,7 @@ export default () => {
 
   const handleDistrictChange = (selectedOption) => {
     setdisttId(selectedOption.value);
+    setdisttIdError("");
   };
   const getAllDistrict = async () => {
     try {
@@ -199,9 +207,9 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    handleChange();
+    handleMobile2Change();
   }, [mobileNo2])
-  const handleChange = () => {
+  const handleMobile2Change = () => {
     if (mobileNo2.length >= 11) {
       setMobileNo2Error("Mobile Number  must be of 10 letter");
     } else {
@@ -209,19 +217,36 @@ export default () => {
     }
   }
 
+  useEffect(() => {
+    handleMobile1Change();
+  }, [mobileNo1])
+  const handleMobile1Change = () => {
+    if (mobileNo1.length >= 11) {
+      setMobileNo1Error("Mobile Number  must be of 10 letter");
+    } else {
+      setMobileNo1Error("");
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (empId === "") {
+    if (titleId === 0 || titleId === null) {
+      setTitleError("Title is Required");
+    } else {
+      setTitleError("");
+    }
+    if (officeTypeId === 0 || officeTypeId === null) {
+      setOfficeTypeError("Office Type is Required");
+    } else {
+      setOfficeTypeError("");
+    }
+    if (empId === 0 || empId == null) {
       setEmpIDError("Employee Id is Required");
     } else {
       setEmpIDError("");
     }
-    if (officeTypeId === 0 || officeTypeId == null) {
-      setOfficeTypeError("Office Type Id is Required");
-    } else {
-      setOfficeTypeError("");
-    }
+
     if (userName === "") {
       setUserNameError("userName is Required");
     } else if (userName.length <= 3 && userName.length >= 100) {
@@ -229,15 +254,25 @@ export default () => {
     } else {
       setUserNameError("");
     }
-    if (titleId === "") {
-      setTitleError("Title is Required");
-    } else {
-      setTitleError("");
-    }
-    if (designationId === "") {
+
+    if (designationId === 0 || designationId === null) {
       setDesignationError("Designation is Required");
     } else {
       setDesignationError("");
+    }
+    if (stateId === 0 || stateId === null) {
+      setStateNameError("State Name is Required");
+    } else {
+      setStateNameError("");
+    }
+    if (disttId === 0 || disttId === null) {
+      setdisttIdError("District Name is Required");
+    } else {
+      setdisttIdError("");
+    }
+
+    if (mobileNo1 === 0 || mobileNo1 === null) {
+      setMobileNo1Error("Mobile Number is Required");
     }
 
     if (true) {
@@ -311,9 +346,9 @@ export default () => {
               <Col md={6} className="mb-3">
                 <Form.Group id="officeTypeId">
                   <Form.Label>Office Type</Form.Label>
-                  {/* {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                                    )} */}
+                  {officeTypeError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
+                  )}
                   <Select
                     value={officeTypeDropdownData.find((option) => option.value === officeTypeId)}
                     options={officeTypeDropdownData}
@@ -326,9 +361,9 @@ export default () => {
               <Col md={6} className="mb-3">
                 <Form.Group id="officeTypeId">
                   <Form.Label>Title</Form.Label>
-                  {/* {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                                    )} */}
+                  {titleError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{titleError}</p>
+                  )}
                   <Select
                     value={titleDropdownData.find((option) => option.value === titleId)}
                     options={titleDropdownData}
@@ -355,9 +390,9 @@ export default () => {
               <Col md={6} className="mb-3">
                 <Form.Group id="officeTypeId">
                   <Form.Label>Designation Name</Form.Label>
-                  {/* {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                                    )} */}
+                  {designationError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{designationError}</p>
+                  )}
                   <Select
                     value={designationDropdownData.find((option) => option.value === designationId)}
                     options={designationDropdownData}
@@ -369,13 +404,14 @@ export default () => {
               <Col md={6} className="mb-3">
                 <Form.Group id="firstName">
                   <Form.Label>Mobile Number 1</Form.Label>
-                  {/* {mobi && (
-                    <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                  )} */}
+                  {mobileNo1Error && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{mobileNo1Error}</p>
+                  )}
                   <Form.Control required type="text" placeholder="Enter Title here" value={mobileNo1}
                     onChange={(e) => {
                       setmobileNo1(e.target.value);
-                      // setOfficeTypeError("");
+                      setMobileNo1Error("");
+                      handleMobile1Change();
                     }} />
                 </Form.Group>
               </Col>
@@ -391,7 +427,7 @@ export default () => {
                     onChange={(e) => {
                       setmobileNo2(e.target.value);
                       setMobileNo2Error("");
-                      handleChange();
+                      handleMobile2Change();
                     }} />
                 </Form.Group>
               </Col>
@@ -428,9 +464,9 @@ export default () => {
               <Col md={6} className="mb-3">
                 <Form.Group id="officeTypeId">
                   <Form.Label>State Name</Form.Label>
-                  {/* {stateNameError && (
+                  {stateNameError && (
                     <p style={{ color: "red", fontSize: "15px" }}>*{stateNameError}</p>
-                  )} */}
+                  )}
                   <Select
                     value={stateDropdownData.find((option) => option.value === stateId)}
                     options={stateDropdownData}
@@ -443,9 +479,9 @@ export default () => {
               <Col md={6} className="mb-3">
                 <Form.Group id="officeTypeId">
                   <Form.Label>District Name</Form.Label>
-                  {/* {officeTypeError && (
-                                        <p style={{ color: "red", fontSize: "15px" }}>*{officeTypeError}</p>
-                                    )} */}
+                  {disttIdError && (
+                    <p style={{ color: "red", fontSize: "15px" }}>*{disttIdError}</p>
+                  )}
                   <Select
                     value={disttDropdownData.find((option) => option.value === disttId)}
                     options={disttDropdownData}
