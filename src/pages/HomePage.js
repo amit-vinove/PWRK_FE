@@ -97,6 +97,7 @@ import editOfficeUnit from './officeUnit/editOfficeUnit';
 import viewOfficeUnit from './officeUnit/viewOfficeUnit';
 import viewOfficeAcc from './officeAccDetail/viewOfficeAcc';
 import viewUser from './user/viewUser';
+import Chatbot from './chatBoat';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -224,9 +225,13 @@ export default () => (
     <RouteWithSidebar exact path={Routes.EditOtherOffice.path} component={editOtherOffice} />
     <RouteWithSidebar exact path={Routes.OtherOfficeDetail.path} component={otherOfficeDetail} />
     {/* other components */}
+    
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
     <RouteWithSidebar exact path={Routes.OfficeDetail.path} component={officeDetails} />
+    {/* chatboat */}
+    
+    <RouteWithSidebar exact path={Routes.ChatBoat.path} component={Chatbot} />
     {/* components */}
     <RouteWithSidebar exact path={Routes.Accordions.path} component={Accordion} />
     <RouteWithSidebar exact path={Routes.Alerts.path} component={Alerts} />

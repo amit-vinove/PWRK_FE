@@ -67,7 +67,10 @@ export const Routes = {
     Signup: { path: "/auth/sign-up" },
     ForgotPassword: { path: "/auth/forgot-password" },
     ResetPassword: { path: "/auth/reset-password" },
+    ChatBoat: { path: "/chatBoat" },
+
     Settings: { path: "/settings" },
+
     BootstrapTables: { path: "/tables/bootstrap-tables" },
     Lock: { path: "/auth/lock" },
     NotFound: { path: "/examples/404" },

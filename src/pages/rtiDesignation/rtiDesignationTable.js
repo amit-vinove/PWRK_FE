@@ -43,13 +43,10 @@ export const RTIDesignationTable = ({ searchText }) => {
 
   const history = useHistory();
 
-
-
   useEffect(() => {
     searchDesignation(searchText);
     setCurrentPage(defaultPage);
   }, [searchText]);
-
 
   const getRtiDesignation = async () => {
     await axios.get(API).then((response) => {
@@ -65,9 +62,8 @@ export const RTIDesignationTable = ({ searchText }) => {
       const searchTextLower = searchText.toLowerCase();
       return (
         item.rtiDesignation.toLowerCase().includes(searchTextLower) ||
-        (item.isActive && searchText.toLowerCase() === 'active') ||
-        (!item.isActive && searchText.toLowerCase() === 'inactive')
-
+        (item.isActive && searchText.toLowerCase() === "active") ||
+        (!item.isActive && searchText.toLowerCase() === "inactive")
       );
     });
     setFilteredData(filteredData);
@@ -121,11 +117,10 @@ export const RTIDesignationTable = ({ searchText }) => {
     getRtiDesignation();
   }, []);
 
-
   useEffect(() => {
     setShowPreviousButton(currentPage > 1);
     setShowNextButton(currentPage < totalPages());
-  }, [currentPage]);
+  }, [currentPage, filteredData]);
 
   const totalPages = () => Math.ceil(filteredData.length / itemsPerPage);
 

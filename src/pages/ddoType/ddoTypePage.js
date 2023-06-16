@@ -18,12 +18,12 @@ export default () => {
                 <div className="d-block mb-4 mb-md-0">
                     <h4>DDO Type Dashboard</h4>
                 </div>
-                <div className="btn-toolbar mb-2 mb-md-0">
+                {/* <div className="btn-toolbar mb-2 mb-md-0">
                     <ButtonGroup>
                         <Button variant="outline-primary" size="sm">Share</Button>
                         <Button variant="outline-primary" size="sm">Export</Button>
                     </ButtonGroup>
-                </div>
+                </div> */}
             </div>
             <div className="table-settings mb-4">
                 <Row className="justify-content-between align-items-center">
