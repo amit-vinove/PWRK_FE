@@ -102,7 +102,7 @@ export default (props = {}) => {
               <NavItem title="Office Account Detail" icon={faHandHoldingUsd} link={Routes.OfficeAccDetail.path} />
               <NavItem title="Other Office" icon={faHandHoldingUsd} link={Routes.OtherOffice.path} />
               <NavItem title="User" icon={faTable} link={Routes.User.path} />
-              <NavItem title="Help" icon={faTable} link={Routes.ChatBoat.path} />
+
 
 
               {/*start extra field of sidebar */}
