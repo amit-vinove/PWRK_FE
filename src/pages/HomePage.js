@@ -97,7 +97,6 @@ import editOfficeUnit from './officeUnit/editOfficeUnit';
 import viewOfficeUnit from './officeUnit/viewOfficeUnit';
 import viewOfficeAcc from './officeAccDetail/viewOfficeAcc';
 import viewUser from './user/viewUser';
-import Chatbot from './chatBoat';
 import Chat from '../components/Chatbot';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
@@ -231,9 +230,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
     <RouteWithSidebar exact path={Routes.OfficeDetail.path} component={officeDetails} />
-    {/* chatboat */}
 
-    <RouteWithSidebar exact path={Routes.ChatBoat.path} component={Chatbot} />
     {/* components */}
     <RouteWithSidebar exact path={Routes.Accordions.path} component={Accordion} />
     <RouteWithSidebar exact path={Routes.Alerts.path} component={Alerts} />
