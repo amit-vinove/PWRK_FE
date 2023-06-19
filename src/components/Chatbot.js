@@ -104,7 +104,7 @@ const Chatbot = () => {
                     हिंदी
                 </button>
 
-                
+
                 <button
                     className="btn btn-outline-secondary"
                     onClick={() => {
@@ -456,7 +456,7 @@ const Chatbot = () => {
                     className=" pmd-btn-fab pmd-ripple-effect pmd-btn-raised btn btn-dark rounded-circle position-fixed botBtn"
                     type="button"
                 >
-                    <ChatIcon style={{ height: 80, width: 78 }} />
+                    <ChatIcon style={{ height: 68, width: 64, marginLeft: -6.5 }} />
                 </button>
             </div>
 
