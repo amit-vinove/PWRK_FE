@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../assets/Chatbot.css";
 import moment from "moment-timezone";
 import Datetime from "react-datetime";
@@ -20,15 +20,20 @@ import "sweetalert2/src/sweetalert2.scss";
 import ChatIcon from "@material-ui/icons/Chat";
 const Chatbot = () => {
     const [step, setStep] = useState(1);
-    const [language, setLanguage] = useState("");
+    const [language, setLanguage] = useState([]);
     const [mobileNo, setMobileNo] = useState("");
     const [step2Value, setStep2Value] = useState("");
-    // const [step3Value, setStep3Value] = useState('');
+    const [step3Value, setStep3Value] = useState('');
     const [step4Value, setStep4Value] = useState("");
     const [step5Value, setStep5Value] = useState("");
     const [disable, setDisable] = useState(false);
+    const [roadSurfaceDamage, setRoadSurfaceDamage] = useState("");
+    const [potHoleOnRoad, setPotHoleOnRoad] = useState("");
+    const [showInput, setShowInput] = useState(false);
+    const [complaintValue, setComplaintValue] = useState('');
     const chatbox = useRef();
     // Other form //
+    const [languageName, setLanguageName] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [complaintId, setComplainId] = useState(0);
     const [complaintNo, setComplaintNo] = useState(0);
@@ -44,8 +49,10 @@ const Chatbot = () => {
     const [complaintImage, setComplainImage] = useState("");
     const [guiLatitude, setGuiLatitude] = useState("");
     const [guiLongitude, setGuiLongitude] = useState("");
+    const [visible, setVisible] = useState(false);
     const API = `${process.env.REACT_APP_API}Complaint/GetComplaintTypeMasters`;
     const history = useHistory;
+    const [showInputChat, setShowInputChat] = useState(false);
 
     const handleStep2Selection = (value) => {
         setStep2Value(value);
@@ -56,10 +63,30 @@ const Chatbot = () => {
 
         if (value !== false) {
             setStep4Value(value);
-            setStep(4);
+            setStep(3);
         } else {
             setStep(4);
         }
+    };
+    console.log(language, "70");
+    useEffect(() => {
+        console.log(language, "74");
+        if (languageName) {
+            console.log(language, "77");
+            language?.map((item, index) => {
+                console.log(item, "75")
+                return (setComplainTypeId(item.complaintTypeId))
+            })
+        }
+    }, [languageName])
+
+
+    const handleStep3Selection = (potHoleOnRoad, roadSurfaceDamage) => {
+        setStep3Value(`${potHoleOnRoad},${roadSurfaceDamage}`);
+        setStep(4);
+    };
+    const handleOther = () => {
+        setShowInputChat(true);
     };
 
     const handleStep4Selection = (longitude, latitude) => {
@@ -74,12 +101,61 @@ const Chatbot = () => {
     };
 
     const handleSubmit = () => {
-        // Send data to the web service using the captured values
+        const payload = {
+            complaintId: complaintId,
+            complaintNo,
+            complaintTypeId: complaintTypeId,
+            complainant,
+            contactNo,
+            comment,
+            sourceId,
+            complaintDate,
+            address,
+            complainImageName,
+            complaintImage,
+            guiLatitude,
+            ipAddress
+        }
+        console.log("219", payload)
 
-        // Display the generated complaint number to the user
-        const complaintNumber = "COM-123456"; // Replace with actual complaint number
+        let formData = new FormData(payload);
+        formData.append("complaintId", complaintId);
+        formData.append("complaintNo", complaintNo);
+        formData.append("complaintTypeId", complaintTypeId);
+        formData.append("complainant", complainant);
+        formData.append("contactNo", contactNo);
+        formData.append("comment", comment);
+        formData.append("sourceId", sourceId);
+        formData.append("complaintDate", complaintDate);
+        formData.append("address", address);
+        formData.append("complainImageName", complainImageName);
+        formData.append("complaintImage", complaintImage);
+        formData.append("guiLatitude", guiLatitude);
+        formData.append("guiLongitude", guiLongitude);
+        formData.append("ipAddress", ipAddress);
+
+        Axios.post(
+            `${process.env.REACT_APP_API}Complaint/ComplaintRegister`,
+            formData
+        )
+            .then((response) => {
+                console.log(response.data);
+                Swal.fire("Save", "Complaint Saved Sucessfully", "success");
+                history.push("/dashboard");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        const complaintNumber = complaintId; // Replace with actual complaint number
         alert(`Complaint Number: ${complaintNumber}`);
+        // };
     };
+    // Send data to the web service using the captured values   http://122.176.101.76:8085/api/Complaint/ComplaintRegister
+
+    // Display the generated complaint number to the user
+
+
+
     const handleLanguageSelection = (response) => { };
     const handleCall = async () => {
         await axios
@@ -109,12 +185,76 @@ const Chatbot = () => {
                     className="btn btn-outline-secondary"
                     onClick={() => {
                         handleCall();
+                        setLanguageName(true);
                     }}
                 >
                     English
                 </button>
             </div>
         );
+    };
+
+    const renderStep3Options = () => {
+
+        return (
+            <>
+                <button
+                    className="btn btn-outline-dark me-3"
+                    onClick={() => handleStep3Selection("Other Road Issue")}
+                >
+                    Pot Hole On Road
+                </button>
+                <button
+                    className="btn btn-outline-dark me-3"
+                    onClick={() => handleStep3Selection("Other Road Issue")}
+                >
+                    Road Surface Damage
+                </button>
+                <button
+                    className="btn btn-outline-dark me-3"
+                    onClick={() => { setVisible(true) }}
+                >
+                    Other
+                </button>
+                {visible && (
+                    <div>
+                        <input type="text" placeholder="Enter your message" />
+                        {/* Additional chat input related components can be added here */}
+                    </div>
+                )}
+                <button
+                    className="btn btn-dark me-3"
+                    onClick={() => {
+                        setStep(step - 1);
+                        setShowForm(false);
+                    }}
+                >
+                    Go Back
+                </button>
+
+            </>
+        );
+    };
+
+
+    const handleNewComplaint = (value) => {
+        if (value === 'Other') {
+            setShowInput(true);
+        } else {
+            setShowInput(false);
+            // Handle the selected complaint type
+        }
+    };
+    const handleComplaintChange = (e) => {
+        setComplaintValue(e.target.value);
+    };
+
+    const redirectToComplaint = () => {
+        history.push("/complaint");
+    };
+
+    const scrollToBottom = () => {
+        chatbox.current.scrollTop = chatbox.current.scrollHeight;
     };
 
     const renderStep2Options = () => {
@@ -126,50 +266,6 @@ const Chatbot = () => {
             const selectedImage = e.target.files[0];
             console.log(selectedImage);
             // Do something with the selected image
-        };
-        const handleComSave = () => {
-            // if (rtiDesignation === "") {
-            //     setRtiDesignationError("RTI Designation is Required");
-            // } else if (rtiDesignation.length <= 2 ||
-            //     rtiDesignation.length > 100) {
-            //     setRtiDesignationError("RTI Designation Must Be Between 3 to 100 Letter");
-            // }
-
-            // else {
-            //     setRtiDesignationError("");
-            // }
-
-            // if (formValid) {
-            //     let UserID = localStorage.getItem("UserId")
-            let formData = new FormData();
-            formData.append("complaintId", complaintId);
-            formData.append("complaintNo", complaintNo);
-            formData.append("complaintTypeId", complaintTypeId);
-            formData.append("complainant", complainant);
-            formData.append("contactNo", contactNo);
-            formData.append("comment", comment);
-            formData.append("sourceId", sourceId);
-            formData.append("complaintDate", complaintDate);
-            formData.append("address", address);
-            formData.append("complainImageName", complainImageName);
-            formData.append("complaintImage", complaintImage);
-            formData.append("guiLatitude", guiLatitude);
-            formData.append("guiLongitude", guiLongitude);
-            formData.append("ipAddress", ipAddress);
-
-            Axios.post(
-                `${process.env.REACT_APP_API}Complaint/ComplaintRegister`,
-                formData
-            )
-                .then((response) => {
-                    console.log(response.data);
-                    Swal.fire("Save", "Complaint Saved Sucessfully", "success");
-                    history.push("/dashboard");
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            // };
         };
 
         return (
@@ -209,12 +305,12 @@ const Chatbot = () => {
                         >
                             Go Back
                         </button>
-                        <button
+                        {/* <button
                             className="btn btn-dark me-3"
-                            onClick={() => handleNewComplaint()}
+                            onClick={(e) => handleNewComplaint(e.target.value)}
                         >
                             Other Complaint
-                        </button>
+                        </button> */}
                     </>
                 )}
 
@@ -226,175 +322,16 @@ const Chatbot = () => {
                             <input type="text" className="form-control" id="complaintTitle" />
                         </div> */}
                         {/* Add more form inputs as needed */}
-                        <Row>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Complaint</Form.Label>
-                                    <Form.Control
-                                        value={complainant}
-                                        required
-                                        type="text"
-                                        onChange={(e) => setComplain()}
-                                        placeholder="Enter your Complaint"
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="lastName">
-                                    <Form.Label>Contact Number</Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your Contact Number"
-                                        value={contactNo}
-                                        onChange={(e) => setContactNo()}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Comment</Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your Comment"
-                                        value={comment}
-                                        onChange={(e) => setComment()}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="lastName">
-                                    <Form.Label>Source Id</Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your source Id"
-                                        value={sourceId}
-                                        onChange={(e) => setSourceId()}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row className="align-items-center">
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="birthday">
-                                    <Form.Label>Complaint Date</Form.Label>
-                                    <Datetime
-                                        timeFormat={false}
-                                        onChange={setComplaintDate}
-                                        renderInput={(props, openCalendar) => (
-                                            <InputGroup>
-                                                <InputGroup.Text>
-                                                    <FontAwesomeIcon icon={faCalendarAlt} />
-                                                </InputGroup.Text>
-                                                <Form.Control
-                                                    required
-                                                    type="text"
-                                                    value={
-                                                        complaintDate
-                                                            ? moment(complaintDate).format("MM/DD/YYYY")
-                                                            : ""
-                                                    }
-                                                    placeholder="mm/dd/yyyy"
-                                                    onFocus={openCalendar}
-                                                    onChange={(e) => {
-                                                        setComplaintDate();
-                                                    }}
-                                                />
-                                            </InputGroup>
-                                        )}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="firstName">
-                                    <Form.Label>Address</Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your Address"
-                                        value={address}
-                                        onChange={(e) => {
-                                            setAddress();
-                                        }}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="lastName">
-                                    <Form.Label>Complain Image Name</Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your Complain Image Name"
-                                        value={complainImageName}
-                                        onChange={(e) => {
-                                            setComplainImageName();
-                                        }}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                                <Form.Group controlId="complainImage">
-                                    <Form.Label>Complain Image</Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="lastName">
-                                    <Form.Label>GUI Latitude</Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your GUI Latitude"
-                                        value={guiLatitude}
-                                        onChange={(e) => {
-                                            setGuiLatitude();
-                                        }}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                                <Form.Group id="lastName">
-                                    <Form.Label>GUI Longitude</Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your Longitude"
-                                        value={guiLongitude}
-                                        onChange={(e) => {
-                                            setGuiLongitude();
-                                        }}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
 
 
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            onClick={handleComSave()}
-                        >
-                            Submit
-                        </button>
+
+
+
                     </form>
                 )
                 }
-            </div >
-        );
+            </div >)
+
     };
 
     const renderStep4Options = () => {
@@ -490,8 +427,7 @@ const Chatbot = () => {
                                 }}
                             >
                                 <p className="small mb-0">
-                                    Hello and thank you for visiting . Please click the given
-                                    option.
+                                    Welcome to the PWD SEWA whatsapp chatbot.Please select your preferred language.
                                 </p>
                             </div>
                         </div>
@@ -503,7 +439,7 @@ const Chatbot = () => {
                                 className="p-3 me-3 border"
                                 style={{ borderRadius: 15, backgroundColor: "#fbfbfb" }}
                             >
-                                <p className="small mb-0"> Please click the given option</p>
+                                <p className="small mb-0"> Please Choose Next.</p>
                             </div>
                             <img
                                 src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
@@ -513,27 +449,7 @@ const Chatbot = () => {
                         </div>
                     )}
 
-                    {/* {step === 3 && (
-                         <div className="d-flex flex-row justify-content-start mb-4">
-                             <img
-                                 src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                                 alt="avatar 1"
-                                 style={{ width: 45, height: '100%' }}
-                             />
-                             <div className="ms-3" style={{ borderRadius: 15 }}>
-                                 <div className="bg-image">
-                                     <img
-                                         src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/screenshot1.webp"
-                                         style={{ borderRadius: 15 }}
-                                         alt="video"
-                                     />
-                                     <a href="#!">
-                                         <div className="mask" />
-                                     </a>
-                                 </div>
-                             </div>
-                         </div>
-                     )} */}
+
 
                     {step === 3 && (
                         <div className="d-flex flex-row justify-content-start mb-4">
@@ -613,13 +529,14 @@ const Chatbot = () => {
                     {step === 4 && renderStep4Options()}
                     {step === 5 && renderStep5Options()}
 
-                    {/* {step === 3 && (
-                         <div>
-                             <p>Response: {step3Value}</p>
-                             <p>Mobile No.: {mobileNo}</p>
-                             <p>Language: {language}</p>
-                         </div>
-                     )} */}
+                    {step === 3 && (
+                        <>
+                            <div className="chatbot-message">
+                                <p>Please select the type of damage:</p>
+                            </div>
+                            <div className="chatbot-options">{renderStep3Options()}</div>
+                        </>
+                    )}
 
                     {step === 6 && (
                         <div>
@@ -660,6 +577,7 @@ const Chatbot = () => {
                                         handleSubmit();
                                     } else {
                                         setStep(step + 1);
+                                        handleSubmit();
                                     }
                                 }}
                             >
